@@ -30,7 +30,7 @@ public struct SCDashboardBlock: View {
     public init() {}
 
     public var body: some View {
-        SCSidebarLayout(collapsible: .icon) {
+        SCSidebarLayout(collapsible: .icon, persistenceKey: nil) {
             SCSidebarHeader {
                 DashboardBlockIdentity()
             }

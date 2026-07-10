@@ -41,7 +41,7 @@ public struct SCSidebarBlock<Detail: View>: View {
     }
 
     public var body: some View {
-        SCSidebarLayout(collapsible: .icon) {
+        SCSidebarLayout(collapsible: .icon, persistenceKey: nil) {
             SCSidebarHeader {
                 SidebarBlockIdentity()
             }

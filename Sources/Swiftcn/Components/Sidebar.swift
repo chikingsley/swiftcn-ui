@@ -105,9 +105,10 @@ extension EnvironmentValues {
     }
 
     /// Whether the enclosing sidebar pane is currently rendering as the
-    /// icon rail. Set by `SCSidebarLayout`; pieces read it to adapt.
+    /// icon rail. Set by `SCSidebarLayout`; pieces (including your own
+    /// header/footer content) read it to adapt.
     /// (Always false inside the compact-width sheet.)
-    var scSidebarIconRail: Bool {
+    public internal(set) var scSidebarIconRail: Bool {
         get { self[SCSidebarIconRailKey.self] }
         set { self[SCSidebarIconRailKey.self] = newValue }
     }
@@ -132,33 +133,39 @@ public struct SCSidebarLayout<SidebarContent: View, Detail: View>: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
-    @AppStorage(SCSidebarMetrics.storageKey) private var persistedOpen = true
     @State private var state: SCSidebarState
 
     private let collapsible: SCSidebarCollapsible
     private let side: SCSidebarSide
+    private let persistenceKey: String?
     private let sidebar: SidebarContent
     private let detail: Detail
 
     /// - Parameters:
     ///   - collapsible: How the sidebar collapses (default `.offcanvas`).
     ///   - side: Which edge the sidebar occupies (default `.leading`).
+    ///   - persistenceKey: `UserDefaults` key under which the open state is
+    ///     restored across launches (mirrors shadcn's cookie). Give each
+    ///     distinct sidebar its own key; pass `nil` to disable persistence
+    ///     (embedded demos, previews).
     ///   - sidebar: Sidebar content — compose `SCSidebarHeader`,
     ///     `SCSidebarContent`, and `SCSidebarFooter`.
     ///   - detail: The main content pane.
     public init(
         collapsible: SCSidebarCollapsible = .offcanvas,
         side: SCSidebarSide = .leading,
+        persistenceKey: String? = "sc.sidebar.open",
         @ViewBuilder sidebar: () -> SidebarContent,
         @ViewBuilder detail: () -> Detail
     ) {
         self.collapsible = collapsible
         self.side = side
+        self.persistenceKey = persistenceKey
         self.sidebar = sidebar()
         self.detail = detail()
-        // Restore the persisted open state (mirrors shadcn's cookie).
-        let restored = UserDefaults.standard
-            .object(forKey: SCSidebarMetrics.storageKey) as? Bool ?? true
+        let restored = persistenceKey.flatMap {
+            UserDefaults.standard.object(forKey: $0) as? Bool
+        } ?? true
         _state = State(initialValue: SCSidebarState(
             isOpen: restored, collapsible: collapsible
         ))
@@ -175,7 +182,9 @@ public struct SCSidebarLayout<SidebarContent: View, Detail: View>: View {
         .background(keyboardToggle)
         .environment(\.scSidebar, state)
         .onChange(of: state.isOpen) { _, newValue in
-            persistedOpen = newValue
+            if let persistenceKey {
+                UserDefaults.standard.set(newValue, forKey: persistenceKey)
+            }
         }
         .onChange(of: collapsible) { _, newValue in
             state.collapsible = newValue
