@@ -100,6 +100,31 @@ struct CardDemo: View {
     }
 }
 
+// MARK: - Carousel
+
+struct CarouselDemo: View {
+    @Environment(\.theme) private var theme
+
+    private struct Slide: Identifiable {
+        let id: Int
+        var label: String { "\(id + 1)" }
+    }
+
+    var body: some View {
+        SCCarousel(items: (0..<5).map(Slide.init)) { slide in
+            RoundedRectangle(cornerRadius: theme.radius + 2, style: .continuous)
+                .fill(theme.muted)
+                .frame(height: 200)
+                .overlay {
+                    Text(slide.label)
+                        .font(.largeTitle.weight(.semibold))
+                        .foregroundStyle(theme.foreground)
+                }
+        }
+        .padding(.horizontal, 24)
+    }
+}
+
 // MARK: - Chart
 
 struct ChartDemo: View {
@@ -137,6 +162,59 @@ struct ChartDemo: View {
         }
         .scChartStyle()
         .frame(height: 240)
+    }
+}
+
+// MARK: - Chat
+
+/// The full chat suite in one stage: markers, bubbles, an attachment, the
+/// typing indicator, and a live composer that appends to local state.
+struct ChatDemo: View {
+    @Environment(\.theme) private var theme
+
+    private struct SentMessage: Identifiable {
+        let id = UUID()
+        let text: String
+    }
+
+    @State private var draft = ""
+    @State private var sent: [SentMessage] = []
+
+    var body: some View {
+        VStack(spacing: 0) {
+            SCMessageScroller {
+                SCMessageMarker("Today")
+                SCMessage(role: .received, avatar: (nil, "SD"), sender: "Sofia Davis") {
+                    SCMessageBubble("Hi, how can I help you today?", role: .received)
+                }
+                SCMessage(role: .sent, timestamp: "9:41 AM") {
+                    SCMessageBubble("Hey, I'm having trouble with my account.", role: .sent)
+                    SCMessageAttachment(filename: "invoice-2026.pdf", size: "1.2 MB", systemImage: "doc.text")
+                }
+                SCMessageMarker("New", variant: .unread)
+                SCMessage(role: .received, avatar: (nil, "SD")) {
+                    SCMessageBubble("What seems to be the problem?", role: .received)
+                }
+                ForEach(sent) { message in
+                    SCMessage(role: .sent) {
+                        SCMessageBubble(message.text, role: .sent)
+                    }
+                }
+                SCMessage(role: .received, avatar: (nil, "SD")) {
+                    SCTypingIndicator()
+                }
+            }
+            SCChatInputBar(text: $draft) {
+                sent.append(SentMessage(text: draft))
+                draft = ""
+            }
+        }
+        .frame(height: 400)
+        .clipShape(RoundedRectangle(cornerRadius: theme.radius, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+                .strokeBorder(theme.border)
+        }
     }
 }
 
@@ -223,6 +301,40 @@ struct KbdDemo: View {
     }
 }
 
+// MARK: - Resizable
+
+struct ResizableDemo: View {
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Drag a divider to resize; double-tap its handle to reset.")
+                .scMuted()
+            SCResizableSplit(fraction: 0.35) {
+                pane("One")
+            } second: {
+                SCResizableSplit(.vertical, fraction: 0.4) {
+                    pane("Two")
+                } second: {
+                    pane("Three")
+                }
+            }
+            .frame(height: 260)
+        }
+    }
+
+    private func pane(_ label: String) -> some View {
+        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+            .fill(theme.muted)
+            .overlay {
+                Text(label)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(theme.foreground)
+            }
+            .padding(6)
+    }
+}
+
 // MARK: - Separator
 
 struct SeparatorDemo: View {
@@ -240,6 +352,58 @@ struct SeparatorDemo: View {
             }
             .frame(height: 20)
             SCSeparator(label: "or continue with")
+        }
+    }
+}
+
+// MARK: - Table
+
+struct TableDemo: View {
+    private struct Invoice: Identifiable {
+        let id: String
+        let status: String
+        let method: String
+        let amount: Double
+    }
+
+    private let invoices: [Invoice] = [
+        .init(id: "INV001", status: "Paid", method: "Credit Card", amount: 250),
+        .init(id: "INV002", status: "Pending", method: "PayPal", amount: 150),
+        .init(id: "INV003", status: "Unpaid", method: "Bank Transfer", amount: 350),
+        .init(id: "INV004", status: "Paid", method: "Credit Card", amount: 450),
+        .init(id: "INV005", status: "Paid", method: "PayPal", amount: 550),
+    ]
+
+    @State private var selection: Set<String> = ["INV002"]
+
+    private var columns: [SCTableColumn<Invoice>] {
+        [
+            SCTableColumn("Invoice", width: .min(80)) { $0.id },
+            SCTableColumn("Status") { $0.status },
+            SCTableColumn("Method") { $0.method },
+            SCTableColumn(
+                "Amount",
+                alignment: .trailing,
+                comparator: { $0.amount < $1.amount },
+                value: { $0.amount.formatted(.currency(code: "USD").precision(.fractionLength(2))) }
+            ),
+        ]
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 28) {
+            SCTable(
+                rows: invoices,
+                columns: columns,
+                caption: "A list of your recent invoices."
+            )
+            DemoSection("Selectable rows · sortable Amount") {
+                SCTable(
+                    rows: invoices,
+                    columns: columns,
+                    selection: $selection
+                )
+            }
         }
     }
 }

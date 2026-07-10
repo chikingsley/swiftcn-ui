@@ -182,3 +182,68 @@ struct PopoverDemo: View {
         }
     }
 }
+
+// MARK: - Tooltip
+
+struct TooltipDemo: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Hover with a pointer, or long-press on touch.")
+                .scMuted()
+            WrappingRow {
+                Button("Add to library") {}
+                    .buttonStyle(.sc(.outline))
+                    .scTooltip("Add to library")
+                Button("Bottom") {}
+                    .buttonStyle(.sc(.outline, size: .sm))
+                    .scTooltip("Tooltip on bottom", edge: .bottom)
+                Button("Trailing") {}
+                    .buttonStyle(.sc(.outline, size: .sm))
+                    .scTooltip("Trailing", edge: .trailing)
+            }
+            .padding(.vertical, 40)
+        }
+    }
+}
+
+// MARK: - Hover Card
+
+struct HoverCardDemo: View {
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Hover with a pointer, or long-press on touch.")
+                .scMuted()
+            trigger
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 60)
+        }
+    }
+
+    private var trigger: some View {
+        Text("@swiftcn")
+            .font(.subheadline.weight(.medium))
+            .foregroundStyle(theme.primary)
+            .underline()
+            .scHoverCard {
+                HStack(alignment: .top, spacing: 12) {
+                    SCAvatar(url: nil, fallback: "SC", size: .custom(40))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("@swiftcn")
+                            .font(.subheadline.weight(.semibold))
+                        Text("shadcn/ui for SwiftUI — copy-paste components themed by design tokens.")
+                            .font(.footnote)
+                            .foregroundStyle(theme.mutedForeground)
+                        HStack(spacing: 4) {
+                            Image(systemName: "calendar")
+                            Text("Joined July 2026")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(theme.mutedForeground)
+                        .padding(.top, 2)
+                    }
+                }
+            }
+    }
+}

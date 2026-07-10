@@ -61,6 +61,17 @@ struct DashboardBlockDemo: View {
     }
 }
 
+// MARK: - Chat (chat-01)
+
+struct ChatBlockDemo: View {
+    var body: some View {
+        BlockStage {
+            SCChatBlock()
+                .frame(minHeight: 600)
+        }
+    }
+}
+
 // MARK: - Stage
 
 /// Clips a full-screen block into a bordered stage so it reads as an

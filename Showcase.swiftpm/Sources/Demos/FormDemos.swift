@@ -71,6 +71,46 @@ struct ButtonGroupDemo: View {
     }
 }
 
+// MARK: - Calendar
+
+struct CalendarDemo: View {
+    @State private var date: Date? = Date()
+    @State private var range: ClosedRange<Date>? = nil
+    @State private var bounded: Date? = nil
+
+    private var bounds: ClosedRange<Date> {
+        let today = Calendar.current.startOfDay(for: Date())
+        let limit = Calendar.current.date(byAdding: .month, value: 2, to: today) ?? today
+        return today...limit
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 28) {
+            DemoSection("Single date") {
+                SCCalendar(selection: $date)
+            }
+            DemoSection("Range · tap two days") {
+                VStack(alignment: .leading, spacing: 10) {
+                    SCCalendar(range: $range)
+                    Text(
+                        range.map {
+                            "\($0.lowerBound.formatted(date: .abbreviated, time: .omitted)) – \($0.upperBound.formatted(date: .abbreviated, time: .omitted))"
+                        } ?? "No range selected"
+                    )
+                    .scMuted()
+                }
+            }
+            DemoSection("Bounds & disabled weekends") {
+                SCCalendar(
+                    selection: $bounded,
+                    bounds: bounds,
+                    disabled: { Calendar.current.isDateInWeekend($0) }
+                )
+            }
+        }
+    }
+}
+
 // MARK: - Checkbox
 
 struct CheckboxDemo: View {
@@ -85,6 +125,64 @@ struct CheckboxDemo: View {
                 .toggleStyle(.scCheckbox)
             Toggle("Disabled checked", isOn: .constant(true))
                 .toggleStyle(.scCheckbox)
+                .disabled(true)
+        }
+    }
+}
+
+// MARK: - Combobox
+
+struct ComboboxDemo: View {
+    @State private var framework: String? = nil
+    @State private var priority: Int? = 2
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SCCombobox(
+                selection: $framework,
+                options: ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"],
+                placeholder: "Select framework…",
+                searchPlaceholder: "Search framework…"
+            )
+            SCCombobox(
+                selection: $priority,
+                options: [
+                    SCComboboxOption(value: 1, label: "Low"),
+                    SCComboboxOption(value: 2, label: "Medium"),
+                    SCComboboxOption(value: 3, label: "High"),
+                    SCComboboxOption(value: 4, label: "Urgent"),
+                ],
+                placeholder: "Priority…"
+            )
+            SCCombobox(
+                selection: .constant(String?.none),
+                options: ["One", "Two"],
+                placeholder: "Disabled"
+            )
+            .disabled(true)
+            Text("Selected: \(framework ?? "none")")
+                .scMuted()
+        }
+    }
+}
+
+// MARK: - Date Picker
+
+struct DatePickerDemo: View {
+    @State private var date: Date? = nil
+    @State private var bounded: Date? = nil
+
+    private var bounds: ClosedRange<Date> {
+        let today = Calendar.current.startOfDay(for: Date())
+        let limit = Calendar.current.date(byAdding: .month, value: 1, to: today) ?? today
+        return today...limit
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SCDatePicker(selection: $date)
+            SCDatePicker("Within a month", selection: $bounded, in: bounds)
+            SCDatePicker(selection: .constant(nil))
                 .disabled(true)
         }
     }

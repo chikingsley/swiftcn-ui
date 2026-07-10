@@ -97,6 +97,19 @@ enum Catalog {
             demoView: { AnyView(ButtonGroupDemo()) }
         ),
         ComponentEntry(
+            id: "calendar",
+            name: "Calendar",
+            category: .formsAndInput,
+            icon: "calendar",
+            description: "A locale-aware month grid with single-date and range selection.",
+            usage: """
+            SCCalendar(selection: $date)                     // single date
+            SCCalendar(range: $stay)                         // date range
+            SCCalendar(selection: $date, bounds: today...max)
+            """,
+            demoView: { AnyView(CalendarDemo()) }
+        ),
+        ComponentEntry(
             id: "checkbox",
             name: "Checkbox",
             category: .formsAndInput,
@@ -107,6 +120,30 @@ enum Catalog {
                 .toggleStyle(.scCheckbox)
             """,
             demoView: { AnyView(CheckboxDemo()) }
+        ),
+        ComponentEntry(
+            id: "combobox",
+            name: "Combobox",
+            category: .formsAndInput,
+            icon: "text.magnifyingglass",
+            description: "A searchable select: a field trigger opening a filtered option list.",
+            usage: """
+            SCCombobox(selection: $framework,
+                       options: ["Next.js", "SvelteKit", "Nuxt.js", "Remix", "Astro"])
+            """,
+            demoView: { AnyView(ComboboxDemo()) }
+        ),
+        ComponentEntry(
+            id: "date-picker",
+            name: "Date Picker",
+            category: .formsAndInput,
+            icon: "calendar.badge.clock",
+            description: "An input-look trigger that opens an SCCalendar in a popover.",
+            usage: """
+            SCDatePicker(selection: $date)
+            SCDatePicker("Date of birth", selection: $birthday, in: earliest...Date())
+            """,
+            demoView: { AnyView(DatePickerDemo()) }
         ),
         ComponentEntry(
             id: "field",
@@ -308,6 +345,19 @@ enum Catalog {
             demoView: { AnyView(CardDemo()) }
         ),
         ComponentEntry(
+            id: "carousel",
+            name: "Carousel",
+            category: .display,
+            icon: "rectangle.stack",
+            description: "A horizontally paging scroller with dot indicators and chevron controls.",
+            usage: """
+            SCCarousel(items: slides) { slide in
+                SCCard { SCCardTitle(slide.title) }
+            }
+            """,
+            demoView: { AnyView(CarouselDemo()) }
+        ),
+        ComponentEntry(
             id: "chart",
             name: "Chart",
             category: .display,
@@ -321,6 +371,21 @@ enum Catalog {
             .scChartStyle()
             """,
             demoView: { AnyView(ChartDemo()) }
+        ),
+        ComponentEntry(
+            id: "chat",
+            name: "Chat",
+            category: .display,
+            icon: "bubble.left.and.bubble.right",
+            description: "Message bubbles, attachments, markers, a typing indicator, and a composer.",
+            usage: """
+            SCMessageScroller {
+                SCMessage(role: .sent) { SCMessageBubble("I can't log in.", role: .sent) }
+                SCMessage(role: .received, avatar: (nil, "SD")) { SCTypingIndicator() }
+            }
+            SCChatInputBar(text: $draft) { send() }
+            """,
+            demoView: { AnyView(ChatDemo()) }
         ),
         ComponentEntry(
             id: "collapsible",
@@ -379,6 +444,21 @@ enum Catalog {
             demoView: { AnyView(KbdDemo()) }
         ),
         ComponentEntry(
+            id: "resizable",
+            name: "Resizable",
+            category: .display,
+            icon: "rectangle.split.2x1",
+            description: "A two-pane split view with a draggable divider — nestable for layouts.",
+            usage: """
+            SCResizableSplit(fraction: 0.3, range: 0.2...0.6) {
+                SidebarPane()
+            } second: {
+                DetailPane()
+            }
+            """,
+            demoView: { AnyView(ResizableDemo()) }
+        ),
+        ComponentEntry(
             id: "separator",
             name: "Separator",
             category: .display,
@@ -390,6 +470,20 @@ enum Catalog {
             SCSeparator(label: "or continue with")
             """,
             demoView: { AnyView(SeparatorDemo()) }
+        ),
+        ComponentEntry(
+            id: "table",
+            name: "Table",
+            category: .display,
+            icon: "tablecells",
+            description: "A themed data grid with sortable columns, row selection, and a caption.",
+            usage: """
+            SCTable(rows: invoices, columns: [
+                SCTableColumn("Invoice") { $0.id },
+                SCTableColumn("Status") { $0.status },
+            ], caption: "A list of your recent invoices.")
+            """,
+            demoView: { AnyView(TableDemo()) }
         ),
         ComponentEntry(
             id: "typography",
@@ -486,6 +580,33 @@ enum Catalog {
             ])
             """,
             demoView: { AnyView(BreadcrumbDemo()) }
+        ),
+        ComponentEntry(
+            id: "command",
+            name: "Command",
+            category: .navigation,
+            icon: "command",
+            description: "A filterable, keyboard-navigable command list — inline or as a ⌘K palette.",
+            usage: """
+            .scCommandPalette(isPresented: $showPalette, groups: [
+                SCCommandGroup(label: "Settings", items: [
+                    SCCommandItem(title: "Profile", systemImage: "person", shortcut: "⌘P") { openProfile() },
+                ]),
+            ])
+            """,
+            demoView: { AnyView(CommandDemo()) }
+        ),
+        ComponentEntry(
+            id: "pagination",
+            name: "Pagination",
+            category: .navigation,
+            icon: "123.rectangle",
+            description: "Previous/next links around a windowed row of page numbers.",
+            usage: """
+            SCPagination(current: $page, total: 10)
+            SCPagination(current: $page, total: 42, maxVisible: 9)
+            """,
+            demoView: { AnyView(PaginationDemo()) }
         ),
         ComponentEntry(
             id: "tabs",
@@ -591,6 +712,33 @@ enum Catalog {
             """,
             demoView: { AnyView(PopoverDemo()) }
         ),
+        ComponentEntry(
+            id: "tooltip",
+            name: "Tooltip",
+            category: .overlays,
+            icon: "bubble.middle.bottom",
+            description: "A small text bubble beside any view — hover on pointer, long-press on touch.",
+            usage: """
+            Button("Add to library") {}
+                .buttonStyle(.sc(.outline))
+                .scTooltip("Add to library")
+            """,
+            demoView: { AnyView(TooltipDemo()) }
+        ),
+        ComponentEntry(
+            id: "hover-card",
+            name: "Hover Card",
+            category: .overlays,
+            icon: "rectangle.on.rectangle",
+            description: "A rich preview card in a native popover — hover to open, long-press on touch.",
+            usage: """
+            Text("@swiftcn")
+                .scHoverCard {
+                    Text("shadcn/ui for SwiftUI — themed by design tokens.")
+                }
+            """,
+            demoView: { AnyView(HoverCardDemo()) }
+        ),
 
         // MARK: Blocks
 
@@ -642,9 +790,34 @@ enum Catalog {
             """,
             demoView: { AnyView(DashboardBlockDemo()) }
         ),
+        ComponentEntry(
+            id: "chat-block",
+            name: "Chat App",
+            category: .blocks,
+            icon: "message",
+            description: "shadcn's chat-01 block: contact header, conversation, and a live composer.",
+            usage: """
+            SCChatBlock()
+            """,
+            demoView: { AnyView(ChatBlockDemo()) }
+        ),
 
         // MARK: Effects
 
+        ComponentEntry(
+            id: "aurora",
+            name: "Aurora",
+            category: .effects,
+            icon: "sun.haze",
+            description: "A soft, slowly drifting color wash of blurred theme-tinted blobs.",
+            usage: """
+            ZStack {
+                SCAuroraBackground()
+                heroContent
+            }
+            """,
+            demoView: { AnyView(AuroraDemo()) }
+        ),
         ComponentEntry(
             id: "dot-pattern",
             name: "Dot Pattern",
@@ -658,6 +831,34 @@ enum Catalog {
             }
             """,
             demoView: { AnyView(DotPatternDemo()) }
+        ),
+        ComponentEntry(
+            id: "marquee",
+            name: "Marquee",
+            category: .effects,
+            icon: "arrow.left.arrow.right",
+            description: "Scrolls content in an endless horizontal loop, fading at the edges.",
+            usage: """
+            SCMarquee {
+                HStack(spacing: 32) {
+                    ForEach(stack, id: \\.self) { SCBadge($0, variant: .secondary) }
+                }
+            }
+            """,
+            demoView: { AnyView(MarqueeDemo()) }
+        ),
+        ComponentEntry(
+            id: "number-ticker",
+            name: "Number Ticker",
+            category: .effects,
+            icon: "number",
+            description: "Rolls each digit into place when a numeric value changes.",
+            usage: """
+            SCNumberTicker(value: downloads)
+                .scH2()
+            SCNumberTicker(value: revenue, format: .number.precision(.fractionLength(2)))
+            """,
+            demoView: { AnyView(NumberTickerDemo()) }
         ),
         ComponentEntry(
             id: "shimmer",

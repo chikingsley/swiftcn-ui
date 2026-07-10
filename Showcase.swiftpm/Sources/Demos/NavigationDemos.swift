@@ -31,6 +31,89 @@ struct BreadcrumbDemo: View {
     }
 }
 
+// MARK: - Command
+
+/// The ⌘K palette over a bounded stage (the scrim covers the stage, not the
+/// app), plus the same list inline in a bordered box.
+struct CommandDemo: View {
+    @Environment(\.theme) private var theme
+    @State private var showPalette = false
+
+    private static let groups = [
+        SCCommandGroup(label: "Suggestions", items: [
+            SCCommandItem(title: "Calendar", systemImage: "calendar") {},
+            SCCommandItem(title: "Search Emoji", systemImage: "face.smiling", keywords: ["smiley", "emoticon"]) {},
+            SCCommandItem(title: "Calculator", systemImage: "plus.forwardslash.minus", keywords: ["math"]) {},
+        ]),
+        SCCommandGroup(label: "Settings", items: [
+            SCCommandItem(title: "Profile", systemImage: "person", shortcut: "⌘P") {},
+            SCCommandItem(title: "Billing", systemImage: "creditcard", shortcut: "⌘B") {},
+            SCCommandItem(title: "Settings", systemImage: "gearshape", shortcut: "⌘S") {},
+        ]),
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 28) {
+            DemoSection("Palette") {
+                Button {
+                    showPalette = true
+                } label: {
+                    HStack(spacing: 8) {
+                        Text("Open command palette")
+                        SCKbdGroup(["⌘", "K"])
+                    }
+                }
+                .buttonStyle(.sc(.outline))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(height: 420)
+                .scCommandPalette(isPresented: $showPalette, groups: Self.groups)
+            }
+            DemoSection("Inline list") {
+                SCCommandList(groups: Self.groups)
+                    .frame(height: 300)
+                    .background(
+                        theme.popover,
+                        in: RoundedRectangle(cornerRadius: theme.radius + 4, style: .continuous)
+                    )
+                    .overlay {
+                        RoundedRectangle(cornerRadius: theme.radius + 4, style: .continuous)
+                            .strokeBorder(theme.border)
+                    }
+            }
+        }
+    }
+}
+
+// MARK: - Pagination
+
+struct PaginationDemo: View {
+    @State private var page = 2
+    @State private var windowed = 25
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 28) {
+            DemoSection("10 pages") {
+                pagination {
+                    SCPagination(current: $page, total: 10)
+                }
+            }
+            DemoSection("Windowed · 50 pages") {
+                pagination {
+                    SCPagination(current: $windowed, total: 50)
+                }
+            }
+        }
+    }
+
+    /// Pagination rows are wider than an iPhone stage; let them scroll.
+    private func pagination<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        ScrollView(.horizontal) {
+            content()
+        }
+        .scrollIndicators(.hidden)
+    }
+}
+
 // MARK: - Tabs
 
 struct TabsDemo: View {

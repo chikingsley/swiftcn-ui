@@ -37,6 +37,14 @@ SCCard {
 
 **Copy-paste (the intended way):** grab `Sources/Swiftcn/Theme/` once, then copy any component file from `Sources/Swiftcn/Components/`. Each file's header lists its dependencies; [`registry.json`](registry.json) is the machine-readable index of every item and its dependency graph.
 
+**The CLI (the automated way):** the [`swiftcn` CLI](cli/) resolves the registry's dependency graph and copies the files for you — components, blocks, theme and all:
+
+```console
+$ swift run --package-path cli swiftcn list
+$ swift run --package-path cli swiftcn add button card sidebar --target MyApp/UI
+$ swift run --package-path cli swiftcn add login-block --dry-run
+```
+
 **Swift Package Manager (if you'd rather import):**
 
 ```swift
@@ -45,10 +53,10 @@ SCCard {
 
 **Browse everything:** open `Showcase.swiftpm` in Xcode and run it — a gallery of every component and block, built out of the components it browses. Or open the package root in Xcode and use the `#Preview` canvas in any component file.
 
-## Components (40)
+## Components (49)
 
-Accordion · Alert · Alert Dialog · Avatar (+ Group) · Badge · Breadcrumb · Button · Button Group · Card · Chart · Checkbox · Collapsible · Dialog · Drawer · Empty · Field · Input · Input OTP · Item · Kbd · Label · Popover · Progress · Radio Group · Select · Separator · Sheet · Sidebar · Skeleton · Slider · Spinner · Switch · Tabs · Textarea · Toast · Toggle · Toggle Group · Typography
-**Effects:** Dot Pattern · Shimmer (+ Shimmer Button)
+Accordion · Alert · Alert Dialog · Avatar (+ Group) · Badge · Breadcrumb · Button · Button Group · Calendar · Card · Carousel · Chart · Chat suite (Message · Bubble · Attachment · Marker · Scroller · Typing Indicator · Input Bar) · Checkbox · Collapsible · Combobox · Command (⌘K palette) · Date Picker · Dialog · Drawer · Empty · Field · Hover Card · Input · Input OTP · Item · Kbd · Label · Pagination · Popover · Progress · Radio Group · Resizable Split · Select · Separator · Sheet · Sidebar · Skeleton · Slider · Spinner · Switch · Table · Tabs · Textarea · Toast · Toggle · Toggle Group · Tooltip · Typography
+**Effects:** Aurora · Dot Pattern · Marquee · Number Ticker · Shimmer (+ Shimmer Button)
 
 ## Blocks
 
@@ -58,6 +66,7 @@ Composed screens built from the components — copy one file, get a whole page:
 - `SCSettingsBlock` — settings screen (profile, preferences, danger zone)
 - `SCSidebarBlock` — sidebar-07: collapsible icon-rail sidebar app shell
 - `SCDashboardBlock` — dashboard-01: stat cards, chart, recent sales
+- `SCChatBlock` — chat-01: message thread with attachments and composer
 
 ## Docs
 
