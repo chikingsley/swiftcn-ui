@@ -45,6 +45,7 @@ private struct SCChartStyle: ViewModifier {
 }
 
 public extension View {
+    /// Applies swiftcn's chart theming to Swift Charts content: the theme's series palette, muted axis labels, and hairline grid lines.
     func scChartStyle() -> some View {
         modifier(SCChartStyle())
     }

@@ -1,53 +1,70 @@
-# swiftcn-ui | Swift playground
+# swiftcn-ui
 
-Comprehensive library of SwiftUI components to build beautiful iOS apps, fast. No package install, no bs. Inspired by [shadcn-ui](https://github.com/shadcn-ui/ui).
+Beautifully designed SwiftUI components you can copy and paste into your apps. A full port of the [shadcn/ui](https://ui.shadcn.com) system — design tokens, variants, composition, blocks, and a registry — for iOS 17+ and macOS 14+.
 
-> [!NOTE]
-> We are looking for a maintainer for this repository. If you are interested, please reach out!
+**This is not a component library. It is how you build your component library.**
 
 |          Dark mode           |          Light mode           |
 | :--------------------------: | :---------------------------: |
 | ![](assets/example-dark.png) | ![](assets/example-light.png) |
 |    ![](assets/X-dark.png)    |    ![](assets/X-light.png)    |
 
-## Usage
+## How it works
 
-Check out the [docs](https://swiftcn.mintlify.app/introduction) to get started.
+Every component is **one self-contained Swift file** that depends only on the `Theme/` folder — copy the files you need into your project and you own the code. Colors come from a `Theme` token set injected through the SwiftUI environment (the analog of shadcn's CSS variables), so dark mode is automatic and re-theming your whole app is one struct:
 
-> [!TIP]
-> **swiftcn-ui 2.0 is being planned** — a full design-token system, shadcn-style variants, previews for every component, ~50 components, and a `swiftcn add` CLI. Read the [design docs and roadmap](docs/README.md).
+```swift
+// At your app root (optional — the default theme works with zero setup):
+ContentView().theme(.default)
 
-You can also run the playground locally:
+// Components style native SwiftUI primitives, shadcn-style:
+Button("Continue") { … }.buttonStyle(.sc())
+Button("Delete") { … }.buttonStyle(.sc(.destructive))
+Toggle("Notifications", isOn: $on).toggleStyle(.scSwitch)
 
-1. `git clone git@github.com:Mobilecn-UI/swiftcn-ui.git`
-2. Open Xcode -> `Open a project or file`
-3. Select `Swiftcn Playground.swiftpm` under `swiftcn-ui`
-4. Slide 🛝
+// And compose through slots, not string props:
+SCCard {
+    SCCardHeader {
+        SCCardTitle("Accelerate UI")
+        SCCardDescription("Enter a new development experience")
+    }
+    SCCardContent { SCInput("Email", text: $email, icon: "envelope") }
+    SCCardFooter { Button("Deploy") { … }.buttonStyle(.sc()) }
+}
+```
 
-## Components
+## Getting started
 
-- [x] Avatar
-- [x] Badge
-- [x] Button
-- [x] Card
-- [x] Input
-- [x] Progress
-- [x] Slider
-- [x] Tabs
-- [x] Toggle
-- [ ] Calendar (WIP)
-- [ ] Skeleton (WIP)
-- [ ] Textarea (WIP)
+**Copy-paste (the intended way):** grab `Sources/Swiftcn/Theme/` once, then copy any component file from `Sources/Swiftcn/Components/`. Each file's header lists its dependencies; [`registry.json`](registry.json) is the machine-readable index of every item and its dependency graph.
 
-## Examples
+**Swift Package Manager (if you'd rather import):**
 
-- [x] X Home
-- [ ] Spotify (WIP)
+```swift
+.package(url: "https://github.com/Mobilecn-UI/swiftcn-ui", branch: "main")
+```
 
-## Contributing
+**Browse everything:** open `Showcase.swiftpm` in Xcode and run it — a gallery of every component and block, built out of the components it browses. Or open the package root in Xcode and use the `#Preview` canvas in any component file.
 
-Check out the [contributing guide](https://github.com/Mobilecn-UI/swiftcn-ui/blob/main/CONTRIBUTING.md).
+## Components (40)
+
+Accordion · Alert · Alert Dialog · Avatar (+ Group) · Badge · Breadcrumb · Button · Button Group · Card · Chart · Checkbox · Collapsible · Dialog · Drawer · Empty · Field · Input · Input OTP · Item · Kbd · Label · Popover · Progress · Radio Group · Select · Separator · Sheet · Sidebar · Skeleton · Slider · Spinner · Switch · Tabs · Textarea · Toast · Toggle · Toggle Group · Typography
+**Effects:** Dot Pattern · Shimmer (+ Shimmer Button)
+
+## Blocks
+
+Composed screens built from the components — copy one file, get a whole page:
+
+- `SCLoginBlock` — login-01: card login form with social sign-in
+- `SCSettingsBlock` — settings screen (profile, preferences, danger zone)
+- `SCSidebarBlock` — sidebar-07: collapsible icon-rail sidebar app shell
+- `SCDashboardBlock` — dashboard-01: stat cards, chart, recent sales
+
+## Docs
+
+- [Design docs & architecture](docs/README.md) — principles, the token system, variant conventions, previews, roadmap, registry/CLI plan
+- [Contributing](CONTRIBUTING.md) — the component checklist
+- Legacy v1 lives in `Swiftcn Playground.swiftpm` (the original `Custom*` components, unchanged)
 
 ## License
 
-Distributed under the [MIT license](https://github.com/Mobilecn-UI/swiftcn-ui/blob/main/LICENSE).
+Distributed under the [MIT license](LICENSE).

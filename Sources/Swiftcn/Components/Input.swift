@@ -32,6 +32,7 @@ extension Double: InputConvertible {}
 /// while focused and `theme.destructive` inside an `SCField` with an error.
 ///
 ///     SCInput("Email", text: $email, icon: "envelope")
+///     SCInput("Password", text: $password, secure: true)
 ///     SCInput("Age", value: $age)
 ///     SCInput("Search", text: $query) {
 ///         Button { query = "" } label: { Image(systemName: "xmark.circle.fill") }
@@ -46,11 +47,14 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
     @Binding private var value: Value
     private let placeholder: String
     private let icon: String?
+    private let isSecure: Bool
     private let trailing: Trailing
 
     /// Text mirror of `value` so partial entries ("1." while typing 1.5)
     /// aren't reformatted mid-keystroke.
     @State private var text: String
+    /// Whether a secure input is temporarily showing its text.
+    @State private var isRevealed = false
 
     /// Creates an input bound to any `InputConvertible` value, with a
     /// trailing accessory slot.
@@ -58,11 +62,13 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
         _ placeholder: String,
         value: Binding<Value>,
         icon: String? = nil,
+        secure: Bool = false,
         @ViewBuilder trailing: () -> Trailing
     ) {
         self.placeholder = placeholder
         self._value = value
         self.icon = icon
+        self.isSecure = secure
         self.trailing = trailing()
         self._text = State(initialValue: value.wrappedValue.description)
     }
@@ -76,6 +82,18 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
             }
 
             field
+
+            if isSecure {
+                Button {
+                    isRevealed.toggle()
+                } label: {
+                    Image(systemName: isRevealed ? "eye.slash" : "eye")
+                        .font(.subheadline)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(theme.mutedForeground)
+                .accessibilityLabel(isRevealed ? "Hide password" : "Show password")
+            }
 
             trailing
                 .foregroundStyle(theme.mutedForeground)
@@ -102,14 +120,27 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
     }
 
     private var field: some View {
-        TextField(placeholder, text: $text, prompt: Text(placeholder).foregroundStyle(theme.mutedForeground))
-            .textFieldStyle(.plain)
-            .font(.subheadline)
-            .foregroundStyle(theme.foreground)
-            .focused($isFocused)
-            #if os(iOS)
-            .keyboardType(keyboardType)
-            #endif
+        Group {
+            if isSecure && !isRevealed {
+                SecureField(placeholder, text: $text, prompt: prompt)
+                    #if os(iOS)
+                    .textContentType(.password)
+                    #endif
+            } else {
+                TextField(placeholder, text: $text, prompt: prompt)
+                    #if os(iOS)
+                    .keyboardType(keyboardType)
+                    #endif
+            }
+        }
+        .textFieldStyle(.plain)
+        .font(.subheadline)
+        .foregroundStyle(theme.foreground)
+        .focused($isFocused)
+    }
+
+    private var prompt: Text {
+        Text(placeholder).foregroundStyle(theme.mutedForeground)
     }
 
     private var shape: RoundedRectangle {
@@ -145,11 +176,13 @@ public extension SCInput where Trailing == EmptyView {
 }
 
 public extension SCInput where Value == String, Trailing == EmptyView {
-    /// Creates a plain text input — the primary form.
+    /// Creates a plain text input — the primary form. Pass `secure: true` for
+    /// a password field with a built-in reveal toggle.
     ///
     ///     SCInput("Email", text: $email, icon: "envelope")
-    init(_ placeholder: String, text: Binding<String>, icon: String? = nil) {
-        self.init(placeholder, value: text, icon: icon) { EmptyView() }
+    ///     SCInput("Password", text: $password, secure: true)
+    init(_ placeholder: String, text: Binding<String>, icon: String? = nil, secure: Bool = false) {
+        self.init(placeholder, value: text, icon: icon, secure: secure) { EmptyView() }
     }
 }
 
@@ -169,10 +202,12 @@ public extension SCInput where Value == String {
 
 #Preview("Input") {
     @Previewable @State var email = ""
+    @Previewable @State var password = ""
     SCPreview {
         VStack(spacing: 12) {
             SCInput("Email", text: $email, icon: "envelope")
             SCInput("Email", text: $email)
+            SCInput("Password", text: $password, secure: true)
             SCInput("Disabled", text: $email).disabled(true)
         }
     }
