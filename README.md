@@ -14,6 +14,9 @@ Comprehensive library of SwiftUI components to build beautiful iOS apps, fast. N
 
 Check out the [docs](https://swiftcn.mintlify.app/introduction) to get started.
 
+> [!TIP]
+> **swiftcn-ui 2.0 is being planned** — a full design-token system, shadcn-style variants, previews for every component, ~50 components, and a `swiftcn add` CLI. Read the [design docs and roadmap](docs/README.md).
+
 You can also run the playground locally:
 
 1. `git clone git@github.com:Mobilecn-UI/swiftcn-ui.git`
