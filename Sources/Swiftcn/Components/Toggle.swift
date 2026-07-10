@@ -1,0 +1,160 @@
+// ============================================================
+// Toggle.swift — swiftcn-ui
+// Depends on: Theme/
+// ============================================================
+import SwiftUI
+
+// MARK: - Variants
+
+public enum SCToggleVariant: CaseIterable, Sendable {
+    case `default`, outline
+}
+
+public enum SCToggleSize: CaseIterable, Sendable {
+    case `default`, sm, lg
+}
+
+// MARK: - Style
+
+/// shadcn's Toggle: a two-state pressed button (think a toolbar Bold button),
+/// not a switch. Apply it to a native `Toggle` — behavior and accessibility
+/// stay native; this supplies the style layer only.
+///
+///     Toggle("Bold", systemImage: "bold", isOn: $isBold)
+///         .toggleStyle(.scToggle())
+///         .labelStyle(.iconOnly)
+///     Toggle("Italic", isOn: $isItalic)
+///         .toggleStyle(.scToggle(variant: .outline, size: .sm))
+public struct SCToggleStyle: ToggleStyle {
+    @Environment(\.theme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
+
+    var variant: SCToggleVariant
+    var size: SCToggleSize
+
+    public init(variant: SCToggleVariant = .default, size: SCToggleSize = .default) {
+        self.variant = variant
+        self.size = size
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            configuration.label
+        }
+        .buttonStyle(SCTogglePressStyle(variant: variant, size: size, isOn: configuration.isOn))
+        .opacity(isEnabled ? 1 : 0.5)
+        .animation(.easeOut(duration: 0.12), value: configuration.isOn)
+        .accessibilityAddTraits(configuration.isOn ? [.isSelected] : [])
+    }
+}
+
+public extension ToggleStyle where Self == SCToggleStyle {
+    static func scToggle(variant: SCToggleVariant = .default, size: SCToggleSize = .default) -> SCToggleStyle {
+        SCToggleStyle(variant: variant, size: size)
+    }
+}
+
+// MARK: - Inner button style
+
+/// Draws the toggle cell and its pressed feedback for the `Button` that
+/// `SCToggleStyle` builds internally.
+private struct SCTogglePressStyle: ButtonStyle {
+    @Environment(\.theme) private var theme
+
+    var variant: SCToggleVariant
+    var size: SCToggleSize
+    var isOn: Bool
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(font)
+            .lineLimit(1)
+            .padding(padding)
+            .frame(minWidth: height, minHeight: height)
+            .background(background(pressed: configuration.isPressed), in: shape)
+            .overlay {
+                if variant == .outline {
+                    shape.strokeBorder(theme.border)
+                }
+            }
+            .foregroundStyle(isOn ? theme.accentForeground : theme.foreground)
+            .contentShape(shape)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+    }
+
+    private var shape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+    }
+
+    private func background(pressed: Bool) -> Color {
+        if isOn {
+            return pressed ? theme.accent.opacity(0.85) : theme.accent
+        }
+        if pressed {
+            return variant == .outline ? theme.accent : theme.muted
+        }
+        return variant == .outline ? theme.background : .clear
+    }
+
+    private var font: Font {
+        switch size {
+        case .sm: .footnote.weight(.medium)
+        default:  .subheadline.weight(.medium)
+        }
+    }
+
+    private var padding: EdgeInsets {
+        switch size {
+        case .default: EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+        case .sm:      EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
+        case .lg:      EdgeInsets(top: 10, leading: 32, bottom: 10, trailing: 32)
+        }
+    }
+
+    private var height: CGFloat {
+        switch size {
+        case .default: 40
+        case .sm:      36
+        case .lg:      44
+        }
+    }
+}
+
+// MARK: - Previews
+
+#Preview("Toggle") {
+    @Previewable @State var isBold = true
+    @Previewable @State var isItalic = false
+    SCPreview {
+        HStack(spacing: 8) {
+            Toggle("Bold", systemImage: "bold", isOn: $isBold)
+                .toggleStyle(.scToggle())
+                .labelStyle(.iconOnly)
+            Toggle("Italic", systemImage: "italic", isOn: $isItalic)
+                .toggleStyle(.scToggle(variant: .outline))
+                .labelStyle(.iconOnly)
+            Toggle("Underline", systemImage: "underline", isOn: .constant(false))
+                .toggleStyle(.scToggle())
+                .labelStyle(.iconOnly)
+                .disabled(true)
+        }
+    }
+}
+
+#Preview("Toggle · sizes & labels") {
+    @Previewable @State var small = false
+    @Previewable @State var regular = true
+    @Previewable @State var large = false
+    SCPreview {
+        HStack(spacing: 8) {
+            Toggle("Small", isOn: $small)
+                .toggleStyle(.scToggle(variant: .outline, size: .sm))
+            Toggle("Default", systemImage: "italic", isOn: $regular)
+                .toggleStyle(.scToggle(variant: .outline))
+            Toggle("Large", isOn: $large)
+                .toggleStyle(.scToggle(variant: .outline, size: .lg))
+        }
+    }
+}

@@ -91,3 +91,6 @@ iOSInjectionProject/
 
 # Misc
 .DS_Store
+
+# Claude Code session artifacts
+.claude/
