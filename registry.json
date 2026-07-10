@@ -37,6 +37,29 @@
       }
     },
     {
+      "name": "chat-block",
+      "type": "registry:block",
+      "title": "Chat Block",
+      "description": "shadcn/ui's `chat-01` block as a ready-made screen: a contact header (avatar, name, email, new-conversation button) over a bottom-anchored `SCMessageScroller` and an `SCChatInputBar`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/ChatBlock.swift",
+          "target": "Swiftcn/ChatBlock.swift"
+        }
+      ],
+      "registryDependencies": [
+        "avatar",
+        "button",
+        "chat",
+        "separator",
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "dashboard-block",
       "type": "registry:block",
       "title": "Dashboard Block",
@@ -201,6 +224,27 @@
       }
     },
     {
+      "name": "aurora",
+      "type": "registry:component",
+      "title": "Aurora",
+      "description": "A soft, slowly drifting color wash \u2014 large blurred circles moving on sinusoidal paths over `theme.background`, the magicui aurora look.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Effects/Aurora.swift",
+          "target": "Swiftcn/Aurora.swift"
+        }
+      ],
+      "registryDependencies": [
+        "card",
+        "theme",
+        "typography"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "avatar",
       "type": "registry:component",
       "title": "Avatar",
@@ -296,6 +340,25 @@
       }
     },
     {
+      "name": "calendar",
+      "type": "registry:component",
+      "title": "Calendar",
+      "description": "A month-view date grid \u2014 shadcn's Calendar (react-day-picker look) rebuilt on Foundation's `Calendar`, so the week start, weekday symbols, and numerals all follow the user's locale rather than assuming a Sunday-first English calendar.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Calendar.swift",
+          "target": "Swiftcn/Calendar.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "card",
       "type": "registry:component",
       "title": "Card",
@@ -317,6 +380,26 @@
       }
     },
     {
+      "name": "carousel",
+      "type": "registry:component",
+      "title": "Carousel",
+      "description": "A horizontally paging carousel with dot indicators and optional previous/next controls \u2014 the swiftcn port of shadcn/ui's Carousel.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Carousel.swift",
+          "target": "Swiftcn/Carousel.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "chart",
       "type": "registry:component",
       "title": "Chart",
@@ -328,6 +411,26 @@
         }
       ],
       "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "chat",
+      "type": "registry:component",
+      "title": "Chat",
+      "description": "A single chat bubble \u2014 the smallest unit of the chat suite.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Chat.swift",
+          "target": "Swiftcn/Chat.swift"
+        }
+      ],
+      "registryDependencies": [
+        "avatar",
         "theme"
       ],
       "platforms": {
@@ -366,6 +469,66 @@
         }
       ],
       "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "combobox",
+      "type": "registry:component",
+      "title": "Combobox",
+      "description": "A searchable select \u2014 the swiftcn port of shadcn/ui's Combobox (Popover + Command).",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Combobox.swift",
+          "target": "Swiftcn/Combobox.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "command",
+      "type": "registry:component",
+      "title": "Command",
+      "description": "One executable entry in a command list: a title, optional icon and shortcut hint, extra search keywords, and the action to run.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Command.swift",
+          "target": "Swiftcn/Command.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "kbd",
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:component",
+      "title": "Date Picker",
+      "description": "An input-look trigger that opens an `SCCalendar` in a popover \u2014 shadcn's Date Picker composition.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/DatePicker.swift",
+          "target": "Swiftcn/DatePicker.swift"
+        }
+      ],
+      "registryDependencies": [
+        "calendar",
         "theme"
       ],
       "platforms": {
@@ -476,6 +639,25 @@
       }
     },
     {
+      "name": "hover-card",
+      "type": "registry:component",
+      "title": "Hover Card",
+      "description": "Presents a rich preview card when the pointer hovers the view \u2014 the swiftcn port of shadcn/ui's HoverCard, for sighted users previewing content behind a link.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/HoverCard.swift",
+          "target": "Swiftcn/HoverCard.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "input",
       "type": "registry:component",
       "title": "Input",
@@ -573,6 +755,67 @@
       }
     },
     {
+      "name": "marquee",
+      "type": "registry:component",
+      "title": "Marquee",
+      "description": "Scrolls its content in an endless horizontal loop \u2014 the magicui `Marquee` port.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Effects/Marquee.swift",
+          "target": "Swiftcn/Marquee.swift"
+        }
+      ],
+      "registryDependencies": [
+        "badge",
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "number-ticker",
+      "type": "registry:component",
+      "title": "Number Ticker",
+      "description": "Animates numeric changes by rolling each digit into place \u2014 the magicui `NumberTicker` port, built on `contentTransition(.numericText)`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Effects/NumberTicker.swift",
+          "target": "Swiftcn/NumberTicker.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "theme",
+        "typography"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "pagination",
+      "type": "registry:component",
+      "title": "Pagination",
+      "description": "Page navigation with previous/next links and a windowed row of page numbers \u2014 the swiftcn port of shadcn/ui's Pagination.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Pagination.swift",
+          "target": "Swiftcn/Pagination.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "popover",
       "type": "registry:component",
       "title": "Popover",
@@ -621,6 +864,25 @@
         {
           "path": "Sources/Swiftcn/Components/RadioGroup.swift",
           "target": "Swiftcn/RadioGroup.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "resizable",
+      "type": "registry:component",
+      "title": "Resizable",
+      "description": "A two-pane split view with a draggable divider \u2014 the swiftcn port of shadcn/ui's Resizable.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Resizable.swift",
+          "target": "Swiftcn/Resizable.swift"
         }
       ],
       "registryDependencies": [
@@ -807,6 +1069,25 @@
       }
     },
     {
+      "name": "table",
+      "type": "registry:component",
+      "title": "Table",
+      "description": "A themed data table \u2014 the swiftcn port of shadcn/ui's Table.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Table.swift",
+          "target": "Swiftcn/Table.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
       "name": "tabs",
       "type": "registry:component",
       "title": "Tabs",
@@ -896,6 +1177,26 @@
         }
       ],
       "registryDependencies": [
+        "theme"
+      ],
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:component",
+      "title": "Tooltip",
+      "description": "Shows a small text bubble beside the view \u2014 the swiftcn port of shadcn/ui's Tooltip.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Tooltip.swift",
+          "target": "Swiftcn/Tooltip.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
         "theme"
       ],
       "platforms": {

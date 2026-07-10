@@ -84,10 +84,6 @@ private struct SCSkeletonModifier: ViewModifier {
 private struct SCSkeletonShimmer: View {
     var highlight: Color
 
-    /// -1 parks the band fully off the leading edge; 2 is fully past the
-    /// trailing edge, so the repeat loops seamlessly.
-    @State private var phase: CGFloat = -1
-
     var body: some View {
         GeometryReader { geometry in
             LinearGradient(
@@ -96,14 +92,15 @@ private struct SCSkeletonShimmer: View {
                 endPoint: .trailing
             )
             .frame(width: geometry.size.width * 0.6, height: geometry.size.height)
-            .offset(x: phase * geometry.size.width)
-        }
-        .allowsHitTesting(false)
-        .onAppear {
-            withAnimation(.linear(duration: 1.6).repeatForever(autoreverses: false)) {
-                phase = 2
+            // Phase -1 parks the band fully off the leading edge; 2 is fully
+            // past the trailing edge, so the repeat loops seamlessly.
+            .keyframeAnimator(initialValue: CGFloat(-1), repeating: true) { content, phase in
+                content.offset(x: phase * geometry.size.width)
+            } keyframes: { _ in
+                LinearKeyframe(CGFloat(2), duration: 1.6)
             }
         }
+        .allowsHitTesting(false)
     }
 }
 

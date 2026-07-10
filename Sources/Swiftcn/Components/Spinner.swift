@@ -19,8 +19,6 @@ public struct SCSpinner: View {
     private let size: CGFloat
     private let lineWidth: CGFloat
 
-    @State private var isSpinning = false
-
     /// - Parameters:
     ///   - size: Diameter of the spinner in points. Defaults to 20.
     ///   - lineWidth: Stroke width of the arc. Defaults to 2.
@@ -42,11 +40,10 @@ public struct SCSpinner: View {
                 style: StrokeStyle(lineWidth: lineWidth, lineCap: .round)
             )
             .frame(width: size, height: size)
-            .rotationEffect(.degrees(isSpinning ? 360 : 0))
-            .onAppear {
-                withAnimation(.linear(duration: 0.8).repeatForever(autoreverses: false)) {
-                    isSpinning = true
-                }
+            .keyframeAnimator(initialValue: 0.0, repeating: true) { content, angle in
+                content.rotationEffect(.degrees(angle))
+            } keyframes: { _ in
+                LinearKeyframe(360.0, duration: 0.8)
             }
             .opacity(isEnabled ? 1 : 0.5)
             .accessibilityLabel(Text("Loading"))

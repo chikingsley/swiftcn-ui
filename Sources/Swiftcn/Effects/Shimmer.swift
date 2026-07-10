@@ -32,10 +32,6 @@ private struct SCShimmerModifier: ViewModifier {
     var active: Bool
     var duration: Double
 
-    /// -1 parks the band fully off the leading edge; 2 is fully past the
-    /// trailing edge, so the repeat loops seamlessly.
-    @State private var phase: CGFloat = -1
-
     func body(content: Content) -> some View {
         content.overlay {
             if active {
@@ -50,21 +46,16 @@ private struct SCShimmerModifier: ViewModifier {
                         endPoint: .trailing
                     )
                     .frame(width: geometry.size.width * 0.4, height: geometry.size.height)
-                    .offset(x: phase * geometry.size.width)
+                    // Phase -1 parks the band fully off the leading edge; 2 is
+                    // fully past the trailing edge, so the repeat loops seamlessly.
+                    .keyframeAnimator(initialValue: CGFloat(-1), repeating: true) { band, phase in
+                        band.offset(x: phase * geometry.size.width)
+                    } keyframes: { _ in
+                        LinearKeyframe(CGFloat(2), duration: duration)
+                    }
                 }
                 .mask(content)
                 .allowsHitTesting(false)
-                .onAppear {
-                    phase = -1
-                    withAnimation(.linear(duration: duration).repeatForever(autoreverses: false)) {
-                        phase = 2
-                    }
-                }
-                .onDisappear {
-                    var transaction = Transaction()
-                    transaction.disablesAnimations = true
-                    withTransaction(transaction) { phase = -1 }
-                }
             }
         }
     }
@@ -84,8 +75,6 @@ public struct SCShimmerButton: View {
     var duration: Double
     var action: () -> Void
 
-    @State private var progress: CGFloat = 0
-
     /// - Parameters:
     ///   - text: The button label.
     ///   - duration: Seconds for one full lap of the border highlight.
@@ -97,21 +86,22 @@ public struct SCShimmerButton: View {
     }
 
     public var body: some View {
+        // Resolved outside the animator closure, which is nonisolated.
+        let beamColor = theme.primaryForeground.opacity(0.9)
+        let cornerRadius = theme.radius
         Button(text, action: action)
             .buttonStyle(.sc())
-            .overlay {
-                SCBorderBeam(progress: progress, cornerRadius: theme.radius)
-                    .stroke(
-                        theme.primaryForeground.opacity(0.9),
-                        style: StrokeStyle(lineWidth: 2, lineCap: .round)
-                    )
-                    .allowsHitTesting(false)
-            }
-            .onAppear {
-                progress = 0
-                withAnimation(.linear(duration: duration).repeatForever(autoreverses: false)) {
-                    progress = 1
+            .keyframeAnimator(initialValue: CGFloat(0), repeating: true) { content, progress in
+                content.overlay {
+                    SCBorderBeam(progress: progress, cornerRadius: cornerRadius)
+                        .stroke(
+                            beamColor,
+                            style: StrokeStyle(lineWidth: 2, lineCap: .round)
+                        )
+                        .allowsHitTesting(false)
                 }
+            } keyframes: { _ in
+                LinearKeyframe(CGFloat(1), duration: duration)
             }
     }
 }
