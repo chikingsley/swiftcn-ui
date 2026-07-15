@@ -75,6 +75,10 @@ third completion gate and they do not pass either checkbox.
 - [ ] Automate upstream catalog drift detection; the catalog date is currently manual.
 - [ ] Create the macOS XCUITest host.
 - [ ] Create the iPadOS XCUITest host.
+      (Both hosts: `xcodebuild build-for-testing` once per change, then
+      `test-without-building` per run against a fixed `-derivedDataPath`;
+      pin one simulator runtime for iPadOS — see docs/architecture.md,
+      "Building and the development loop".)
 - [ ] Create the screenshot/snapshot harness for both platforms.
 - [ ] Publish a versioned CLI and test installation outside this checkout.
 - [ ] Publish the private canonical repository and correct package/registry URLs.
@@ -84,6 +88,16 @@ third completion gate and they do not pass either checkbox.
 
 - **Theme tokens, default zinc preset, palette, adaptive colors, and environment injection**
   - [ ] `CODE` — source exists; no complete item-by-item Theme audit has been accepted.
+        Pre-audit alignment 2026-07-14: `Palette.swift` is regenerated from the
+        Tailwind v4 oklch palette by `scripts/generate_palette.py` (CSS Color 4
+        gamut mapping; hexes match Tailwind's published sRGB fallbacks); the
+        zinc preset now matches ui.shadcn.com `r/colors/zinc.json` (dark
+        primary zinc-200, dark destructive red-400, translucent white dark
+        borders/inputs, monochrome zinc chart series, dark sidebar-primary
+        blue-700, light sidebar-accent zinc-100); `destructiveForeground` was
+        removed because Tailwind v4 upstream dropped `--destructive-foreground`
+        — destructive Button/Badge/ShimmerButton content is fixed white per
+        upstream `text-white`.
   - [ ] `VALIDATION` — light/dark, contrast, Dynamic Type, environment override,
         macOS, and iPadOS validation not completed.
 

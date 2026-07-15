@@ -79,6 +79,25 @@ components continue to read the same semantic token names.
 Additional presets should be extensions of `Theme`; they do not require new
 component APIs.
 
+## Spacing
+
+shadcn themes carry no spacing token: upstream spacing is hardcoded per
+component as Tailwind utility classes on the fixed 4px grid, and `--radius` is
+the only non-color variable in the theme cascade. Swiftcn mirrors that model
+exactly. `Theme` carries colors, `radius`, and `fontDesign` — nothing else —
+and components hardcode their spacing in points on the same 4-point grid,
+using the upstream component's actual Tailwind values (Card `p-6 gap-6` ≙
+24pt insets and section gaps; Button `h-9 px-4` ≙ 36pt height, 16pt padding).
+New components take their spacing from the upstream source, not from taste.
+
+A small number of literals sit deliberately off the grid where SwiftUI text
+and control metrics render differently from the browser: `SCLabel` row
+spacing (3pt), Badge and Kbd vertical padding (3pt against upstream
+`py-0.5` ≙ 2pt), Combobox collection row padding (7pt), Toast content padding
+(14pt), and Calendar grid spacing (1pt). These are optical adaptations, not
+drift. Do not snap them to the grid without comparing the rendered result
+against the upstream component.
+
 ## Package dependencies for engine wrappers
 
 The library is dependency-free by default: components are open Swift source
@@ -170,6 +189,41 @@ The source registry lists `SCPreview.swift` as part of the theme development
 surface, but `swiftcn add` excludes that file and strips `#Preview` blocks when
 the consumer sets `includePreviews` to `false`. It is therefore absent from a
 production-only consumer such as TimberVox by design.
+
+## Building and the development loop
+
+Swiftcn, Showcase, and the CLI are separate SwiftPM package roots, and path
+dependencies do not share build products: a root `swift build` and a Showcase
+build each compile every library source into their own `.build`. To avoid
+paying for the library twice:
+
+- Day to day, build only the Showcase package —
+  `swift build --package-path Showcase` (or `swift run --package-path Showcase
+  SwiftcnShowcase`). One build directory compiles the library and the gallery
+  incrementally and type-checks everything the root build would.
+- Reserve the root `swift build` and the iOS Simulator `xcodebuild` for
+  pre-push verification; CI runs both on every push.
+- Do not add ad-hoc `-Xswiftc` flags to a warm build root. Compiler arguments
+  are part of the incremental cache key, so alternating flagged and unflagged
+  builds forces a full rebuild in both directions. Strict concurrency is
+  enabled in the manifest so every build checks identically; CI adds
+  enforcement flags on its own fresh checkout.
+- Many parallel `swift-frontend` processes during a build are the compiler's
+  batch pipeline — one frontend job per file batch, up to the core count —
+  not a leak. Cap them with `swift build -j <n>` when the machine must stay
+  responsive.
+- Type-check hot spots are found with a deliberate one-off audit build using
+  `-Xswiftc -Xfrontend -Xswiftc -warn-long-expression-type-checking=100`
+  (and `-warn-long-function-bodies=100`), accepting the full rebuild it
+  triggers. Audited 2026-07-14: ten sites over 100ms totaling ~3.4s of a
+  ~76s clean build — compile time is not a reason to restructure accepted
+  sources at this scale.
+
+The XCUITest hosts should pay build and simulator cost once per change:
+`xcodebuild build-for-testing` a single time, then `xcodebuild
+test-without-building` per run against a fixed `-derivedDataPath`, with one
+pinned simulator runtime for the iPadOS host. Device-free logic tests stay in
+`Tests/SwiftcnTests` and run with plain `swift test`.
 
 ## Distribution
 
