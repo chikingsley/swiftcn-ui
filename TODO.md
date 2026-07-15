@@ -49,8 +49,9 @@ third completion gate and they do not pass either checkbox.
   **Tooltip** was already accepted.
 - Block source cursors have met: all **26** blocks in the current official
   catalog have completed the item-by-item `CODE` source pass.
-- Next: audit Theme, then build the macOS and iPadOS validation hosts and work
-  through the still-independent `VALIDATION` checkboxes.
+- Theme `CODE` accepted 2026-07-15 — the entire `CODE` gate is complete.
+- Next: build the macOS and iPadOS validation hosts and work through the
+  still-independent `VALIDATION` checkboxes.
 
 ## Repository and validation infrastructure
 
@@ -87,7 +88,32 @@ third completion gate and they do not pass either checkbox.
 ## Theme
 
 - **Theme tokens, default zinc preset, palette, adaptive colors, and environment injection**
-  - [ ] `CODE` — source exists; no complete item-by-item Theme audit has been accepted.
+  - [x] `CODE` — accepted 2026-07-15 against the current shadcn theming docs,
+        the canonical zinc theme (ui.shadcn.com `r/colors/zinc.json`, cssVars ≡
+        cssVarsV4), and the Tailwind v4 oklch palette. All four Theme sources
+        read in full. Token vocabulary is 1:1: every documented variable —
+        background/foreground, card, popover, primary, secondary, muted,
+        accent (each with foreground), destructive (no foreground, matching
+        v4's dropped `--destructive-foreground`), border, input, ring,
+        chart-1..5, the eight `sidebar-*` tokens, and radius (`0.625rem` ≙
+        10pt, with components deriving `radius ± 2` as Tailwind derives
+        `--radius-md`) — exists with no missing entries. The zinc preset
+        matches the canonical block value-for-value, including translucent
+        white dark borders/inputs and the monochrome zinc chart series.
+        Cascade: an EnvironmentKey plus `.theme(_:)` reproduces CSS-variable
+        cascade — the nearest write wins, so per-subtree overrides restyle
+        exactly that subtree; every component reads `@Environment(\.theme)`
+        and never raw palette colors or `colorScheme`. Light/dark: each token
+        is one adaptive dynamic color (UIKit trait / AppKit appearance
+        provider) replacing `:root`/`.dark` blocks. The Theme struct is a
+        Sendable value type of public vars — fully caller-controllable, no
+        decorative API — and TimberVox consumes it outside the Showcase. The
+        registry item declares all four sources and no dependencies. Native
+        adaptations: `fontDesign` is a deliberate extra (≙ `--font-sans`);
+        oklch values are converted to 8-bit sRGB with CSS Color 4 gamut
+        mapping (byte-equal to Tailwind's published fallbacks) by
+        `scripts/generate_palette.py`; points replace rem; `SCPreview` is a
+        development-only surface the CLI strips for production consumers.
         Pre-audit alignment 2026-07-14: `Palette.swift` is regenerated from the
         Tailwind v4 oklch palette by `scripts/generate_palette.py` (CSS Color 4
         gamut mapping; hexes match Tailwind's published sRGB fallbacks); the
@@ -684,7 +710,7 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         Portal, Positioner, and Popup; logical placement follows layout
         direction; and unsupported DOM animation and pixel-offset controls are
         omitted instead of exposed as decorative API.
-  - [ ] `VALIDATION` — placement, dismissal, focus return, compact adaptation, keyboard, and accessibility not validated.
+  - [ ] `VALIDATION` — press opening, bottom/start placement, Escape dismissal, themed opaque content, and accessibility labels were verified in the launched TimberVox macOS consumer at its 1000-by-620 minimum size on 2026-07-15. Outside dismissal, focus return, compact adaptation, full keyboard coverage, VoiceOver, and iPadOS remain.
 - **Progress**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Progress source,
         all complete examples, and the full Base UI API: Root, Track,
