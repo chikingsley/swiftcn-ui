@@ -1,0 +1,49 @@
+name: SwiftcnValidation
+options:
+  bundleIdPrefix: com.swiftcn.validation
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+
+packages:
+  Swiftcn:
+    path: ..
+
+settings:
+  base:
+    GENERATE_INFOPLIST_FILE: YES
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: NO
+
+targets:
+  ValidationHost:
+    type: application
+    platform: macOS
+    sources: [Host]
+    dependencies:
+      - package: Swiftcn
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.swiftcn.validation.host
+
+  ValidationUITests:
+    type: bundle.ui-testing
+    platform: macOS
+    sources: [UITests]
+    dependencies:
+      - target: ValidationHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.swiftcn.validation.uitests
+        TEST_TARGET_NAME: ValidationHost
+
+schemes:
+  SwiftcnValidation:
+    build:
+      targets:
+        ValidationHost: all
+        ValidationUITests: [test]
+    test:
+      targets:
+        - ValidationUITests
