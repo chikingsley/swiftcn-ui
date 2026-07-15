@@ -467,7 +467,7 @@ private enum SCMessageScrollerLayout {
 
 // MARK: - Environment
 
-private struct SCMessageScrollerStateKey: @MainActor EnvironmentKey {
+private struct SCMessageScrollerStateKey: @preconcurrency EnvironmentKey {
     @MainActor static let defaultValue = SCMessageScrollerState()
 }
 

@@ -131,7 +131,7 @@ public struct SCNumberTicker: View {
     }
 }
 
-private struct SCInterpolatedNumberText: View, @MainActor Animatable {
+private struct SCInterpolatedNumberText: View, @preconcurrency Animatable {
     var value: Double
     let format: FloatingPointFormatStyle<Double>
 
