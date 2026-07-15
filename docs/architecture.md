@@ -135,6 +135,10 @@ their own labels, rows, headers, actions, and empty states.
 
 ## Component source rules
 
+- File shape is fixed at `CODE` acceptance: components are not split, merged,
+  or reorganized afterward for tooling or preference. Lint limits are
+  configured for upstream-sized files; adjust `.swiftlint.yml`, never the
+  accepted source shape.
 - Public types use the `SC` prefix.
 - Main types and initializers have doc comments and a usage example.
 - Visible controls mutate state, navigate, or route a callback; unavailable
