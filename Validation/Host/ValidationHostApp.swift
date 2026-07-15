@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct ValidationHostApp: App {
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("Swiftcn Validation") {
             ValidationRootView()
         }
         .windowResizability(.contentSize)
@@ -37,6 +37,8 @@ struct ValidationRootView: View {
                     .accessibilityIdentifier("sc-unknown-scene")
             }
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Swiftcn validation scene: \(scene)")
         .frame(width: 780, height: 560, alignment: .topLeading)
         .background(Theme.default.background)
         .theme(.default)

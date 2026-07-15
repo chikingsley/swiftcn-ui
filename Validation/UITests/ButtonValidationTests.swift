@@ -14,12 +14,12 @@ final class ButtonValidationTests: ValidationCase {
             XCTAssertTrue(button.exists, "variant \(variant) is missing")
             button.click()
             XCTAssertEqual(
-                app.staticTexts["button-last-activated"].label,
+                text(of: app.staticTexts["button-last-activated"]),
                 "Last: \(variant)",
                 "variant \(variant) did not route its action"
             )
         }
-        XCTAssertEqual(count.label, "Activations: \(variants.count)")
+        XCTAssertEqual(text(of: count), "Activations: \(variants.count)")
         attachWindowScreenshot(of: app, named: "button-light")
     }
 
@@ -33,12 +33,12 @@ final class ButtonValidationTests: ValidationCase {
             XCTAssertTrue(button.exists, "size \(size) is missing")
             button.click()
             XCTAssertEqual(
-                app.staticTexts["button-last-activated"].label,
+                text(of: app.staticTexts["button-last-activated"]),
                 "Last: size-\(size)",
                 "size \(size) did not route its action"
             )
         }
-        XCTAssertEqual(count.label, "Activations: \(sizes.count)")
+        XCTAssertEqual(text(of: count), "Activations: \(sizes.count)")
     }
 
     func testDisabledButtonIsExposedAsDisabled() {
@@ -54,9 +54,15 @@ final class ButtonValidationTests: ValidationCase {
         attachWindowScreenshot(of: app, named: "button-dark")
     }
 
-    func testAccessibilityAudit() throws {
-        let app = launchHost(scene: "button")
+    func testAccessibilityAuditLight() throws {
+        let app = launchHost(scene: "button", appearance: "light")
         XCTAssertTrue(app.buttons["button-variant-default"].waitForExistence(timeout: 5))
-        try app.performAccessibilityAudit()
+        try runAccessibilityAudit(on: app)
+    }
+
+    func testAccessibilityAuditDark() throws {
+        let app = launchHost(scene: "button", appearance: "dark")
+        XCTAssertTrue(app.buttons["button-variant-default"].waitForExistence(timeout: 5))
+        try runAccessibilityAudit(on: app)
     }
 }

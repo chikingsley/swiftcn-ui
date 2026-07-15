@@ -74,7 +74,10 @@ third completion gate and they do not pass either checkbox.
       hatches, enforced by `scripts/check_concurrency_annotations.py`. TimberVox
       still provides the strict copied-source consumer gate.
 - [ ] Automate upstream catalog drift detection; the catalog date is currently manual.
-- [ ] Create the macOS XCUITest host.
+- [x] Create the macOS XCUITest host (`Validation/`, 2026-07-15: xcodegen
+      project; host routes `--sc-scene`/`--sc-appearance` launch arguments to
+      deterministic per-component scenes; XCUITest bundle with per-appearance
+      Apple accessibility audits and screenshot evidence attachments).
 - [ ] Create the iPadOS XCUITest host.
       (Both hosts: `xcodebuild build-for-testing` once per change, then
       `test-without-building` per run against a fixed `-derivedDataPath`;
@@ -190,8 +193,16 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         Button/Link styling are implemented. Native adaptation: `ViewModifier`
         and `ButtonStyle` replace Base UI's render-prop element substitution so
         the caller's native control continues to own activation and semantics.
-  - [ ] `VALIDATION` — variants, Button/Link keyboard activation, focus ring,
-        invalid state, Dynamic Type, macOS, iPadOS, and accessibility not validated.
+  - [ ] `VALIDATION` — macOS host evidence 2026-07-15 (Validation/ XCUITest
+        suite, all passing): all six variants and the invalid state render,
+        a badge-styled native Button owns real activation, light and dark
+        render with screenshots attached, and Apple's accessibility audit
+        passes in both appearances with one genuine inherited finding:
+        upstream's zinc dark theme renders destructive badges as white on
+        red-400 at 2.89:1, below WCAG AA 4.5:1 (kept 1:1 with upstream;
+        tolerated and documented in the audit test). Keyboard activation,
+        focus ring, Dynamic Type, VoiceOver walkthrough, and iPadOS not
+        validated.
 - **Breadcrumb**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Breadcrumb source:
         Root/List/Item/Link/Page/Separator/Ellipsis are independently composable;
@@ -220,9 +231,13 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
   - [ ] `VALIDATION` — the copied source compiles in TimberVox, and the real
         History detail back action has been visually inspected, retains its
         accessibility label, and navigates correctly with the ghost/icon-small
-        style. All variants and sizes, pointer transitions, pressed and focus
-        states, disabled/loading composition, Dynamic Type, VoiceOver, and
-        iPadOS remain incomplete.
+        style. macOS host evidence 2026-07-15 (Validation/ XCUITest suite, all
+        passing): every variant and every size renders and routes its real
+        action through the accessibility tree, the disabled control exposes
+        `isEnabled == false`, light and dark render with screenshots attached,
+        and Apple's accessibility audit passes in both appearances. Pointer
+        transitions, pressed and focus states, loading composition, Dynamic
+        Type, VoiceOver walkthrough, and iPadOS remain incomplete.
 - **Button Group**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Button Group source
         and examples: Root/Text/Separator, horizontal/vertical orientation,
