@@ -291,6 +291,12 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         data collections, SF Symbols, and a native Layout replace Base context,
         DOM portal/positioner/anchor refs,
         React render functions, DOM icons, and flexbox.
+        Update 2026-07-15: searchless comboboxes gained collection-level
+        keyboard focus (Up/Down/Return/Escape without a search field), the
+        initial highlight prefers the selected item, `estimatedRowHeight`
+        sizes custom-row popovers, the list scroll resets on query change,
+        and the macOS overlay portal re-injects the combobox context so
+        selection and dismissal work inside portal-hosted content.
   - [ ] `VALIDATION` — arrows, Enter, touch, dismissal, focus return, VoiceOver, and large data not validated.
 - **Command**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Command source:
