@@ -143,23 +143,25 @@ private struct SCNavigationMenuContext {
     var unregister: (AnyHashable) -> Void
     var moveFocus: (SCNavigationMenuMove) -> Bool
 
-    static let inactive = SCNavigationMenuContext(
-        value: nil,
-        orientation: .horizontal,
-        positioner: SCNavigationMenuPositioner(),
-        focus: nil,
-        setValue: { _, _ in },
-        scheduleOpen: { _ in },
-        scheduleClose: {},
-        cancelScheduledClose: {},
-        register: { _ in },
-        unregister: { _ in },
-        moveFocus: { _ in false }
-    )
+    static var inactive: SCNavigationMenuContext {
+        SCNavigationMenuContext(
+            value: nil,
+            orientation: .horizontal,
+            positioner: SCNavigationMenuPositioner(),
+            focus: nil,
+            setValue: { _, _ in },
+            scheduleOpen: { _ in },
+            scheduleClose: {},
+            cancelScheduledClose: {},
+            register: { _ in },
+            unregister: { _ in },
+            moveFocus: { _ in false }
+        )
+    }
 }
 
 private struct SCNavigationMenuContextKey: EnvironmentKey {
-    static let defaultValue = SCNavigationMenuContext.inactive
+    static var defaultValue: SCNavigationMenuContext { .inactive }
 }
 
 private struct SCNavigationMenuItemContext {
@@ -168,7 +170,7 @@ private struct SCNavigationMenuItemContext {
 }
 
 private struct SCNavigationMenuItemContextKey: EnvironmentKey {
-    static let defaultValue = SCNavigationMenuItemContext()
+    static var defaultValue: SCNavigationMenuItemContext { SCNavigationMenuItemContext() }
 }
 
 private struct SCNavigationMenuDismissAction {
@@ -176,7 +178,7 @@ private struct SCNavigationMenuDismissAction {
 }
 
 private struct SCNavigationMenuDismissActionKey: EnvironmentKey {
-    static let defaultValue = SCNavigationMenuDismissAction()
+    static var defaultValue: SCNavigationMenuDismissAction { SCNavigationMenuDismissAction() }
 }
 
 extension EnvironmentValues {

@@ -202,7 +202,7 @@ public struct SCCarousel<Content: View>: View {
 // MARK: - Content
 
 private struct SCCarouselItemIDsKey: PreferenceKey {
-    static let defaultValue: [AnyHashable] = []
+    static var defaultValue: [AnyHashable] { [] }
 
     static func reduce(value: inout [AnyHashable], nextValue: () -> [AnyHashable]) {
         for id in nextValue() where !value.contains(id) {

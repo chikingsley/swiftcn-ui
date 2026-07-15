@@ -405,18 +405,21 @@ private struct SCBubbleReactionsModifier<Reactions: View>: ViewModifier {
     var reactions: SCBubbleReactions<Reactions>
 
     func body(content: Content) -> some View {
+        let side = reactions.side
+        let align = reactions.align
+
         content.overlay(alignment: overlayAlignment) {
             reactions
                 .alignmentGuide(
-                    reactions.side == .bottom
+                    side == .bottom
                         ? VerticalAlignment.bottom : VerticalAlignment.top
                 ) { dimensions in
                     // Hang 75% of the capsule outside the bubble edge,
                     // mirroring upstream's translate-y-3/4.
-                    reactions.side == .bottom
+                    side == .bottom
                         ? dimensions.height * 0.25 : dimensions.height * 0.75
                 }
-                .padding(reactions.align == .end ? .trailing : .leading, 12)
+                .padding(align == .end ? .trailing : .leading, 12)
         }
     }
 

@@ -101,7 +101,7 @@ Build and registry validation are explicit:
 ```console
 swift build --package-path Showcase --product SwiftcnShowcase
 python3 scripts/generate_registry.py --check
-npx shadcn@latest registry validate ./registry.json
+bunx --bun shadcn@latest registry validate ./registry.json
 python3 scripts/check_shadcn_parity.py
 ```
 

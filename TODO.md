@@ -63,9 +63,15 @@ third completion gate and they do not pass either checkbox.
       at the 2026-07-14 check).
 - [x] The parity ledger accounts for all 64 current official component concepts
       and 26 currently listed upstream blocks.
-- [ ] Run the configured official registry-schema CI gate on the latest tree.
+- [x] Run the configured official registry-schema CI gate on the latest tree.
 - [ ] Replace or backstop regex-inferred registry dependencies with an explicit
       per-item contract or copied-source consumer compile gate.
+- [x] Make the root library pass a Swift 6 complete-concurrency build with
+      compiler warnings treated as errors, then add that command to CI. The
+      root gate passed on 2026-07-14 after resolving all 23 audited error sites;
+      the production source tree is also free of unchecked concurrency escape
+      hatches, enforced by `scripts/check_concurrency_annotations.py`. TimberVox
+      still provides the strict copied-source consumer gate.
 - [ ] Automate upstream catalog drift detection; the catalog date is currently manual.
 - [ ] Create the macOS XCUITest host.
 - [ ] Create the iPadOS XCUITest host.

@@ -142,7 +142,7 @@ private struct SCTabsRootContext {
 }
 
 private struct SCTabsRootContextKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: SCTabsRootContext? = nil
+    static var defaultValue: SCTabsRootContext? { nil }
 }
 
 private struct SCTabsListContext {

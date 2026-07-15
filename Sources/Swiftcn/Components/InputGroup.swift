@@ -35,6 +35,7 @@ public struct SCInputGroupElement {
 }
 
 @resultBuilder
+@MainActor
 public enum SCInputGroupBuilder {
     public static func buildBlock(_ components: [SCInputGroupElement]...) -> [SCInputGroupElement] {
         components.flatMap { $0 }

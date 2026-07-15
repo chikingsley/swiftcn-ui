@@ -253,48 +253,63 @@ public struct SCResizablePanelGroup: View {
         }
     }
 
-    @ViewBuilder
+    @MainActor
     private func elementView(
         _ element: SCResizableElement,
         index: Int,
         availableLength: CGFloat
-    ) -> some View {
+    ) -> AnyView {
         switch element {
         case .panel(let panel):
-            panel.content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .frame(
-                    width: orientation == .horizontal
-                        ? availableLength * (layout[panel.id] ?? 0) : nil,
-                    height: orientation == .vertical
-                        ? availableLength * (layout[panel.id] ?? 0) : nil
-                )
-                .clipped()
-        case .handle(let handle):
-            SCResizableHandleView(
-                orientation: orientation,
-                withHandle: handle.withHandle,
-                isDisabled: handle.isDisabled,
-                isActive: activeHandles.contains(handle.id),
-                visibleThickness: handleThickness,
-                targetThickness: dragTargetThickness,
-                accessibilityLabel: handle.accessibilityLabel,
-                accessibilityValue: handleValue(at: index),
-                onDragBegan: { beginDrag(handle: handle) },
-                onDragChanged: { translation in
-                    resize(
-                        at: index,
-                        handle: handle,
-                        delta: availableLength > 0 ? translation / availableLength : 0
-                    )
-                },
-                onDragEnded: { endDrag(handle: handle) },
-                onAdjust: { direction in
-                    adjust(at: index, by: direction * handle.keyboardStep)
-                },
-                onReset: handle.resetsOnDoubleClick ? reset : nil
+            let length = availableLength * (layout[panel.id] ?? 0)
+            let width = orientation == .horizontal ? length : nil
+            let height = orientation == .vertical ? length : nil
+
+            return AnyView(
+                panel.content
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(width: width, height: height)
+                    .clipped()
             )
-            .zIndex(1)
+        case .handle(let handle):
+            let dragBegan: @MainActor () -> Void = {
+                beginDrag(handle: handle)
+            }
+            let dragChanged: @MainActor (CGFloat) -> Void = { translation in
+                let delta = availableLength > 0 ? translation / availableLength : 0
+                resize(at: index, handle: handle, delta: delta)
+            }
+            let dragEnded: @MainActor () -> Void = {
+                endDrag(handle: handle)
+            }
+            let adjustHandle: @MainActor (CGFloat) -> Void = { direction in
+                adjust(at: index, by: direction * handle.keyboardStep)
+            }
+            let resetHandle: (@MainActor () -> Void)?
+            if handle.resetsOnDoubleClick {
+                resetHandle = { reset() }
+            } else {
+                resetHandle = nil
+            }
+
+            return AnyView(
+                SCResizableHandleView(
+                    orientation: orientation,
+                    withHandle: handle.withHandle,
+                    isDisabled: handle.isDisabled,
+                    isActive: activeHandles.contains(handle.id),
+                    visibleThickness: handleThickness,
+                    targetThickness: dragTargetThickness,
+                    accessibilityLabel: handle.accessibilityLabel,
+                    accessibilityValue: handleValue(at: index),
+                    onDragBegan: dragBegan,
+                    onDragChanged: dragChanged,
+                    onDragEnded: dragEnded,
+                    onAdjust: adjustHandle,
+                    onReset: resetHandle
+                )
+                .zIndex(1)
+            )
         }
     }
 
@@ -490,11 +505,11 @@ private struct SCResizableHandleView: View {
     let targetThickness: CGFloat
     let accessibilityLabel: String
     let accessibilityValue: String
-    let onDragBegan: () -> Void
-    let onDragChanged: (CGFloat) -> Void
-    let onDragEnded: () -> Void
-    let onAdjust: (CGFloat) -> Void
-    let onReset: (() -> Void)?
+    let onDragBegan: @MainActor () -> Void
+    let onDragChanged: @MainActor (CGFloat) -> Void
+    let onDragEnded: @MainActor () -> Void
+    let onAdjust: @MainActor (CGFloat) -> Void
+    let onReset: (@MainActor () -> Void)?
 
     @State private var isDragging = false
 

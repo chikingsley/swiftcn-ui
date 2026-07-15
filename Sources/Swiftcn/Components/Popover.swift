@@ -143,11 +143,11 @@ private struct SCPopoverContext {
 }
 
 private struct SCPopoverContextKey: EnvironmentKey {
-    static let defaultValue = SCPopoverContext()
+    static var defaultValue: SCPopoverContext { SCPopoverContext() }
 }
 
 private struct SCPopoverDismissActionKey: EnvironmentKey {
-    static let defaultValue: () -> Void = {}
+    static var defaultValue: () -> Void { {} }
 }
 
 extension EnvironmentValues {

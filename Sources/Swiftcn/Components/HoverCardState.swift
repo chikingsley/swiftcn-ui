@@ -105,9 +105,12 @@ struct SCHoverCardStateContainer<Trigger: View, CardContent: View>: View {
 
     private var card: some View {
         cardContent
-            .environment(\.scDismissHoverCard) {
-                setPresented(false, reason: .imperativeAction)
-            }
+            .environment(
+                \.scDismissHoverCard,
+                SCDismissHoverCardAction {
+                    setPresented(false, reason: .imperativeAction)
+                }
+            )
             .onHover { hovering in
                 guard isHoverEnabled else { return }
                 if hovering {

@@ -138,6 +138,25 @@ They share SwiftUI source and design tokens, but validation must cover both:
 An iPad-compatible source file is not proven merely because the macOS build
 succeeds. The project needs separate compile and UI gates for both.
 
+## Concurrency contract
+
+The package enables complete Swift concurrency checking, and CI promotes every
+concurrency warning to an error. Mutable state and coordinators owned by the
+SwiftUI view graph are isolated to `@MainActor`; immutable values that genuinely
+cross isolation domains use checked `Sendable` conformances.
+
+Environment defaults must not bypass checking. Optional or stateless contexts
+use computed defaults so they create no shared non-Sendable storage. Mutable
+reference defaults use a main-actor-isolated type and `EnvironmentKey`
+conformance. A `nonisolated` initializer is reserved for immutable setup that
+does not expose or assign actor-isolated mutable state.
+
+Production sources may not use `@unchecked Sendable` or
+`nonisolated(unsafe)`. `scripts/check_concurrency_annotations.py` enforces this
+rule in CI. A future exception requires a concrete synchronization mechanism,
+an adjacent comment naming that mechanism and its invariant, and a deliberate
+update to the checker; silencing a compiler diagnostic is not sufficient.
+
 ## Previews and Showcase
 
 Every component file carries small, interactive previews. Richer demonstrations
@@ -172,8 +191,8 @@ CLI release remain future distribution work.
 “Port of shadcn” is not a single binary assertion across different UI runtimes.
 The project keeps separate evidence layers:
 
-1. `npx shadcn registry validate` proves the distribution document conforms to
-   the official registry schema.
+1. `bunx --bun shadcn@latest registry validate` proves the distribution
+   document conforms to the official registry schema.
 2. `parity/shadcn.json` accounts for every current official component and block,
    explicitly separates present and missing code, and stores machine mappings
    from selected upstream parts and behaviors to Swift symbols.

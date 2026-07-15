@@ -42,8 +42,22 @@ public enum SCHoverCardChangeReason: Hashable, Sendable {
     case imperativeAction
 }
 
-private struct SCHoverCardPresentation {
-    var dismiss: () -> Void = {}
+/// A concurrency-safe command for dismissing the nearest Swiftcn Hover Card.
+public struct SCDismissHoverCardAction: Sendable {
+    private let action: @MainActor @Sendable () -> Void
+
+    public init(_ action: @escaping @MainActor @Sendable () -> Void = {}) {
+        self.action = action
+    }
+
+    @MainActor
+    public func callAsFunction() {
+        action()
+    }
+}
+
+private struct SCHoverCardPresentation: Sendable {
+    var dismiss = SCDismissHoverCardAction()
 }
 
 private struct SCHoverCardPresentationKey: EnvironmentKey {
@@ -52,7 +66,7 @@ private struct SCHoverCardPresentationKey: EnvironmentKey {
 
 extension EnvironmentValues {
     /// Dismisses the nearest enclosing hover card.
-    public var scDismissHoverCard: () -> Void {
+    public var scDismissHoverCard: SCDismissHoverCardAction {
         get { self[SCHoverCardPresentationKey.self].dismiss }
         set { self[SCHoverCardPresentationKey.self] = SCHoverCardPresentation(dismiss: newValue) }
     }

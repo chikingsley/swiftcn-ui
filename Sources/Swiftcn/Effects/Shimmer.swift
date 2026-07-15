@@ -82,6 +82,9 @@ private struct SCShimmerModifier: ViewModifier {
             // upstream's prefers-reduced-motion fallback.
             if active && !reduceMotion {
                 GeometryReader { geometry in
+                    let containerWidth = geometry.size.width
+                    let containerHeight = geometry.size.height
+
                     LinearGradient(
                         colors: [
                             highlight.opacity(0),
@@ -91,14 +94,14 @@ private struct SCShimmerModifier: ViewModifier {
                         startPoint: .leading,
                         endPoint: .trailing
                     )
-                    .frame(width: resolvedSpread, height: geometry.size.height * 3)
+                    .frame(width: resolvedSpread, height: containerHeight * 3)
                     .rotationEffect(resolvedAngle, anchor: .center)
-                    .offset(y: -geometry.size.height)
+                    .offset(y: -containerHeight)
                     // Phase -1 parks the band fully off the starting edge; 2
                     // is fully past the far edge, so the repeat loops
                     // seamlessly. The sweep follows the reading direction.
                     .keyframeAnimator(initialValue: startPhase, repeating: repeats) { band, phase in
-                        band.offset(x: phase * geometry.size.width)
+                        band.offset(x: phase * containerWidth)
                     } keyframes: { _ in
                         LinearKeyframe(endPhase, duration: resolvedDuration)
                     }
@@ -256,7 +259,7 @@ public struct SCShimmerButton: View {
         case .default:
             return theme.primaryForeground.opacity(0.9)
         case .destructive:
-            return theme.destructiveForeground.opacity(0.9)
+            return Color.white.opacity(0.9)
         case .secondary:
             return theme.secondaryForeground.opacity(0.9)
         case .outline, .ghost, .link:

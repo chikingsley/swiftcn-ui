@@ -178,7 +178,7 @@ public struct SCSpeechInputContext {
 }
 
 private struct SCSpeechInputContextKey: EnvironmentKey {
-    static let defaultValue: SCSpeechInputContext? = nil
+    static var defaultValue: SCSpeechInputContext? { nil }
 }
 
 extension EnvironmentValues {

@@ -86,11 +86,13 @@ private struct SCCommandContext {
 }
 
 private struct SCCommandContextKey: EnvironmentKey {
-    static let defaultValue = SCCommandContext(
-        query: .constant(""),
-        isDisabled: true,
-        keyboard: SCCommandKeyboardCoordinator()
-    )
+    static var defaultValue: SCCommandContext {
+        SCCommandContext(
+            query: .constant(""),
+            isDisabled: true,
+            keyboard: SCCommandKeyboardCoordinator()
+        )
+    }
 }
 
 extension EnvironmentValues {

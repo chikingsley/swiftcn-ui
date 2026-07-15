@@ -86,8 +86,12 @@ public struct SCMessageScrollerScrollOptions: Equatable, Sendable {
 ///
 ///     let scroller = SCMessageScrollerState(defaultScrollPosition: .lastAnchor)
 ///     scroller.scrollToMessage("message-41")
+///
+/// Scroller geometry and commands belong to the SwiftUI view graph. Main-actor
+/// isolation prevents callers from racing viewport updates from background work.
+@MainActor
 @Observable
-public final class SCMessageScrollerState: @unchecked Sendable {
+public final class SCMessageScrollerState {
     /// Pins the viewport to the live edge of the conversation while
     /// streamed content grows — but only while the reader is already at
     /// the end. Scrolling up is a deliberate opt-out, exactly as upstream.
@@ -463,14 +467,15 @@ private enum SCMessageScrollerLayout {
 
 // MARK: - Environment
 
-private struct SCMessageScrollerStateKey: EnvironmentKey {
-    static let defaultValue = SCMessageScrollerState()
+private struct SCMessageScrollerStateKey: @MainActor EnvironmentKey {
+    @MainActor static let defaultValue = SCMessageScrollerState()
 }
 
 extension EnvironmentValues {
     /// The enclosing scroller's state — swiftcn's `useMessageScroller`.
     /// Read it to jump, follow, or inspect visibility from anywhere inside
     /// `SCMessageScroller`.
+    @MainActor
     public internal(set) var scMessageScroller: SCMessageScrollerState {
         get { self[SCMessageScrollerStateKey.self] }
         set { self[SCMessageScrollerStateKey.self] = newValue }

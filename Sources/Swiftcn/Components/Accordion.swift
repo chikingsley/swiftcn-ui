@@ -27,7 +27,7 @@ struct SCAccordionState {
 }
 
 private struct SCAccordionStateKey: EnvironmentKey {
-    static let defaultValue = SCAccordionState()
+    static var defaultValue: SCAccordionState { SCAccordionState() }
 }
 
 extension EnvironmentValues {

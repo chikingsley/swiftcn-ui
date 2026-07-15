@@ -98,17 +98,19 @@ struct SCComboboxContext {
 }
 
 private struct SCComboboxContextKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue = SCComboboxContext(
-        isPresented: .constant(false),
-        query: .constant(""),
-        selectedValues: [],
-        allowsMultipleSelection: false,
-        isDisabled: true,
-        select: { _ in },
-        remove: { _ in },
-        clear: {},
-        keyboard: SCComboboxKeyboardCoordinator()
-    )
+    static var defaultValue: SCComboboxContext {
+        SCComboboxContext(
+            isPresented: .constant(false),
+            query: .constant(""),
+            selectedValues: [],
+            allowsMultipleSelection: false,
+            isDisabled: true,
+            select: { _ in },
+            remove: { _ in },
+            clear: {},
+            keyboard: SCComboboxKeyboardCoordinator()
+        )
+    }
 }
 
 extension EnvironmentValues {
@@ -205,7 +207,7 @@ public struct SCComboboxRoot<Value: Hashable, Content: View>: View {
                 SCComboboxContext(
                     isPresented: presentedBinding,
                     query: queryBinding,
-                    selectedValues: selectedValues.map(AnyHashable.init),
+                    selectedValues: selectedValues.map { AnyHashable($0) },
                     allowsMultipleSelection: allowsMultipleSelection,
                     isDisabled: isDisabled || !isEnabled,
                     select: select,

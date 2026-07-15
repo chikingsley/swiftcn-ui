@@ -58,7 +58,7 @@ it with:
 ```console
 python3 scripts/generate_registry.py
 python3 scripts/generate_registry.py --check
-npx shadcn@latest registry validate ./registry.json
+bunx --bun shadcn@latest registry validate ./registry.json
 ```
 
 The official CLI validates the source-registry document shape. The native

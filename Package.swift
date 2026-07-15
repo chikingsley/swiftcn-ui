@@ -28,7 +28,10 @@ let package = Package(
                 // SE-0444: extension members resolve only in files that import
                 // their module. Without this, MarkdownUI's Color(light:dark:)
                 // would collide module-wide with Theme's own initializer.
-                .enableUpcomingFeature("MemberImportVisibility")
+                .enableUpcomingFeature("MemberImportVisibility"),
+                // Keep Swift 6 data-race diagnostics enabled for every
+                // package consumer, even while the manifest remains Swift 5.9.
+                .enableUpcomingFeature("StrictConcurrency"),
             ]
         )
     ]

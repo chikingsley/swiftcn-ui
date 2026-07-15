@@ -180,16 +180,18 @@ private struct SCSkeletonShimmer: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let shimmerWidth = geometry.size.width
+
             LinearGradient(
                 colors: [highlight.opacity(0), highlight, highlight.opacity(0)],
                 startPoint: .leading,
                 endPoint: .trailing
             )
-            .frame(width: geometry.size.width * 0.6, height: geometry.size.height)
+            .frame(width: shimmerWidth * 0.6, height: geometry.size.height)
             // Phase -1 parks the band fully off the leading edge; 2 is fully
             // past the trailing edge, so the repeat loops seamlessly.
             .keyframeAnimator(initialValue: CGFloat(-1), repeating: true) { content, phase in
-                content.offset(x: phase * geometry.size.width)
+                content.offset(x: phase * shimmerWidth)
             } keyframes: { _ in
                 LinearKeyframe(CGFloat(2), duration: 1.6)
             }

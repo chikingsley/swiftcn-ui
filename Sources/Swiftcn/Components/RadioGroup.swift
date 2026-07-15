@@ -81,7 +81,7 @@ private struct SCRadioGroupContext {
 }
 
 private struct SCRadioGroupContextKey: EnvironmentKey {
-    nonisolated(unsafe) static let defaultValue: SCRadioGroupContext? = nil
+    static var defaultValue: SCRadioGroupContext? { nil }
 }
 
 extension EnvironmentValues {

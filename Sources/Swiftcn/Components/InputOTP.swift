@@ -56,7 +56,7 @@ private struct SCInputOTPContext {
 }
 
 private struct SCInputOTPContextKey: EnvironmentKey {
-    static let defaultValue = SCInputOTPContext()
+    static var defaultValue: SCInputOTPContext { SCInputOTPContext() }
 }
 
 private enum SCInputOTPGroupPosition {

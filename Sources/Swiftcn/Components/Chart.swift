@@ -90,7 +90,7 @@ public struct SCChartConfiguration {
 }
 
 private struct SCChartConfigurationKey: EnvironmentKey {
-    static let defaultValue = SCChartConfiguration([])
+    static var defaultValue: SCChartConfiguration { SCChartConfiguration([]) }
 }
 
 extension EnvironmentValues {
