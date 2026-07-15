@@ -4,23 +4,25 @@
 // ============================================================
 import SwiftUI
 
-// MARK: - Variants
+// MARK: - Selection
 
-public enum SCAccordionType: Sendable {
-    /// Only one item may be open at a time; opening an item closes the rest.
-    /// `collapsible` allows tapping the open item to close it.
+/// Whether an accordion permits one or multiple expanded items.
+public enum SCAccordionType: Equatable, Sendable {
+    /// Only one item may be open. Set `collapsible` to `false` when one item
+    /// must always remain open after the first selection.
     case single(collapsible: Bool)
     /// Any number of items may be open simultaneously.
     case multiple
 
-    /// `.single(collapsible: true)` — the common case.
+    /// The common single-item mode, which permits closing the open item.
     public static var single: SCAccordionType { .single(collapsible: true) }
 }
 
-// MARK: - State plumbing (internal)
+// MARK: - State plumbing
 
 struct SCAccordionState {
     var expanded: Set<String> = []
+    var isDisabled = false
     var toggle: (String) -> Void = { _ in }
 }
 
@@ -35,34 +37,78 @@ extension EnvironmentValues {
     }
 }
 
-// MARK: - Component
+struct SCAccordionItemState {
+    var id = ""
+    var isDisabled = false
+}
 
-/// A vertically stacked set of interactive headings that each reveal a
-/// section of content.
+private struct SCAccordionItemStateKey: EnvironmentKey {
+    static let defaultValue = SCAccordionItemState()
+}
+
+extension EnvironmentValues {
+    var scAccordionItemState: SCAccordionItemState {
+        get { self[SCAccordionItemStateKey.self] }
+        set { self[SCAccordionItemStateKey.self] = newValue }
+    }
+}
+
+// MARK: - Root
+
+/// A vertically stacked set of headings that reveal sections of content.
 ///
-///     SCAccordion {
-///         SCAccordionItem("Is it accessible?") {
-///             Text("Yes. It uses native buttons and traits.")
+/// Compose an accordion from `SCAccordionItem`, `SCAccordionTrigger`, and
+/// `SCAccordionContent`:
+///
+///     SCAccordion(defaultExpanded: ["shipping"]) {
+///         SCAccordionItem(id: "shipping") {
+///             SCAccordionTrigger { Text("Shipping") }
+///             SCAccordionContent { Text("Free worldwide shipping.") }
 ///         }
-///         SCAccordionItem("Is it styled?", content: "Yes — theme tokens only.")
 ///     }
 ///
-///     SCAccordion(type: .multiple) { … }
+/// Pass `expanded:` when the owning application needs controlled state.
 public struct SCAccordion<Content: View>: View {
-    @State private var expanded: Set<String> = []
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    var type: SCAccordionType
-    @ViewBuilder var content: Content
+    @State private var internalExpanded: Set<String>
 
-    /// - Parameters:
-    ///   - type: `.single` (default, one open item; tap again to close) or
-    ///     `.multiple`.
-    ///   - content: The `SCAccordionItem`s, in display order.
+    private let controlledExpanded: Binding<Set<String>>?
+    private let type: SCAccordionType
+    private let isDisabled: Bool
+    private let onExpandedChange: (Set<String>) -> Void
+    private let content: Content
+
+    /// Creates an accordion that owns its expansion state.
     public init(
         type: SCAccordionType = .single,
+        defaultExpanded: Set<String> = [],
+        isDisabled: Bool = false,
+        onExpandedChange: @escaping (Set<String>) -> Void = { _ in },
         @ViewBuilder content: () -> Content
     ) {
+        _internalExpanded = State(initialValue: defaultExpanded)
+        controlledExpanded = nil
         self.type = type
+        self.isDisabled = isDisabled
+        self.onExpandedChange = onExpandedChange
+        self.content = content()
+    }
+
+    /// Creates an accordion whose expansion state is owned by the caller.
+    /// In single mode, the binding should contain at most one item identifier.
+    public init(
+        type: SCAccordionType = .single,
+        expanded: Binding<Set<String>>,
+        isDisabled: Bool = false,
+        onExpandedChange: @escaping (Set<String>) -> Void = { _ in },
+        @ViewBuilder content: () -> Content
+    ) {
+        _internalExpanded = State(initialValue: expanded.wrappedValue)
+        controlledExpanded = expanded
+        self.type = type
+        self.isDisabled = isDisabled
+        self.onExpandedChange = onExpandedChange
         self.content = content()
     }
 
@@ -70,144 +116,238 @@ public struct SCAccordion<Content: View>: View {
         VStack(alignment: .leading, spacing: 0) {
             content
         }
-        .environment(\.scAccordionState, SCAccordionState(expanded: expanded, toggle: toggle))
+        .environment(
+            \.scAccordionState,
+            SCAccordionState(
+                expanded: expanded,
+                isDisabled: isDisabled,
+                toggle: toggle
+            )
+        )
+    }
+
+    private var expanded: Set<String> {
+        controlledExpanded?.wrappedValue ?? internalExpanded
     }
 
     private func toggle(_ id: String) {
-        withAnimation(.snappy(duration: 0.25)) {
-            switch type {
-            case .single(let collapsible):
-                if expanded.contains(id) {
-                    if collapsible { expanded.remove(id) }
-                } else {
-                    expanded = [id]
-                }
-            case .multiple:
-                if expanded.contains(id) {
-                    expanded.remove(id)
-                } else {
-                    expanded.insert(id)
-                }
+        guard !isDisabled else { return }
+
+        var next = expanded
+        switch type {
+        case .single(let collapsible):
+            if next.contains(id) {
+                if collapsible { next.removeAll() }
+            } else {
+                next = [id]
             }
+        case .multiple:
+            if next.contains(id) {
+                next.remove(id)
+            } else {
+                next.insert(id)
+            }
+        }
+
+        let update = {
+            if let controlledExpanded {
+                controlledExpanded.wrappedValue = next
+            } else {
+                internalExpanded = next
+            }
+            onExpandedChange(next)
+        }
+
+        if reduceMotion {
+            update()
+        } else {
+            withAnimation(.snappy(duration: 0.25), update)
         }
     }
 }
 
 // MARK: - Item
 
-/// One heading plus its collapsible content inside an `SCAccordion`.
+/// One identified item inside an `SCAccordion`.
 ///
-/// The item's identity defaults to its title; pass `id:` explicitly when two
-/// items share a title. Content inherits `.subheadline` and the theme's
-/// muted foreground as overridable defaults.
+/// The content normally contains one `SCAccordionTrigger` followed by one
+/// `SCAccordionContent`. Set `isDisabled` to disable that item's trigger.
 public struct SCAccordionItem<ItemContent: View>: View {
     @Environment(\.theme) private var theme
-    @Environment(\.scAccordionState) private var accordion
 
-    var title: String
-    var id: String
-    @ViewBuilder var content: ItemContent
+    private let id: String
+    private let isDisabled: Bool
+    private let showsSeparator: Bool
+    private let content: ItemContent
 
-    /// - Parameters:
-    ///   - title: The always-visible heading.
-    ///   - id: Stable identity within the accordion; defaults to `title`.
-    ///   - content: Revealed while the item is expanded.
     public init(
-        _ title: String,
-        id: String? = nil,
+        id: String,
+        isDisabled: Bool = false,
+        showsSeparator: Bool = true,
         @ViewBuilder content: () -> ItemContent
     ) {
-        self.title = title
-        self.id = id ?? title
+        self.id = id
+        self.isDisabled = isDisabled
+        self.showsSeparator = showsSeparator
         self.content = content()
     }
 
-    private var isExpanded: Bool { accordion.expanded.contains(id) }
-
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Button {
-                accordion.toggle(id)
-            } label: {
-                HStack(spacing: 8) {
-                    Text(title)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(theme.foreground)
-                        .multilineTextAlignment(.leading)
-                    Spacer(minLength: 8)
-                    Image(systemName: "chevron.down")
-                        .font(.caption)
-                        .foregroundStyle(theme.mutedForeground)
-                        .rotationEffect(.degrees(isExpanded ? 180 : 0))
-                        .accessibilityHidden(true)
-                }
-                .padding(.vertical, 14)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityValue(Text(isExpanded ? "Expanded" : "Collapsed"))
+            content
+        }
+        .environment(
+            \.scAccordionItemState,
+            SCAccordionItemState(id: id, isDisabled: isDisabled)
+        )
 
-            VStack(alignment: .leading, spacing: 0) {
-                if isExpanded {
-                    content
-                        .font(.subheadline)
-                        .foregroundStyle(theme.mutedForeground)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 14)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                }
-            }
-            .clipped()
-
+        if showsSeparator {
             Rectangle()
                 .fill(theme.border)
                 .frame(height: 1)
+                .accessibilityHidden(true)
         }
     }
 }
 
-public extension SCAccordionItem where ItemContent == Text {
-    /// Convenience for plain-text content.
-    ///
-    ///     SCAccordionItem("Is it styled?", content: "Yes — theme tokens only.")
-    init(_ title: String, id: String? = nil, content: String) {
-        self.init(title, id: id) { Text(content) }
+// MARK: - Trigger
+
+/// The interactive heading for an `SCAccordionItem`.
+public struct SCAccordionTrigger<Label: View>: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.scAccordionState) private var accordion
+    @Environment(\.scAccordionItemState) private var item
+
+    private let label: Label
+
+    public init(@ViewBuilder label: () -> Label) {
+        self.label = label()
+    }
+
+    public var body: some View {
+        Button {
+            accordion.toggle(item.id)
+        } label: {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                label
+                    .multilineTextAlignment(.leading)
+                Spacer(minLength: 8)
+                Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(theme.mutedForeground)
+                    .accessibilityHidden(true)
+            }
+            .font(.subheadline.weight(.medium))
+            .foregroundStyle(theme.foreground)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, 14)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(accordion.isDisabled || item.isDisabled)
+        .accessibilityValue(Text(isExpanded ? "Expanded" : "Collapsed"))
+    }
+
+    private var isExpanded: Bool {
+        accordion.expanded.contains(item.id)
+    }
+}
+
+extension SCAccordionTrigger where Label == Text {
+    public init(_ title: String) {
+        self.init { Text(title) }
+    }
+}
+
+// MARK: - Content
+
+/// The collapsible content panel for an `SCAccordionItem`.
+public struct SCAccordionContent<Content: View>: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.scAccordionState) private var accordion
+    @Environment(\.scAccordionItemState) private var item
+
+    private let content: Content
+
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    public var body: some View {
+        if accordion.expanded.contains(item.id) {
+            content
+                .font(.subheadline)
+                .foregroundStyle(theme.mutedForeground)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 14)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+        }
+    }
+}
+
+// MARK: - Convenience item composition
+
+extension SCAccordionItem where ItemContent == AnyView {
+    /// Convenience composition for a text trigger and arbitrary content.
+    public init<Body: View>(
+        _ title: String,
+        id: String? = nil,
+        isDisabled: Bool = false,
+        showsSeparator: Bool = true,
+        @ViewBuilder content: () -> Body
+    ) {
+        let itemID = id ?? title
+        self.init(
+            id: itemID,
+            isDisabled: isDisabled,
+            showsSeparator: showsSeparator
+        ) {
+            AnyView(
+                Group {
+                    SCAccordionTrigger(title)
+                    SCAccordionContent(content: content)
+                }
+            )
+        }
+    }
+
+    /// Convenience composition for plain-text content.
+    public init(
+        _ title: String,
+        id: String? = nil,
+        content: String,
+        isDisabled: Bool = false,
+        showsSeparator: Bool = true
+    ) {
+        self.init(
+            title,
+            id: id,
+            isDisabled: isDisabled,
+            showsSeparator: showsSeparator
+        ) {
+            Text(content)
+        }
     }
 }
 
 // MARK: - Previews
 
-#Preview("Accordion · single") {
-    SCPreview {
-        SCAccordion {
-            SCAccordionItem(
-                "Is it accessible?",
-                content: "Yes. It uses native buttons, so focus and traits come for free."
-            )
-            SCAccordionItem(
-                "Is it styled?",
-                content: "Yes. It comes with default styles that match the other components' aesthetic."
-            )
-            SCAccordionItem(
-                "Is it animated?",
-                content: "Yes. It's animated by default with a snappy spring."
-            )
-        }
-    }
-}
+#Preview("Accordion · composed and controlled") {
+    @Previewable @State var expanded: Set<String> = ["shipping"]
 
-#Preview("Accordion · multiple") {
     SCPreview {
-        SCAccordion(type: .multiple) {
-            SCAccordionItem("Shipping", content: "Free worldwide shipping on all orders.")
-            SCAccordionItem("Returns", content: "Free returns within 30 days of purchase.")
-            SCAccordionItem("Support") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Reach us any time:")
-                    Text("support@example.com")
-                        .fontWeight(.medium)
+        SCAccordion(type: .multiple, expanded: $expanded) {
+            SCAccordionItem(id: "shipping") {
+                SCAccordionTrigger { Text("Shipping") }
+                SCAccordionContent {
+                    Text("Free worldwide shipping on all orders.")
                 }
             }
+            SCAccordionItem(id: "returns", isDisabled: true) {
+                SCAccordionTrigger { Text("Returns") }
+                SCAccordionContent { Text("Free returns within 30 days.") }
+            }
+            SCAccordionItem("Support", content: "Reach us any time.")
         }
     }
 }

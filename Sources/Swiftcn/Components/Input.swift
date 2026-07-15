@@ -25,6 +25,23 @@ extension Double: InputConvertible {}
 
 // MARK: - Component
 
+public enum SCInputSize: CaseIterable, Sendable {
+    case `default`, sm
+}
+
+/// The semantic intent of a text-based input. Date, time, and file values use
+/// `SCDateInput`, `SCTimeInput`, and `SCFileInput` so their bindings stay typed.
+public enum SCInputKind: Hashable, Sendable {
+    case automatic
+    case text
+    case email
+    case password
+    case telephone
+    case url
+    case search
+    case number
+}
+
 /// A themed single-line text field — shadcn's Input on a native `TextField`.
 ///
 /// Anatomy: optional leading SF Symbol icon, the text field, and an optional
@@ -40,14 +57,17 @@ extension Double: InputConvertible {}
 ///     }
 public struct SCInput<Value: InputConvertible, Trailing: View>: View {
     @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.scFieldInvalid) private var isInvalid
+    @Environment(\.scFieldInvalid) private var fieldIsInvalid
+    @Environment(\.scInputGroupControl) private var inputGroupControl
     @FocusState private var isFocused: Bool
 
     @Binding private var value: Value
     private let placeholder: String
     private let icon: String?
-    private let isSecure: Bool
+    private let kind: SCInputKind
+    private let size: SCInputSize
+    private let explicitIsInvalid: SCFieldInvalidState
+    private let onSubmit: (() -> Void)?
     private let trailing: Trailing
 
     /// Text mirror of `value` so partial entries ("1." while typing 1.5)
@@ -63,12 +83,19 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
         value: Binding<Value>,
         icon: String? = nil,
         secure: Bool = false,
+        kind: SCInputKind = .automatic,
+        size: SCInputSize = .default,
+        isInvalid: SCFieldInvalidState = .inherited,
+        onSubmit: (() -> Void)? = nil,
         @ViewBuilder trailing: () -> Trailing
     ) {
         self.placeholder = placeholder
         self._value = value
         self.icon = icon
-        self.isSecure = secure
+        self.kind = secure ? .password : kind
+        self.size = size
+        self.explicitIsInvalid = isInvalid
+        self.onSubmit = onSubmit
         self.trailing = trailing()
         self._text = State(initialValue: value.wrappedValue.description)
     }
@@ -83,7 +110,7 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
 
             field
 
-            if isSecure {
+            if resolvedKind == .password {
                 Button {
                     isRevealed.toggle()
                 } label: {
@@ -98,13 +125,15 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
             trailing
                 .foregroundStyle(theme.mutedForeground)
         }
-        .padding(.horizontal, 12)
-        .frame(height: 40)
-        .background(theme.background, in: shape)
-        .overlay(shape.strokeBorder(strokeColor, lineWidth: isFocused ? 1.5 : 1))
-        .contentShape(shape)
+        .modifier(
+            SCInputChrome(
+                size: size,
+                isFocused: isFocused,
+                isInvalid: resolvedIsInvalid,
+                suppressesChrome: inputGroupControl.isGrouped
+            )
+        )
         .onTapGesture { isFocused = true }
-        .opacity(isEnabled ? 1 : 0.5)
         .animation(.easeOut(duration: 0.15), value: isFocused)
         .onChange(of: text) { _, newText in
             if let parsed = Value(newText) {
@@ -117,34 +146,145 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
                 text = newDescription
             }
         }
+        .onSubmit { onSubmit?() }
+        .onChange(of: isFocused) { _, focused in
+            inputGroupControl.reportFocus(focused)
+        }
+        .onChange(of: inputGroupControl.focusRequestID) { _, _ in
+            guard inputGroupControl.isGrouped else { return }
+            isFocused = true
+        }
+        .preference(
+            key: SCInputGroupInvalidPreferenceKey.self,
+            value: inputGroupControl.isGrouped && resolvedIsInvalid
+        )
+        .onDisappear {
+            if isFocused {
+                inputGroupControl.reportFocus(false)
+            }
+        }
     }
 
     private var field: some View {
         Group {
-            if isSecure && !isRevealed {
+            if resolvedKind == .password && !isRevealed {
                 SecureField(placeholder, text: $text, prompt: prompt)
                     #if os(iOS)
-                    .textContentType(.password)
+                        .textContentType(.password)
                     #endif
             } else {
                 TextField(placeholder, text: $text, prompt: prompt)
                     #if os(iOS)
-                    .keyboardType(keyboardType)
+                        .keyboardType(keyboardType)
                     #endif
             }
         }
         .textFieldStyle(.plain)
-        .font(.subheadline)
+        .font(.system(size: 14))
         .foregroundStyle(theme.foreground)
         .focused($isFocused)
+        .modifier(SCInputTextIntentModifier(kind: resolvedKind))
+        #if os(iOS)
+            .textContentType(textContentType)
+        #endif
     }
 
     private var prompt: Text {
         Text(placeholder).foregroundStyle(theme.mutedForeground)
     }
 
+    private var resolvedKind: SCInputKind {
+        guard kind == .automatic else { return kind }
+        if Value.self == Int.self || Value.self == Double.self {
+            return .number
+        }
+        return .text
+    }
+
+    private var resolvedIsInvalid: Bool {
+        explicitIsInvalid.resolve(inherited: fieldIsInvalid)
+    }
+
+    #if os(iOS)
+        private var textContentType: UITextContentType? {
+            switch resolvedKind {
+            case .email: .emailAddress
+            case .password: .password
+            case .telephone: .telephoneNumber
+            case .url: .URL
+            default: nil
+            }
+        }
+
+        private var keyboardType: UIKeyboardType {
+            switch resolvedKind {
+            case .email: .emailAddress
+            case .telephone: .phonePad
+            case .url: .URL
+            case .search: .webSearch
+            case .number:
+                Value.self == Int.self ? .numberPad : .decimalPad
+            default: .default
+            }
+        }
+    #endif
+}
+
+private struct SCInputTextIntentModifier: ViewModifier {
+    let kind: SCInputKind
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        #if os(iOS)
+            switch kind {
+            case .email, .password, .telephone, .url:
+                content
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+            case .search:
+                content.submitLabel(.search)
+            default:
+                content
+            }
+        #else
+            content
+        #endif
+    }
+}
+
+// MARK: - Shared chrome
+
+struct SCInputChrome: ViewModifier {
+    @Environment(\.theme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.scGroupedControlOrientation) private var groupOrientation
+
+    let size: SCInputSize
+    let isFocused: Bool
+    let isInvalid: Bool
+    var suppressesChrome = false
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if suppressesChrome {
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            content
+                .padding(.horizontal, 12)
+                .frame(height: size == .sm ? 32 : 40)
+                .background(theme.background, in: shape)
+                .overlay(shape.strokeBorder(strokeColor, lineWidth: isFocused ? 1.5 : 1))
+                .contentShape(shape)
+                .opacity(isEnabled ? 1 : 0.5)
+        }
+    }
+
     private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+        RoundedRectangle(
+            cornerRadius: groupOrientation == nil ? theme.radius : 0,
+            style: .continuous
+        )
     }
 
     private var strokeColor: Color {
@@ -156,85 +296,85 @@ public struct SCInput<Value: InputConvertible, Trailing: View>: View {
             theme.input
         }
     }
-
-    #if os(iOS)
-    private var keyboardType: UIKeyboardType {
-        if Value.self == Int.self { return .numberPad }
-        if Value.self == Double.self { return .decimalPad }
-        return .default
-    }
-    #endif
 }
 
 // MARK: - Convenience initializers
 
-public extension SCInput where Trailing == EmptyView {
+extension SCInput where Trailing == EmptyView {
     /// Creates an input bound to any `InputConvertible` value.
-    init(_ placeholder: String, value: Binding<Value>, icon: String? = nil) {
-        self.init(placeholder, value: value, icon: icon) { EmptyView() }
+    public init(
+        _ placeholder: String,
+        value: Binding<Value>,
+        icon: String? = nil,
+        kind: SCInputKind = .automatic,
+        size: SCInputSize = .default,
+        isInvalid: SCFieldInvalidState = .inherited,
+        onSubmit: (() -> Void)? = nil
+    ) {
+        self.init(
+            placeholder,
+            value: value,
+            icon: icon,
+            kind: kind,
+            size: size,
+            isInvalid: isInvalid,
+            onSubmit: onSubmit
+        ) { EmptyView() }
     }
 }
 
-public extension SCInput where Value == String, Trailing == EmptyView {
+extension SCInput where Value == String, Trailing == EmptyView {
     /// Creates a plain text input — the primary form. Pass `secure: true` for
     /// a password field with a built-in reveal toggle.
     ///
     ///     SCInput("Email", text: $email, icon: "envelope")
     ///     SCInput("Password", text: $password, secure: true)
-    init(_ placeholder: String, text: Binding<String>, icon: String? = nil, secure: Bool = false) {
-        self.init(placeholder, value: text, icon: icon, secure: secure) { EmptyView() }
-    }
-}
-
-public extension SCInput where Value == String {
-    /// Creates a plain text input with a trailing accessory slot.
-    init(
+    public init(
         _ placeholder: String,
         text: Binding<String>,
         icon: String? = nil,
+        secure: Bool = false,
+        kind: SCInputKind = .automatic,
+        size: SCInputSize = .default,
+        isInvalid: SCFieldInvalidState = .inherited,
+        onSubmit: (() -> Void)? = nil
+    ) {
+        self.init(
+            placeholder,
+            value: text,
+            icon: icon,
+            secure: secure,
+            kind: kind,
+            size: size,
+            isInvalid: isInvalid,
+            onSubmit: onSubmit
+        ) { EmptyView() }
+    }
+}
+
+extension SCInput where Value == String {
+    /// Creates a plain text input with a trailing accessory slot.
+    public init(
+        _ placeholder: String,
+        text: Binding<String>,
+        icon: String? = nil,
+        secure: Bool = false,
+        kind: SCInputKind = .automatic,
+        size: SCInputSize = .default,
+        isInvalid: SCFieldInvalidState = .inherited,
+        onSubmit: (() -> Void)? = nil,
         @ViewBuilder trailing: () -> Trailing
     ) {
-        self.init(placeholder, value: text, icon: icon, trailing: trailing)
-    }
-}
-
-// MARK: - Previews
-
-#Preview("Input") {
-    @Previewable @State var email = ""
-    @Previewable @State var password = ""
-    SCPreview {
-        VStack(spacing: 12) {
-            SCInput("Email", text: $email, icon: "envelope")
-            SCInput("Email", text: $email)
-            SCInput("Password", text: $password, secure: true)
-            SCInput("Disabled", text: $email).disabled(true)
-        }
-    }
-}
-
-#Preview("Input · numeric") {
-    @Previewable @State var age = 0
-    @Previewable @State var price = 0.0
-    SCPreview {
-        VStack(spacing: 12) {
-            SCInput("Age", value: $age)
-            SCInput("Price", value: $price, icon: "dollarsign")
-        }
-    }
-}
-
-#Preview("Input · trailing slot") {
-    @Previewable @State var query = "swiftcn"
-    SCPreview {
-        SCInput("Search", text: $query, icon: "magnifyingglass") {
-            Button {
-                query = ""
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Clear search")
-        }
+        self.init(
+            placeholder,
+            value: text,
+            icon: icon,
+            secure: secure,
+            kind: kind,
+            size: size,
+            isInvalid: isInvalid,
+            onSubmit: onSubmit,
+            trailing: trailing
+        )
     }
 }

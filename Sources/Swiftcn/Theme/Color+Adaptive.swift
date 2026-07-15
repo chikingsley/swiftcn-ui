@@ -1,26 +1,33 @@
 import SwiftUI
+
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 #elseif canImport(AppKit)
-import AppKit
+    import AppKit
 #endif
 
-public extension Color {
-    /// A single color that resolves per color scheme — swiftcn's replacement for
-    /// shadcn's `:root` / `.dark` variable blocks. Components never branch on
-    /// `colorScheme`; the token itself adapts.
-    init(light: Color, dark: Color) {
+extension Color {
+    /// Creates one native color that resolves to different light and dark
+    /// values without colliding with similarly named dependency extensions.
+    ///
+    /// This is swiftcn's replacement for selecting between shadcn's `:root`
+    /// and `.dark` variable values. Components never branch on `colorScheme`;
+    /// the semantic color stored in `Theme` resolves through the platform's
+    /// native appearance system.
+    public static func adaptive(light: Color, dark: Color) -> Color {
         #if canImport(UIKit)
-        self.init(uiColor: UIColor { trait in
-            trait.userInterfaceStyle == .dark ? UIColor(dark) : UIColor(light)
-        })
+            Color(
+                uiColor: UIColor { trait in
+                    trait.userInterfaceStyle == .dark ? UIColor(dark) : UIColor(light)
+                })
         #elseif canImport(AppKit)
-        self.init(nsColor: NSColor(name: nil) { appearance in
-            let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-            return isDark ? NSColor(dark) : NSColor(light)
-        })
+            Color(
+                nsColor: NSColor(name: nil) { appearance in
+                    let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+                    return isDark ? NSColor(dark) : NSColor(light)
+                })
         #else
-        self = light
+            light
         #endif
     }
 }

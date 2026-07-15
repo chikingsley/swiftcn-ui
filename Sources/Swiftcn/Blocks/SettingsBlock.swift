@@ -11,18 +11,60 @@ import SwiftUI
 
 /// A complete settings screen — the grouped-cards layout every iOS app
 /// ships: a profile card, a preferences card (switches + theme select),
-/// and a danger zone. All control state lives inside the block, so it
-/// drops into a preview or Showcase page with zero wiring.
+/// and a danger zone. Every preference is controlled or internal: pass
+/// a binding to own it, or omit it and the block keeps its own state so
+/// it drops into a preview or Showcase page with zero wiring. Profile
+/// identity is demo data, matching the shadcn block model of blocks as
+/// copy-and-edit starting points.
 ///
-///     SCSettingsBlock()
+///     SCSettingsBlock(
+///         pushNotifications: $push,
+///         onDeleteAccount: { confirmDeletion() }
+///     )
 public struct SCSettingsBlock: View {
     @Environment(\.theme) private var theme
 
-    @State private var pushNotifications = true
-    @State private var emailDigest = false
-    @State private var appearance: String? = "System"
+    @State private var internalPushNotifications: Bool
+    @State private var internalEmailDigest: Bool
+    @State private var internalAppearance: String?
 
-    public init() {}
+    private let externalPushNotifications: Binding<Bool>?
+    private let externalEmailDigest: Binding<Bool>?
+    private let externalAppearance: Binding<String?>?
+    private let onEditProfile: (() -> Void)?
+    private let onDeleteAccount: (() -> Void)?
+
+    public init(
+        pushNotifications: Binding<Bool>? = nil,
+        defaultPushNotifications: Bool = true,
+        emailDigest: Binding<Bool>? = nil,
+        defaultEmailDigest: Bool = false,
+        appearance: Binding<String?>? = nil,
+        defaultAppearance: String? = "System",
+        onEditProfile: (() -> Void)? = nil,
+        onDeleteAccount: (() -> Void)? = nil
+    ) {
+        self.externalPushNotifications = pushNotifications
+        self._internalPushNotifications = State(initialValue: defaultPushNotifications)
+        self.externalEmailDigest = emailDigest
+        self._internalEmailDigest = State(initialValue: defaultEmailDigest)
+        self.externalAppearance = appearance
+        self._internalAppearance = State(initialValue: defaultAppearance)
+        self.onEditProfile = onEditProfile
+        self.onDeleteAccount = onDeleteAccount
+    }
+
+    private var pushNotifications: Binding<Bool> {
+        externalPushNotifications ?? $internalPushNotifications
+    }
+
+    private var emailDigest: Binding<Bool> {
+        externalEmailDigest ?? $internalEmailDigest
+    }
+
+    private var appearance: Binding<String?> {
+        externalAppearance ?? $internalAppearance
+    }
 
     public var body: some View {
         ScrollView {
@@ -59,8 +101,10 @@ public struct SCSettingsBlock: View {
                 SCItem("Sofia Davis", description: "sofia@example.com") {
                     SCAvatar(url: nil, fallback: "SD")
                 } trailing: {
-                    Button("Edit") {}
-                        .buttonStyle(.sc(.outline, size: .sm))
+                    if let onEditProfile {
+                        Button("Edit", action: onEditProfile)
+                            .buttonStyle(.sc(.outline, size: .sm))
+                    }
                 }
             }
         }
@@ -76,7 +120,7 @@ public struct SCSettingsBlock: View {
             }
             SCCardContent {
                 VStack(spacing: 12) {
-                    Toggle(isOn: $pushNotifications) {
+                    Toggle(isOn: pushNotifications) {
                         toggleLabel(
                             "Push notifications",
                             caption: "Get alerts on this device."
@@ -86,7 +130,7 @@ public struct SCSettingsBlock: View {
 
                     SCSeparator()
 
-                    Toggle(isOn: $emailDigest) {
+                    Toggle(isOn: emailDigest) {
                         toggleLabel(
                             "Email digest",
                             caption: "A weekly summary in your inbox."
@@ -98,7 +142,7 @@ public struct SCSettingsBlock: View {
 
                     SCField("Theme", description: "System follows your device appearance.") {
                         SCSelect(
-                            selection: $appearance,
+                            selection: appearance,
                             placeholder: "Select a theme",
                             options: ["System", "Light", "Dark"]
                         )
@@ -133,8 +177,10 @@ public struct SCSettingsBlock: View {
                         description: "Deleting your account permanently removes your profile and all associated data.",
                         variant: .destructive
                     )
-                    Button("Delete account") {}
-                        .buttonStyle(.sc(.destructive))
+                    if let onDeleteAccount {
+                        Button("Delete account", action: onDeleteAccount)
+                            .buttonStyle(.sc(.destructive))
+                    }
                 }
             }
         }
@@ -144,8 +190,35 @@ public struct SCSettingsBlock: View {
 // MARK: - Previews
 
 #Preview("Settings") {
+    @Previewable @State var lastAction = "Choose an account action."
+
     SCPreview {
-        SCSettingsBlock()
+        VStack(spacing: 8) {
+            SCSettingsBlock(
+                onEditProfile: { lastAction = "Edit profile" },
+                onDeleteAccount: { lastAction = "Delete account" }
+            )
+            Text(lastAction).scMuted()
+        }
+    }
+    .frame(height: 700)
+}
+
+#Preview("Settings · controlled preferences") {
+    @Previewable @State var push = false
+    @Previewable @State var digest = true
+    @Previewable @State var appearance: String? = "Dark"
+
+    SCPreview {
+        VStack(spacing: 8) {
+            SCSettingsBlock(
+                pushNotifications: $push,
+                emailDigest: $digest,
+                appearance: $appearance
+            )
+            Text("push \(push ? "on" : "off") · digest \(digest ? "on" : "off") · \(appearance ?? "unset")")
+                .scMuted()
+        }
     }
     .frame(height: 700)
 }

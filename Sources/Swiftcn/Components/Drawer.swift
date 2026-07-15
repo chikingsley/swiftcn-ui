@@ -1,241 +1,335 @@
 // ============================================================
 // Drawer.swift — swiftcn-ui
-// Depends on: Theme/
+// Depends on: Theme/ · Button.swift
 // ============================================================
 import SwiftUI
 
-// MARK: - Environment
+// MARK: - Configuration
 
-private struct SCDismissDrawerKey: EnvironmentKey {
-    static let defaultValue: () -> Void = {}
-}
+/// The physical edge and dismissal direction of a drawer.
+public enum SCDrawerSwipeDirection: String, CaseIterable, Equatable, Hashable, Sendable {
+    case up
+    case right
+    case down
+    case left
 
-public extension EnvironmentValues {
-    /// Dismisses the nearest enclosing drawer presented with
-    /// `scDrawer(isPresented:content:)`. A no-op outside of a drawer.
-    ///
-    ///     @Environment(\.scDismissDrawer) private var dismissDrawer
-    ///     Button("Cancel") { dismissDrawer() }
-    var scDismissDrawer: () -> Void {
-        get { self[SCDismissDrawerKey.self] }
-        set { self[SCDismissDrawerKey.self] = newValue }
+    var isVertical: Bool {
+        self == .up || self == .down
     }
 }
 
-// MARK: - Modifier
+/// How an open drawer interacts with the content behind it.
+public enum SCDrawerModalBehavior: CaseIterable, Equatable, Hashable, Sendable {
+    /// Shows a backdrop and makes the underlying content inert.
+    case modal
+    /// Leaves underlying pointer and accessibility interaction available.
+    case nonModal
+    /// Omits the backdrop but keeps accessibility focus in the drawer.
+    case trapFocus
+}
 
-public extension View {
-    /// Presents a vaul-style bottom drawer over this view — shadcn's Drawer.
-    ///
-    /// The drawer is a pure SwiftUI overlay (no `.sheet`): a scrim plus a
-    /// bottom panel that slides in from the bottom edge. Drag the panel down
-    /// past 120pt to dismiss; shorter drags spring back. Tapping the scrim
-    /// also dismisses. Apply it to a view that fills the screen so the scrim
-    /// covers everything.
-    ///
-    /// Build the panel with ``SCDrawerContent`` and its subcomponents:
-    ///
-    ///     .scDrawer(isPresented: $showDrawer) {
-    ///         SCDrawerContent {
-    ///             SCDrawerHeader {
-    ///                 SCDrawerTitle("Are you absolutely sure?")
-    ///                 SCDrawerDescription("This action cannot be undone.")
-    ///             }
-    ///             SCDrawerFooter {
-    ///                 Button("Confirm") { … }.buttonStyle(.sc())
-    ///             }
-    ///         }
-    ///     }
-    ///
-    /// Views inside the drawer can dismiss it via `\.scDismissDrawer`.
-    func scDrawer<DrawerContent: View>(
+/// A vertical drawer height, expressed as a viewport fraction or native points.
+public enum SCDrawerSnapPoint: Equatable, Hashable, Sendable {
+    case fraction(CGFloat)
+    case points(CGFloat)
+
+    public static let full: Self = .fraction(1)
+
+    internal func resolved(in viewport: CGFloat, maximum: CGFloat) -> CGFloat {
+        let value: CGFloat
+        switch self {
+        case .fraction(let fraction):
+            value = viewport * min(max(fraction, 0), 1)
+        case .points(let points):
+            value = max(points, 0)
+        }
+        return min(max(value, 80), maximum)
+    }
+}
+
+// MARK: - Presentation environment
+
+struct SCDrawerPresentation {
+    var isPresented: Binding<Bool> = .constant(false)
+    var swipeDirection: SCDrawerSwipeDirection = .down
+    var modalBehavior: SCDrawerModalBehavior = .modal
+    var showSwipeHandle = false
+    var disablePointerDismissal = false
+
+    func present() {
+        isPresented.wrappedValue = true
+    }
+
+    func dismiss() {
+        isPresented.wrappedValue = false
+    }
+}
+
+private struct SCDrawerPresentationKey: EnvironmentKey {
+    static let defaultValue = SCDrawerPresentation()
+}
+
+extension EnvironmentValues {
+    internal var scDrawerPresentation: SCDrawerPresentation {
+        get { self[SCDrawerPresentationKey.self] }
+        set { self[SCDrawerPresentationKey.self] = newValue }
+    }
+
+    /// Dismisses the nearest enclosing swiftcn drawer.
+    public var scDismissDrawer: () -> Void {
+        scDrawerPresentation.dismiss
+    }
+}
+
+// MARK: - Root
+
+/// A controlled or internally managed drawer composed from a trigger, overlay,
+/// and content. All positions, drag behavior, and snap points use one engine.
+public struct SCDrawer<Trigger: View, DrawerContent: View, Overlay: View>: View {
+    private let externalIsPresented: Binding<Bool>?
+    private let defaultPresented: Bool
+    private let modalBehavior: SCDrawerModalBehavior
+    private let showSwipeHandle: Bool
+    private let snapPoints: [SCDrawerSnapPoint]
+    private let externalSnapPoint: Binding<SCDrawerSnapPoint?>?
+    private let defaultSnapPoint: SCDrawerSnapPoint?
+    private let swipeDirection: SCDrawerSwipeDirection
+    private let swipeEnabled: Bool
+    private let disablePointerDismissal: Bool
+    private let dismissOnEscape: Bool
+    private let panelSize: CGFloat?
+    private let maximumPanelSize: CGFloat?
+    private let onOpenChange: ((Bool) -> Void)?
+    private let onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)?
+    private let trigger: Trigger
+    private let drawerContent: DrawerContent
+    private let overlay: Overlay
+
+    public init(
         isPresented: Binding<Bool>,
+        modalBehavior: SCDrawerModalBehavior = .modal,
+        showSwipeHandle: Bool = false,
+        snapPoints: [SCDrawerSnapPoint] = [],
+        snapPoint: Binding<SCDrawerSnapPoint?>? = nil,
+        defaultSnapPoint: SCDrawerSnapPoint? = nil,
+        swipeDirection: SCDrawerSwipeDirection = .down,
+        swipeEnabled: Bool = true,
+        disablePointerDismissal: Bool = false,
+        dismissOnEscape: Bool = true,
+        panelSize: CGFloat? = nil,
+        maximumPanelSize: CGFloat? = nil,
+        onOpenChange: ((Bool) -> Void)? = nil,
+        onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder overlay: () -> Overlay,
+        @ViewBuilder content: () -> DrawerContent
+    ) {
+        self.externalIsPresented = isPresented
+        self.defaultPresented = isPresented.wrappedValue
+        self.modalBehavior = modalBehavior
+        self.showSwipeHandle = showSwipeHandle
+        self.snapPoints = Self.normalized(snapPoints)
+        self.externalSnapPoint = snapPoint
+        self.defaultSnapPoint = defaultSnapPoint
+        self.swipeDirection = swipeDirection
+        self.swipeEnabled = swipeEnabled
+        self.disablePointerDismissal = disablePointerDismissal
+        self.dismissOnEscape = dismissOnEscape
+        self.panelSize = panelSize.map { max($0, 80) }
+        self.maximumPanelSize = maximumPanelSize.map { max($0, 80) }
+        self.onOpenChange = onOpenChange
+        self.onSnapPointChange = onSnapPointChange
+        self.trigger = trigger()
+        self.overlay = overlay()
+        self.drawerContent = content()
+    }
+
+    public init(
+        defaultPresented: Bool = false,
+        modalBehavior: SCDrawerModalBehavior = .modal,
+        showSwipeHandle: Bool = false,
+        snapPoints: [SCDrawerSnapPoint] = [],
+        defaultSnapPoint: SCDrawerSnapPoint? = nil,
+        swipeDirection: SCDrawerSwipeDirection = .down,
+        swipeEnabled: Bool = true,
+        disablePointerDismissal: Bool = false,
+        dismissOnEscape: Bool = true,
+        panelSize: CGFloat? = nil,
+        maximumPanelSize: CGFloat? = nil,
+        onOpenChange: ((Bool) -> Void)? = nil,
+        onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder overlay: () -> Overlay,
+        @ViewBuilder content: () -> DrawerContent
+    ) {
+        self.externalIsPresented = nil
+        self.defaultPresented = defaultPresented
+        self.modalBehavior = modalBehavior
+        self.showSwipeHandle = showSwipeHandle
+        self.snapPoints = Self.normalized(snapPoints)
+        self.externalSnapPoint = nil
+        self.defaultSnapPoint = defaultSnapPoint
+        self.swipeDirection = swipeDirection
+        self.swipeEnabled = swipeEnabled
+        self.disablePointerDismissal = disablePointerDismissal
+        self.dismissOnEscape = dismissOnEscape
+        self.panelSize = panelSize.map { max($0, 80) }
+        self.maximumPanelSize = maximumPanelSize.map { max($0, 80) }
+        self.onOpenChange = onOpenChange
+        self.onSnapPointChange = onSnapPointChange
+        self.trigger = trigger()
+        self.overlay = overlay()
+        self.drawerContent = content()
+    }
+
+    public var body: some View {
+        SCDrawerStateContainer(
+            externalIsPresented: externalIsPresented,
+            defaultPresented: defaultPresented,
+            modalBehavior: modalBehavior,
+            showSwipeHandle: showSwipeHandle,
+            snapPoints: snapPoints,
+            externalSnapPoint: externalSnapPoint,
+            defaultSnapPoint: defaultSnapPoint,
+            swipeDirection: swipeDirection,
+            swipeEnabled: swipeEnabled,
+            disablePointerDismissal: disablePointerDismissal,
+            dismissOnEscape: dismissOnEscape,
+            panelSize: panelSize,
+            maximumPanelSize: maximumPanelSize,
+            onOpenChange: onOpenChange,
+            onSnapPointChange: onSnapPointChange,
+            presenter: trigger,
+            overlay: overlay,
+            drawer: drawerContent
+        )
+    }
+
+    internal static func normalized(_ points: [SCDrawerSnapPoint]) -> [SCDrawerSnapPoint] {
+        var seen = Set<SCDrawerSnapPoint>()
+        return points.filter { seen.insert($0).inserted }
+    }
+}
+
+extension SCDrawer where Overlay == SCDrawerOverlay {
+    public init(
+        isPresented: Binding<Bool>,
+        modalBehavior: SCDrawerModalBehavior = .modal,
+        showSwipeHandle: Bool = false,
+        snapPoints: [SCDrawerSnapPoint] = [],
+        snapPoint: Binding<SCDrawerSnapPoint?>? = nil,
+        defaultSnapPoint: SCDrawerSnapPoint? = nil,
+        swipeDirection: SCDrawerSwipeDirection = .down,
+        swipeEnabled: Bool = true,
+        disablePointerDismissal: Bool = false,
+        dismissOnEscape: Bool = true,
+        panelSize: CGFloat? = nil,
+        maximumPanelSize: CGFloat? = nil,
+        onOpenChange: ((Bool) -> Void)? = nil,
+        onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder content: () -> DrawerContent
+    ) {
+        self.init(
+            isPresented: isPresented,
+            modalBehavior: modalBehavior,
+            showSwipeHandle: showSwipeHandle,
+            snapPoints: snapPoints,
+            snapPoint: snapPoint,
+            defaultSnapPoint: defaultSnapPoint,
+            swipeDirection: swipeDirection,
+            swipeEnabled: swipeEnabled,
+            disablePointerDismissal: disablePointerDismissal,
+            dismissOnEscape: dismissOnEscape,
+            panelSize: panelSize,
+            maximumPanelSize: maximumPanelSize,
+            onOpenChange: onOpenChange,
+            onSnapPointChange: onSnapPointChange,
+            trigger: trigger,
+            overlay: { SCDrawerOverlay() },
+            content: content
+        )
+    }
+
+    public init(
+        defaultPresented: Bool = false,
+        modalBehavior: SCDrawerModalBehavior = .modal,
+        showSwipeHandle: Bool = false,
+        snapPoints: [SCDrawerSnapPoint] = [],
+        defaultSnapPoint: SCDrawerSnapPoint? = nil,
+        swipeDirection: SCDrawerSwipeDirection = .down,
+        swipeEnabled: Bool = true,
+        disablePointerDismissal: Bool = false,
+        dismissOnEscape: Bool = true,
+        panelSize: CGFloat? = nil,
+        maximumPanelSize: CGFloat? = nil,
+        onOpenChange: ((Bool) -> Void)? = nil,
+        onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder content: () -> DrawerContent
+    ) {
+        self.init(
+            defaultPresented: defaultPresented,
+            modalBehavior: modalBehavior,
+            showSwipeHandle: showSwipeHandle,
+            snapPoints: snapPoints,
+            defaultSnapPoint: defaultSnapPoint,
+            swipeDirection: swipeDirection,
+            swipeEnabled: swipeEnabled,
+            disablePointerDismissal: disablePointerDismissal,
+            dismissOnEscape: dismissOnEscape,
+            panelSize: panelSize,
+            maximumPanelSize: maximumPanelSize,
+            onOpenChange: onOpenChange,
+            onSnapPointChange: onSnapPointChange,
+            trigger: trigger,
+            overlay: { SCDrawerOverlay() },
+            content: content
+        )
+    }
+}
+
+// MARK: - Modifier convenience
+
+extension View {
+    /// Presents a drawer over this container using the same state and gesture
+    /// engine as `SCDrawer`.
+    public func scDrawer<DrawerContent: View>(
+        isPresented: Binding<Bool>,
+        modalBehavior: SCDrawerModalBehavior = .modal,
+        showSwipeHandle: Bool = false,
+        snapPoints: [SCDrawerSnapPoint] = [],
+        snapPoint: Binding<SCDrawerSnapPoint?>? = nil,
+        defaultSnapPoint: SCDrawerSnapPoint? = nil,
+        swipeDirection: SCDrawerSwipeDirection = .down,
+        swipeEnabled: Bool = true,
+        disablePointerDismissal: Bool = false,
+        dismissOnEscape: Bool = true,
+        panelSize: CGFloat? = nil,
+        maximumPanelSize: CGFloat? = nil,
+        onOpenChange: ((Bool) -> Void)? = nil,
+        onSnapPointChange: ((SCDrawerSnapPoint?) -> Void)? = nil,
         @ViewBuilder content: @escaping () -> DrawerContent
     ) -> some View {
-        modifier(SCDrawerModifier(isPresented: isPresented, drawerContent: content))
-    }
-}
-
-private struct SCDrawerModifier<DrawerContent: View>: ViewModifier {
-    @Binding var isPresented: Bool
-    @ViewBuilder var drawerContent: () -> DrawerContent
-
-    @State private var dragOffset: CGFloat = 0
-
-    func body(content: Content) -> some View {
-        content.overlay {
-            ZStack(alignment: .bottom) {
-                if isPresented {
-                    Color.black.opacity(0.5)
-                        .ignoresSafeArea()
-                        .transition(.opacity)
-                        .onTapGesture { isPresented = false }
-
-                    drawerContent()
-                        .environment(\.scDismissDrawer, { isPresented = false })
-                        .offset(y: dragOffset)
-                        .gesture(drag)
-                        .transition(.move(edge: .bottom))
-                }
-            }
-            .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isPresented)
-            .onChange(of: isPresented) { _, presented in
-                if presented { dragOffset = 0 }
-            }
-        }
-    }
-
-    /// Panel follows the finger downward (upward drags rubber-band at 1/10
-    /// distance); releasing past 120pt dismisses, otherwise springs back.
-    private var drag: some Gesture {
-        DragGesture()
-            .onChanged { value in
-                let translation = value.translation.height
-                dragOffset = translation >= 0 ? translation : translation / 10
-            }
-            .onEnded { value in
-                if value.translation.height > 120 {
-                    isPresented = false
-                } else {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
-                        dragOffset = 0
-                    }
-                }
-            }
-    }
-}
-
-// MARK: - Component
-
-/// The drawer panel: a centered grabber above your content, on the themed
-/// background with rounded top corners. Place it at the root of
-/// `scDrawer(isPresented:content:)`'s content.
-public struct SCDrawerContent<Content: View>: View {
-    @Environment(\.theme) private var theme
-
-    @ViewBuilder var content: Content
-
-    public init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    public var body: some View {
-        VStack(spacing: 0) {
-            Capsule()
-                .fill(theme.muted)
-                .frame(width: 40, height: 5)
-                .padding(.top, 8)
-            content
-        }
-        .frame(maxWidth: .infinity)
-        .background {
-            UnevenRoundedRectangle(
-                topLeadingRadius: theme.radius + 6,
-                topTrailingRadius: theme.radius + 6,
-                style: .continuous
-            )
-            .fill(theme.background)
-            .ignoresSafeArea(.container, edges: .bottom)
-        }
-    }
-}
-
-// MARK: - Subcomponents
-
-/// Groups the drawer's title and description with centered text.
-public struct SCDrawerHeader<Content: View>: View {
-    @ViewBuilder var content: Content
-
-    public init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    public var body: some View {
-        VStack(spacing: 6) { content }
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity)
-            .padding(16)
-    }
-}
-
-/// The drawer's title line.
-public struct SCDrawerTitle: View {
-    @Environment(\.theme) private var theme
-
-    let text: String
-
-    public init(_ text: String) {
-        self.text = text
-    }
-
-    public var body: some View {
-        Text(text)
-            .font(.headline)
-            .foregroundStyle(theme.foreground)
-    }
-}
-
-/// Supporting text under the drawer's title.
-public struct SCDrawerDescription: View {
-    @Environment(\.theme) private var theme
-
-    let text: String
-
-    public init(_ text: String) {
-        self.text = text
-    }
-
-    public var body: some View {
-        Text(text)
-            .font(.subheadline)
-            .foregroundStyle(theme.mutedForeground)
-    }
-}
-
-/// Vertical button stack pinned at the bottom of the drawer.
-public struct SCDrawerFooter<Content: View>: View {
-    @ViewBuilder var content: Content
-
-    public init(@ViewBuilder content: () -> Content) {
-        self.content = content()
-    }
-
-    public var body: some View {
-        VStack(spacing: 8) { content }
-            .frame(maxWidth: .infinity)
-            .padding(16)
-    }
-}
-
-// MARK: - Previews
-
-#Preview("Drawer") {
-    @Previewable @State var isOpen = false
-
-    SCPreview {
-        VStack {
-            Button("Open Drawer") { isOpen = true }
-                .buttonStyle(.sc(.outline))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .frame(height: 500)
-        .scDrawer(isPresented: $isOpen) {
-            SCDrawerContent {
-                SCDrawerHeader {
-                    SCDrawerTitle("Are you absolutely sure?")
-                    SCDrawerDescription("This action cannot be undone. This will permanently remove your data from our servers.")
-                }
-                SCDrawerFooter {
-                    Button { isOpen = false } label: {
-                        Text("Confirm").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.sc())
-                    Button { isOpen = false } label: {
-                        Text("Cancel").frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.sc(.outline))
-                }
-            }
-        }
+        SCDrawerStateContainer(
+            externalIsPresented: isPresented,
+            defaultPresented: isPresented.wrappedValue,
+            modalBehavior: modalBehavior,
+            showSwipeHandle: showSwipeHandle,
+            snapPoints: SCDrawer<EmptyView, EmptyView, EmptyView>.normalized(snapPoints),
+            externalSnapPoint: snapPoint,
+            defaultSnapPoint: defaultSnapPoint,
+            swipeDirection: swipeDirection,
+            swipeEnabled: swipeEnabled,
+            disablePointerDismissal: disablePointerDismissal,
+            dismissOnEscape: dismissOnEscape,
+            panelSize: panelSize.map { max($0, 80) },
+            maximumPanelSize: maximumPanelSize.map { max($0, 80) },
+            onOpenChange: onOpenChange,
+            onSnapPointChange: onSnapPointChange,
+            presenter: self,
+            overlay: SCDrawerOverlay(),
+            drawer: content()
+        )
     }
 }

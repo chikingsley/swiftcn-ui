@@ -1,79 +1,112 @@
 # swiftcn-ui
 
-Beautifully designed SwiftUI components you can copy and paste into your apps. A full port of the [shadcn/ui](https://ui.shadcn.com) system — design tokens, variants, composition, blocks, and a registry — for iOS 17+ and macOS 14+.
+SwiftUI components and composed screens inspired by shadcn/ui, primarily for
+macOS and iPadOS.
 
-**This is not a component library. It is how you build your component library.**
+This working tree is the current source of truth. These uncommitted changes are
+not a published release. All current and unfinished work lives in
+[TODO.md](TODO.md).
 
-|          Dark mode           |          Light mode           |
-| :--------------------------: | :---------------------------: |
-| ![](assets/example-dark.png) | ![](assets/example-light.png) |
-|    ![](assets/X-dark.png)    |    ![](assets/X-light.png)    |
+## What is here
 
-## How it works
+- `Sources/Swiftcn/Components/` — reusable controls and compound primitives.
+- `Sources/Swiftcn/Blocks/` — complete screens composed from components.
+- `Sources/Swiftcn/Effects/` — optional visual effects.
+- `Sources/Swiftcn/Theme/` — design tokens, adaptive colors, palette, and preview framing.
+- `Showcase/` — the macOS-only component gallery.
+- `registry.json`, `schemas/swiftcn.schema.json`, and `cli/` — copy-owned source distribution.
+- `parity/shadcn.json` — official inventory, source coverage, and machine structural maps; it is not code-review approval.
+- `Archive/` — the original v1 iOS playground, retained only as historical reference.
 
-Every component is **one self-contained Swift file** that depends only on the `Theme/` folder — copy the files you need into your project and you own the code. Colors come from a `Theme` token set injected through the SwiftUI environment (the analog of shadcn's CSS variables), so dark mode is automatic and re-theming your whole app is one struct:
+## Consume it
+
+The root package is a reusable library supporting macOS 14+ and iOS/iPadOS 17+:
 
 ```swift
-// At your app root (optional — the default theme works with zero setup):
-ContentView().theme(.default)
-
-// Components style native SwiftUI primitives, shadcn-style:
-Button("Continue") { … }.buttonStyle(.sc())
-Button("Delete") { … }.buttonStyle(.sc(.destructive))
-Toggle("Notifications", isOn: $on).toggleStyle(.scSwitch)
-
-// And compose through slots, not string props:
-SCCard {
-    SCCardHeader {
-        SCCardTitle("Accelerate UI")
-        SCCardDescription("Enter a new development experience")
-    }
-    SCCardContent { SCInput("Email", text: $email, icon: "envelope") }
-    SCCardFooter { Button("Deploy") { … }.buttonStyle(.sc()) }
-}
+.package(path: "/path/to/swiftcn-ui")
 ```
 
-## Getting started
+Then depend on the `Swiftcn` product and import it:
 
-**Copy-paste (the intended way):** grab `Sources/Swiftcn/Theme/` once, then copy any component file from `Sources/Swiftcn/Components/`. Each file's header lists its dependencies; [`registry.json`](registry.json) is the machine-readable index of every item and its dependency graph.
+```swift
+import Swiftcn
+```
 
-**The CLI (the automated way):** the [`swiftcn` CLI](cli/) resolves the registry's dependency graph and copies the files for you — components, blocks, theme and all:
+For shadcn-style source ownership, initialize a project and add only the
+components it uses:
 
 ```console
-$ swift run --package-path cli swiftcn list
-$ swift run --package-path cli swiftcn add button card sidebar --target MyApp/UI
-$ swift run --package-path cli swiftcn add login-block --dry-run
+swift run --package-path /path/to/swiftcn-ui/cli swiftcn init \
+  --cwd /path/to/MyApp --registry /path/to/swiftcn-ui/registry.json
+cd /path/to/MyApp
+swift run --package-path /path/to/swiftcn-ui/cli swiftcn add sidebar tooltip kbd
+swift run --package-path /path/to/swiftcn-ui/cli swiftcn check
 ```
 
-**Swift Package Manager (if you'd rather import):**
+See [cli/README.md](cli/README.md) for the consumer contract. The current work
+has not been published as a versioned package or CLI binary release yet.
+
+## Browse the macOS gallery
+
+The gallery is deliberately a separate macOS-only package so Xcode does not
+prepare an iPhone when you inspect it.
+
+```console
+swift run --package-path Showcase SwiftcnShowcase
+```
+
+In Xcode, open `Showcase/Package.swift`, select `SwiftcnShowcase` and `My Mac`,
+then run it. Open `Showcase/Sources/RootView.swift` for the complete gallery
+Canvas, or a file under `Showcase/Sources/Demos/` for focused named previews.
+
+Opening the root `Package.swift` opens the reusable library. It is not an app
+and therefore has nothing meaningful to run.
+
+## Theme
+
+`Theme.swift` owns semantic tokens, environment injection, and the built-in
+zinc preset. `Palette.swift` owns raw reusable color scales.
+`Color+Adaptive.swift` extends Apple's `SwiftUI.Color` with native light/dark
+resolution; there is intentionally no local base `Color.swift`.
+`SCPreview.swift` is development-only framing and is omitted for consumers with
+`includePreviews: false`.
 
 ```swift
-.package(url: "https://github.com/Mobilecn-UI/swiftcn-ui", branch: "main")
+ContentView().theme(.default)
 ```
 
-**Browse everything:** open `Showcase.swiftpm` in Xcode and run it — a gallery of every component and block, built out of the components it browses. Or open the package root in Xcode and use the `#Preview` canvas in any component file.
+See the [Theme ownership table](docs/architecture.md#theme) for the complete
+source-to-runtime flow and where an app-specific preset belongs.
 
-## Components (49)
+## Format and validate
 
-Accordion · Alert · Alert Dialog · Avatar (+ Group) · Badge · Breadcrumb · Button · Button Group · Calendar · Card · Carousel · Chart · Chat suite (Message · Bubble · Attachment · Marker · Scroller · Typing Indicator · Input Bar) · Checkbox · Collapsible · Combobox · Command (⌘K palette) · Date Picker · Dialog · Drawer · Empty · Field · Hover Card · Input · Input OTP · Item · Kbd · Label · Pagination · Popover · Progress · Radio Group · Resizable Split · Select · Separator · Sheet · Sidebar · Skeleton · Slider · Spinner · Switch · Table · Tabs · Textarea · Toast · Toggle · Toggle Group · Tooltip · Typography
-**Effects:** Aurora · Dot Pattern · Marquee · Number Ticker · Shimmer (+ Shimmer Button)
+Apple's formatter ships with the Swift toolchain. No Mint installation or
+version pin is required:
 
-## Blocks
+```console
+swift format format --configuration .swift-format --recursive --parallel --in-place \
+  Sources Showcase/Sources cli/Sources
 
-Composed screens built from the components — copy one file, get a whole page:
+swift format lint --configuration .swift-format --recursive --parallel --strict \
+  Sources Showcase/Sources cli/Sources
 
-- `SCLoginBlock` — login-01: card login form with social sign-in
-- `SCSettingsBlock` — settings screen (profile, preferences, danger zone)
-- `SCSidebarBlock` — sidebar-07: collapsible icon-rail sidebar app shell
-- `SCDashboardBlock` — dashboard-01: stat cards, chart, recent sales
-- `SCChatBlock` — chat-01: message thread with attachments and composer
+swiftlint lint --strict --config .swiftlint.yml
+```
 
-## Docs
+SwiftLint is optional locally but required by CI. CI installs the current
+Homebrew release rather than a repository-pinned version.
 
-- [Design docs & architecture](docs/README.md) — principles, the token system, variant conventions, previews, roadmap, registry/CLI plan
-- [Contributing](CONTRIBUTING.md) — the component checklist
-- Legacy v1 lives in `Swiftcn Playground.swiftpm` (the original `Custom*` components, unchanged)
+Build and registry validation are explicit:
 
-## License
+```console
+swift build --package-path Showcase --product SwiftcnShowcase
+python3 scripts/generate_registry.py --check
+npx shadcn@latest registry validate ./registry.json
+python3 scripts/check_shadcn_parity.py
+```
 
-Distributed under the [MIT license](LICENSE).
+## Architecture
+
+See [docs/architecture.md](docs/architecture.md) for the stable design rules.
+Distribution details live with the tool in [cli/README.md](cli/README.md). Work
+tracking belongs only in [TODO.md](TODO.md).

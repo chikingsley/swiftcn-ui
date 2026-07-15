@@ -1,33 +1,65 @@
+import Charts
 // ============================================================
 // DashboardBlock.swift — swiftcn-ui
 // Depends on: Theme/, Components/ (Sidebar, Card, Chart, Item,
-//             Avatar, Button, Typography, Separator)
+//             Avatar, Button, Typography)
 //
-// SwiftUI port of shadcn/ui's dashboard-01 block — an analytics
-// dashboard behind a collapsible icon-rail sidebar: stat cards,
+// Swiftcn-native analytics dashboard — an analytics screen behind
+// a collapsible icon-rail sidebar: stat cards,
 // a revenue bar chart, and a recent-sales list:
 //
 //     SCDashboardBlock()
 // ============================================================
 import SwiftUI
-import Charts
 
 // MARK: - Block
 
-/// shadcn/ui's `dashboard-01` block as a ready-made screen: an
+/// A Swiftcn-native analytics block as a ready-made screen: an
 /// `SCSidebarLayout(collapsible: .icon)` with a compact navigation
 /// sidebar and a scrolling detail pane of stat cards (adaptive grid:
 /// four across on regular widths, 2×2 on compact), an "Overview" bar
 /// chart card, and a "Recent Sales" card. All data is hardcoded demo
-/// data, matching the shadcn block.
+/// data, matching the shadcn block model of blocks as copy-and-edit
+/// starting points.
 ///
-///     SCDashboardBlock()
+/// Sidebar navigation is controlled or internal: pass `selection` to
+/// own the selected section, and `onNavigate` fires for every sidebar
+/// choice. The detail header follows the selection.
+///
+///     SCDashboardBlock(onNavigate: { section in route(section) })
 public struct SCDashboardBlock: View {
     @Environment(\.theme) private var theme
 
-    @State private var selection = "Dashboard"
+    @State private var internalSelection: String
 
-    public init() {}
+    private let externalSelection: Binding<String>?
+    private let onNavigate: ((String) -> Void)?
+    private let onDownload: (() -> Void)?
+
+    public init(
+        selection: Binding<String>? = nil,
+        defaultSelection: String = "Dashboard",
+        onNavigate: ((String) -> Void)? = nil,
+        onDownload: (() -> Void)? = nil
+    ) {
+        self.externalSelection = selection
+        self._internalSelection = State(initialValue: defaultSelection)
+        self.onNavigate = onNavigate
+        self.onDownload = onDownload
+    }
+
+    private var selection: String {
+        externalSelection?.wrappedValue ?? internalSelection
+    }
+
+    private func navigate(to label: String) {
+        if let externalSelection {
+            externalSelection.wrappedValue = label
+        } else {
+            internalSelection = label
+        }
+        onNavigate?(label)
+    }
 
     public var body: some View {
         SCSidebarLayout(collapsible: .icon, persistenceKey: nil) {
@@ -51,7 +83,7 @@ public struct SCDashboardBlock: View {
 
     private func row(_ label: String, icon: String) -> some View {
         SCSidebarMenuButton(label, systemImage: icon, isActive: selection == label) {
-            selection = label
+            navigate(to: label)
         }
     }
 
@@ -74,10 +106,12 @@ public struct SCDashboardBlock: View {
     private var headerRow: some View {
         HStack(spacing: 12) {
             SCSidebarTrigger()
-            Text("Dashboard").scH2()
+            Text(selection).scH2()
             Spacer()
-            Button("Download") {}
-                .buttonStyle(.sc(.outline, size: .sm))
+            if let onDownload {
+                Button("Download", action: onDownload)
+                    .buttonStyle(.sc(.outline, size: .sm))
+            }
         }
     }
 
@@ -207,7 +241,7 @@ private struct DashboardBlockIdentity: View {
 
 // MARK: - Data
 
-/// Hardcoded demo data, matching shadcn's dashboard-01 block.
+/// Sample data for Swiftcn's compact analytics block.
 private enum DashboardData {
     struct Stat: Identifiable {
         let id = UUID()
@@ -281,9 +315,29 @@ private enum DashboardData {
 
 // MARK: - Previews
 
-#Preview("DashboardBlock · dashboard-01") {
+#Preview("DashboardBlock · analytics") {
+    @Previewable @State var lastAction = "Use the dashboard actions."
+
     SCPreview {
-        SCDashboardBlock()
+        VStack(spacing: 8) {
+            SCDashboardBlock(
+                onNavigate: { lastAction = "Navigate: \($0)" },
+                onDownload: { lastAction = "Download requested" }
+            )
             .frame(width: 1000, height: 700)
+            Text(lastAction).scMuted()
+        }
+    }
+}
+
+#Preview("DashboardBlock · controlled selection") {
+    @Previewable @State var selection = "Analytics"
+
+    SCPreview {
+        VStack(spacing: 8) {
+            SCDashboardBlock(selection: $selection)
+                .frame(width: 1000, height: 640)
+            Text("Selected: \(selection)").scMuted()
+        }
     }
 }

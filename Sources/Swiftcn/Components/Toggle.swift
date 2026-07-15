@@ -26,8 +26,8 @@ public enum SCToggleSize: CaseIterable, Sendable {
 ///     Toggle("Italic", isOn: $isItalic)
 ///         .toggleStyle(.scToggle(variant: .outline, size: .sm))
 public struct SCToggleStyle: ToggleStyle {
-    @Environment(\.theme) private var theme
     @Environment(\.isEnabled) private var isEnabled
+    @FocusState private var isFocused: Bool
 
     var variant: SCToggleVariant
     var size: SCToggleSize
@@ -43,31 +43,54 @@ public struct SCToggleStyle: ToggleStyle {
         } label: {
             configuration.label
         }
-        .buttonStyle(SCTogglePressStyle(variant: variant, size: size, isOn: configuration.isOn))
+        .buttonStyle(
+            SCToggleButtonStyle(
+                variant: variant,
+                size: size,
+                isOn: configuration.isOn,
+                isFocused: isFocused
+            )
+        )
+        .focused($isFocused)
         .opacity(isEnabled ? 1 : 0.5)
         .animation(.easeOut(duration: 0.12), value: configuration.isOn)
         .accessibilityAddTraits(configuration.isOn ? [.isSelected] : [])
     }
 }
 
-public extension ToggleStyle where Self == SCToggleStyle {
-    static func scToggle(variant: SCToggleVariant = .default, size: SCToggleSize = .default) -> SCToggleStyle {
+extension ToggleStyle where Self == SCToggleStyle {
+    public static func scToggle(variant: SCToggleVariant = .default, size: SCToggleSize = .default) -> SCToggleStyle {
         SCToggleStyle(variant: variant, size: size)
     }
 }
 
 // MARK: - Inner button style
 
-/// Draws the toggle cell and its pressed feedback for the `Button` that
-/// `SCToggleStyle` builds internally.
-private struct SCTogglePressStyle: ButtonStyle {
+/// Shared visual engine for native toggle and toggle-group buttons.
+public struct SCToggleButtonStyle: ButtonStyle {
     @Environment(\.theme) private var theme
 
-    var variant: SCToggleVariant
-    var size: SCToggleSize
-    var isOn: Bool
+    private let variant: SCToggleVariant
+    private let size: SCToggleSize
+    private let isOn: Bool
+    private let isFocused: Bool
+    private let isConnected: Bool
 
-    func makeBody(configuration: Configuration) -> some View {
+    public init(
+        variant: SCToggleVariant = .default,
+        size: SCToggleSize = .default,
+        isOn: Bool,
+        isFocused: Bool = false,
+        isConnected: Bool = false
+    ) {
+        self.variant = variant
+        self.size = size
+        self.isOn = isOn
+        self.isFocused = isFocused
+        self.isConnected = isConnected
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(font)
             .lineLimit(1)
@@ -79,13 +102,23 @@ private struct SCTogglePressStyle: ButtonStyle {
                     shape.strokeBorder(theme.border)
                 }
             }
+            .overlay {
+                if isFocused {
+                    shape
+                        .stroke(theme.ring, lineWidth: 2)
+                        .padding(-2)
+                }
+            }
             .foregroundStyle(isOn ? theme.accentForeground : theme.foreground)
             .contentShape(shape)
             .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
 
     private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+        RoundedRectangle(
+            cornerRadius: isConnected ? 0 : theme.radius,
+            style: .continuous
+        )
     }
 
     private func background(pressed: Bool) -> Color {
@@ -101,23 +134,23 @@ private struct SCTogglePressStyle: ButtonStyle {
     private var font: Font {
         switch size {
         case .sm: .footnote.weight(.medium)
-        default:  .subheadline.weight(.medium)
+        default: .subheadline.weight(.medium)
         }
     }
 
     private var padding: EdgeInsets {
         switch size {
         case .default: EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
-        case .sm:      EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
-        case .lg:      EdgeInsets(top: 10, leading: 32, bottom: 10, trailing: 32)
+        case .sm: EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12)
+        case .lg: EdgeInsets(top: 10, leading: 32, bottom: 10, trailing: 32)
         }
     }
 
     private var height: CGFloat {
         switch size {
         case .default: 40
-        case .sm:      36
-        case .lg:      44
+        case .sm: 36
+        case .lg: 44
         }
     }
 }

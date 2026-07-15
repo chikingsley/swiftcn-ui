@@ -1,162 +1,382 @@
 // ============================================================
 // Select.swift — swiftcn-ui
-// Depends on: Theme/
+// Depends on: Field.swift · Theme/
 // ============================================================
 import SwiftUI
 
-// MARK: - Option
+// MARK: - Root builder
 
-/// One entry in an `SCSelect`: the value it writes to the selection binding
-/// and the label shown for it.
-public struct SCSelectOption<Value: Hashable>: Identifiable {
-    public let value: Value
-    public let label: String
+enum SCSelectRootNode<Value: Hashable> {
+    case trigger(SCSelectTrigger<Value>)
+    case content(SCSelectContent<Value>)
+}
 
-    public var id: Value { value }
+/// The opaque result emitted by `SCSelectBuilder`.
+public struct SCSelectComposition<Value: Hashable> {
+    internal var nodes: [SCSelectRootNode<Value>]
 
-    public init(value: Value, label: String) {
-        self.value = value
-        self.label = label
+    internal init(nodes: [SCSelectRootNode<Value>] = []) {
+        self.nodes = nodes
     }
 }
 
-// MARK: - Component
+/// Builds the documented Root → Trigger/Value + Content composition.
+@resultBuilder
+public enum SCSelectBuilder<Value: Hashable> {
+    public static func buildExpression(
+        _ trigger: SCSelectTrigger<Value>
+    ) -> SCSelectComposition<Value> {
+        SCSelectComposition(nodes: [.trigger(trigger)])
+    }
 
-/// A dropdown for choosing one value from a list, triggered from a control
-/// styled like an input field.
+    public static func buildExpression(
+        _ content: SCSelectContent<Value>
+    ) -> SCSelectComposition<Value> {
+        SCSelectComposition(nodes: [.content(content)])
+    }
+
+    public static func buildBlock(
+        _ components: SCSelectComposition<Value>...
+    ) -> SCSelectComposition<Value> {
+        SCSelectComposition(nodes: components.flatMap(\.nodes))
+    }
+
+    public static func buildOptional(
+        _ component: SCSelectComposition<Value>?
+    ) -> SCSelectComposition<Value> {
+        component ?? SCSelectComposition()
+    }
+
+    public static func buildEither(
+        first component: SCSelectComposition<Value>
+    ) -> SCSelectComposition<Value> {
+        component
+    }
+
+    public static func buildEither(
+        second component: SCSelectComposition<Value>
+    ) -> SCSelectComposition<Value> {
+        component
+    }
+
+    public static func buildArray(
+        _ components: [SCSelectComposition<Value>]
+    ) -> SCSelectComposition<Value> {
+        SCSelectComposition(nodes: components.flatMap(\.nodes))
+    }
+
+    public static func buildLimitedAvailability(
+        _ component: SCSelectComposition<Value>
+    ) -> SCSelectComposition<Value> {
+        component
+    }
+}
+
+// MARK: - Root
+
+enum SCSelectSelectionMode {
+    case single
+    case multiple
+}
+
+/// A typed, composable Select backed by the platform Menu primitive.
 ///
-/// Built on the native `Menu` primitive, so presentation, dismissal,
-/// positioning, and accessibility stay native. Accepted limitation: the open
-/// list itself is system-styled — theme tokens style the trigger, not the
-/// platform menu. The selected option shows a checkmark in the menu.
-///
-///     SCSelect(selection: $fruit,
-///              placeholder: "Select a fruit",
-///              options: ["Apple", "Banana", "Blueberry"])
-///
-///     SCSelect(selection: $timezone, options: [
-///         SCSelectOption(value: TimeZone(identifier: "GMT")!, label: "GMT"),
-///         SCSelectOption(value: TimeZone(identifier: "EST")!, label: "Eastern"),
-///     ])
+/// There is one engine for controlled and internally managed single or
+/// multiple selection. Native Menu supplies the real popup, focus, keyboard,
+/// typeahead, scrolling, pointer/touch behavior, dismissal, and accessibility.
 public struct SCSelect<Value: Hashable>: View {
-    @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.isEnabled) private var environmentIsEnabled
+    @Environment(\.scFieldInvalid) private var fieldIsInvalid
+    @FocusState private var isFocused: Bool
 
-    @Binding private var selection: Value?
-    private let placeholder: String
-    private let options: [SCSelectOption<Value>]
+    @State private var internalSingleSelection: Value?
+    @State private var internalMultipleSelection: Set<Value>
 
-    public init(
-        selection: Binding<Value?>,
-        placeholder: String = "Select…",
-        options: [SCSelectOption<Value>]
+    private let externalSingleSelection: Binding<Value?>?
+    private let externalMultipleSelection: Binding<Set<Value>>?
+    private let mode: SCSelectSelectionMode
+    private let isDisabled: Bool
+    private let isReadOnly: Bool
+    private let isRequired: Bool
+    private let explicitIsInvalid: SCFieldInvalidState
+    private let accessibilityLabel: String
+    private let itemToStringLabel: (Value) -> String
+    private let onValueChange: ((Value?) -> Void)?
+    private let onValuesChange: ((Set<Value>) -> Void)?
+    private let composition: SCSelectComposition<Value>
+
+    init(
+        externalSingleSelection: Binding<Value?>?,
+        initialSingleSelection: Value?,
+        externalMultipleSelection: Binding<Set<Value>>?,
+        initialMultipleSelection: Set<Value>,
+        mode: SCSelectSelectionMode,
+        isDisabled: Bool,
+        isReadOnly: Bool,
+        isRequired: Bool,
+        isInvalid: SCFieldInvalidState,
+        accessibilityLabel: String,
+        itemToStringLabel: @escaping (Value) -> String,
+        onValueChange: ((Value?) -> Void)?,
+        onValuesChange: ((Set<Value>) -> Void)?,
+        composition: SCSelectComposition<Value>
     ) {
-        self._selection = selection
-        self.placeholder = placeholder
-        self.options = options
+        self._internalSingleSelection = State(initialValue: initialSingleSelection)
+        self._internalMultipleSelection = State(initialValue: initialMultipleSelection)
+        self.externalSingleSelection = externalSingleSelection
+        self.externalMultipleSelection = externalMultipleSelection
+        self.mode = mode
+        self.isDisabled = isDisabled
+        self.isReadOnly = isReadOnly
+        self.isRequired = isRequired
+        self.explicitIsInvalid = isInvalid
+        self.accessibilityLabel = accessibilityLabel
+        self.itemToStringLabel = itemToStringLabel
+        self.onValueChange = onValueChange
+        self.onValuesChange = onValuesChange
+        self.composition = composition
     }
 
     public var body: some View {
+        let state = valueState
+        let trigger = resolvedTrigger
+
         Menu {
-            ForEach(options) { option in
-                Button {
-                    selection = option.value
-                } label: {
-                    if option.value == selection {
-                        Label(option.label, systemImage: "checkmark")
-                    } else {
-                        Text(option.label)
-                    }
-                }
-            }
+            SCSelectNodeList(
+                nodes: contentNodes,
+                mode: mode,
+                isReadOnly: isReadOnly,
+                isSelected: isSelected,
+                activate: activate
+            )
         } label: {
-            trigger
+            SCSelectTriggerBody(
+                trigger: trigger,
+                state: state,
+                isFocused: isFocused,
+                isInvalid: trigger.explicitIsInvalid.resolve(inherited: resolvedIsInvalid)
+            )
         }
         .menuStyle(.button)
         .buttonStyle(.plain)
         .menuIndicator(.hidden)
-        .opacity(isEnabled ? 1 : 0.5)
+        .controlSize(trigger.size.controlSize)
+        .focused($isFocused)
+        .disabled(isDisabled)
+        .opacity(isActuallyEnabled ? 1 : 0.5)
+        .accessibilityLabel(trigger.accessibilityLabel ?? accessibilityLabel)
+        .accessibilityValue(state.displayText ?? "No selection")
+        .accessibilityHint(accessibilityHint)
     }
 
-    private var selectedLabel: String? {
-        options.first { $0.value == selection }?.label
+    private var resolvedTrigger: SCSelectTrigger<Value> {
+        composition.nodes.compactMap { node in
+            if case .trigger(let trigger) = node { return trigger }
+            return nil
+        }.last
+            ?? SCSelectTrigger { state in
+                SCSelectValue(state)
+            }
     }
 
-    private var trigger: some View {
-        HStack(spacing: 8) {
-            Text(selectedLabel ?? placeholder)
-                .font(.subheadline)
-                .foregroundStyle(selectedLabel == nil ? theme.mutedForeground : theme.foreground)
-                .lineLimit(1)
-            Spacer(minLength: 8)
-            Image(systemName: "chevron.up.chevron.down")
-                .font(.caption)
-                .foregroundStyle(theme.mutedForeground)
+    private var contentNodes: [SCSelectContentNode<Value>] {
+        composition.nodes.flatMap { node in
+            if case .content(let content) = node { return content.nodes }
+            return []
         }
-        .padding(.horizontal, 12)
-        .frame(height: 40)
-        .frame(maxWidth: .infinity)
-        .background(theme.background, in: shape)
-        .overlay(shape.strokeBorder(theme.input))
-        .contentShape(shape)
     }
 
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+    private var allItems: [SCSelectItem<Value>] {
+        Self.items(in: contentNodes)
+    }
+
+    private static func items(
+        in nodes: [SCSelectContentNode<Value>]
+    ) -> [SCSelectItem<Value>] {
+        return nodes.flatMap { node -> [SCSelectItem<Value>] in
+            switch node {
+            case .item(let item):
+                return [item]
+            case .group(let group):
+                return items(in: group.contentNodes)
+            case .label, .separator:
+                return []
+            }
+        }
+    }
+
+    private var singleSelection: Value? {
+        externalSingleSelection?.wrappedValue ?? internalSingleSelection
+    }
+
+    private var multipleSelection: Set<Value> {
+        externalMultipleSelection?.wrappedValue ?? internalMultipleSelection
+    }
+
+    private var orderedSelectedValues: [Value] {
+        switch mode {
+        case .single:
+            return singleSelection.map { [$0] } ?? []
+        case .multiple:
+            var values: [Value] = []
+            var seen: Set<Value> = []
+            for item in allItems where multipleSelection.contains(item.value) {
+                if seen.insert(item.value).inserted {
+                    values.append(item.value)
+                }
+            }
+            values.append(
+                contentsOf:
+                    multipleSelection
+                    .filter { !seen.contains($0) }
+                    .sorted { itemToStringLabel($0) < itemToStringLabel($1) }
+            )
+            return values
+        }
+    }
+
+    private var valueState: SCSelectValueState<Value> {
+        let values = orderedSelectedValues
+        let displayText: String?
+        switch values.count {
+        case 0:
+            displayText = nil
+        case 1:
+            displayText = label(for: values[0])
+        default:
+            displayText = "\(values.count) selected"
+        }
+        return SCSelectValueState(
+            value: mode == .single ? values.first : nil,
+            values: values,
+            isMultiple: mode == .multiple,
+            displayText: displayText
+        )
+    }
+
+    private func label(for value: Value) -> String {
+        allItems.first { $0.value == value }?.textValue ?? itemToStringLabel(value)
+    }
+
+    private func isSelected(_ value: Value) -> Bool {
+        switch mode {
+        case .single: singleSelection == value
+        case .multiple: multipleSelection.contains(value)
+        }
+    }
+
+    private func activate(_ value: Value) {
+        guard isActuallyEnabled, !isReadOnly else { return }
+        switch mode {
+        case .single:
+            guard singleSelection != value else { return }
+            if let externalSingleSelection {
+                externalSingleSelection.wrappedValue = value
+            } else {
+                internalSingleSelection = value
+            }
+            onValueChange?(value)
+        case .multiple:
+            var updated = multipleSelection
+            if updated.contains(value) {
+                if isRequired, updated.count == 1 { return }
+                updated.remove(value)
+            } else {
+                updated.insert(value)
+            }
+            if let externalMultipleSelection {
+                externalMultipleSelection.wrappedValue = updated
+            } else {
+                internalMultipleSelection = updated
+            }
+            onValuesChange?(updated)
+        }
+    }
+
+    private var resolvedIsInvalid: Bool {
+        explicitIsInvalid.resolve(inherited: fieldIsInvalid)
+    }
+
+    private var isActuallyEnabled: Bool {
+        environmentIsEnabled && !isDisabled
+    }
+
+    private var accessibilityHint: String {
+        if resolvedIsInvalid { return "Invalid selection" }
+        if isReadOnly { return "Read only" }
+        if isRequired { return "Required" }
+        return ""
+    }
+
+    static func convenienceComposition(
+        placeholder: String,
+        options: [SCSelectOption<Value>]
+    ) -> SCSelectComposition<Value> {
+        let trigger = SCSelectTrigger<Value>(expandsHorizontally: true) { state in
+            SCSelectValue(state, placeholder: placeholder)
+        }
+        let items = options.map { option in
+            SCSelectContentNode.item(
+                SCSelectItem(
+                    option.label,
+                    value: option.value,
+                    isDisabled: option.isDisabled
+                )
+            )
+        }
+        return SCSelectComposition(nodes: [
+            .trigger(trigger),
+            .content(SCSelectContent(nodes: items)),
+        ])
     }
 }
 
-public extension SCSelect where Value == String {
-    /// Convenience for plain string choices — each string is both value and
-    /// label.
-    ///
-    ///     SCSelect(selection: $fruit, options: ["Apple", "Banana"])
-    init(
+extension SCSelect where Value == String {
+    public init(
         selection: Binding<String?>,
         placeholder: String = "Select…",
+        isDisabled: Bool = false,
+        isReadOnly: Bool = false,
+        isRequired: Bool = false,
+        isInvalid: SCFieldInvalidState = .inherited,
+        accessibilityLabel: String = "Options",
+        onValueChange: ((String?) -> Void)? = nil,
         options: [String]
     ) {
         self.init(
             selection: selection,
             placeholder: placeholder,
+            isDisabled: isDisabled,
+            isReadOnly: isReadOnly,
+            isRequired: isRequired,
+            isInvalid: isInvalid,
+            accessibilityLabel: accessibilityLabel,
+            onValueChange: onValueChange,
             options: options.map { SCSelectOption(value: $0, label: $0) }
         )
     }
-}
 
-// MARK: - Previews
-
-#Preview("Select") {
-    @Previewable @State var fruit: String? = nil
-    SCPreview {
-        VStack(spacing: 12) {
-            SCSelect(
-                selection: $fruit,
-                placeholder: "Select a fruit",
-                options: ["Apple", "Banana", "Blueberry", "Grapes", "Pineapple"]
-            )
-            Text("Selected: \(fruit ?? "none")")
-                .font(.caption)
-                .foregroundStyle(Theme.default.mutedForeground)
-        }
-    }
-}
-
-#Preview("Select · states") {
-    @Previewable @State var picked: String? = "Dark"
-    SCPreview {
-        VStack(spacing: 12) {
-            SCSelect(
-                selection: $picked,
-                placeholder: "Theme",
-                options: ["Light", "Dark", "System"]
-            )
-            SCSelect(
-                selection: .constant(String?.none),
-                placeholder: "Disabled",
-                options: ["One", "Two"]
-            )
-            .disabled(true)
-        }
+    public init(
+        defaultValue: String? = nil,
+        placeholder: String = "Select…",
+        isDisabled: Bool = false,
+        isReadOnly: Bool = false,
+        isRequired: Bool = false,
+        isInvalid: SCFieldInvalidState = .inherited,
+        accessibilityLabel: String = "Options",
+        onValueChange: ((String?) -> Void)? = nil,
+        options: [String]
+    ) {
+        self.init(
+            defaultValue: defaultValue,
+            placeholder: placeholder,
+            isDisabled: isDisabled,
+            isReadOnly: isReadOnly,
+            isRequired: isRequired,
+            isInvalid: isInvalid,
+            accessibilityLabel: accessibilityLabel,
+            onValueChange: onValueChange,
+            options: options.map { SCSelectOption(value: $0, label: $0) }
+        )
     }
 }

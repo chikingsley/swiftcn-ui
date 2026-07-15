@@ -4,170 +4,223 @@
 // ============================================================
 import SwiftUI
 
-// MARK: - Modifier
+// MARK: - Configuration
 
-public extension View {
-    /// Presents a rich preview card when the pointer hovers the view — the
-    /// swiftcn port of shadcn/ui's HoverCard, for sighted users previewing
-    /// content behind a link.
-    ///
-    /// Pointer platforms (macOS, iPadOS) open after `openDelay` seconds of
-    /// hovering and close `closeDelay` seconds after the pointer leaves;
-    /// moving the pointer onto the card keeps it open. On touch (iPhone) a
-    /// long-press opens the card and tapping outside dismisses it. The card
-    /// is a native popover, so anchoring, the arrow, and dismissal stay
-    /// native; it is themed with `theme.popover` tokens, padded 16pt, and
-    /// sized between 240 and 320pt wide.
-    ///
-    ///     Text("@swiftcn")
-    ///         .scHoverCard {
-    ///             VStack(alignment: .leading) {
-    ///                 Text("@swiftcn").font(.subheadline.weight(.semibold))
-    ///                 Text("shadcn/ui for SwiftUI.")
-    ///             }
-    ///         }
-    func scHoverCard<Content: View>(
-        openDelay: Double = 0.5,
-        closeDelay: Double = 0.3,
-        @ViewBuilder content: @escaping () -> Content
-    ) -> some View {
-        modifier(SCHoverCardModifier(
+public enum SCHoverCardSide: Hashable, Sendable {
+    case top
+    case bottom
+    /// Logical inline-start placement.
+    case leading
+    /// Logical inline-end placement.
+    case trailing
+    /// Physical left placement regardless of layout direction.
+    case left
+    /// Physical right placement regardless of layout direction.
+    case right
+
+    fileprivate func arrowEdge(layoutDirection: LayoutDirection) -> Edge {
+        switch self {
+        case .top: .bottom
+        case .bottom: .top
+        case .leading: .trailing
+        case .trailing: .leading
+        case .left:
+            layoutDirection == .leftToRight ? .trailing : .leading
+        case .right:
+            layoutDirection == .leftToRight ? .leading : .trailing
+        }
+    }
+}
+
+public enum SCHoverCardChangeReason: Hashable, Sendable {
+    case triggerHover
+    case triggerFocus
+    case triggerPress
+    case contentHover
+    case outsidePress
+    case escapeKey
+    case imperativeAction
+}
+
+private struct SCHoverCardPresentation {
+    var dismiss: () -> Void = {}
+}
+
+private struct SCHoverCardPresentationKey: EnvironmentKey {
+    static let defaultValue = SCHoverCardPresentation()
+}
+
+extension EnvironmentValues {
+    /// Dismisses the nearest enclosing hover card.
+    public var scDismissHoverCard: () -> Void {
+        get { self[SCHoverCardPresentationKey.self].dismiss }
+        set { self[SCHoverCardPresentationKey.self] = SCHoverCardPresentation(dismiss: newValue) }
+    }
+}
+
+// MARK: - Root
+
+/// A controlled or internally managed preview card with independently
+/// composable trigger and content.
+///
+/// On macOS the card uses SwiftCN's arrowless overlay portal so scroll views,
+/// cards, and split-view columns cannot clip it. Hover and focus use
+/// caller-configurable delays; touch uses a nonblocking long press as a
+/// platform adaptation.
+public struct SCHoverCard<Trigger: View, CardContent: View>: View {
+    private let externalIsPresented: Binding<Bool>?
+    private let defaultPresented: Bool
+    private let openDelay: Duration
+    private let closeDelay: Duration
+    private let side: SCHoverCardSide
+    private let isHoverEnabled: Bool
+    private let isFocusEnabled: Bool
+    private let isLongPressEnabled: Bool
+    private let longPressDuration: Double
+    private let dismissOnEscape: Bool
+    private let onOpenChange: ((Bool, SCHoverCardChangeReason) -> Void)?
+    private let onOpenChangeComplete: ((Bool) -> Void)?
+    private let trigger: Trigger
+    private let cardContent: CardContent
+
+    public init(
+        isPresented: Binding<Bool>,
+        openDelay: Duration = .milliseconds(600),
+        closeDelay: Duration = .milliseconds(300),
+        side: SCHoverCardSide = .bottom,
+        isHoverEnabled: Bool = true,
+        isFocusEnabled: Bool = true,
+        isLongPressEnabled: Bool = true,
+        longPressDuration: Double = 0.35,
+        dismissOnEscape: Bool = true,
+        onOpenChange: ((Bool, SCHoverCardChangeReason) -> Void)? = nil,
+        onOpenChangeComplete: ((Bool) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder content: () -> CardContent
+    ) {
+        self.externalIsPresented = isPresented
+        self.defaultPresented = isPresented.wrappedValue
+        self.openDelay = openDelay
+        self.closeDelay = closeDelay
+        self.side = side
+        self.isHoverEnabled = isHoverEnabled
+        self.isFocusEnabled = isFocusEnabled
+        self.isLongPressEnabled = isLongPressEnabled
+        self.longPressDuration = max(longPressDuration, 0)
+        self.dismissOnEscape = dismissOnEscape
+        self.onOpenChange = onOpenChange
+        self.onOpenChangeComplete = onOpenChangeComplete
+        self.trigger = trigger()
+        self.cardContent = content()
+    }
+
+    public init(
+        defaultPresented: Bool = false,
+        openDelay: Duration = .milliseconds(600),
+        closeDelay: Duration = .milliseconds(300),
+        side: SCHoverCardSide = .bottom,
+        isHoverEnabled: Bool = true,
+        isFocusEnabled: Bool = true,
+        isLongPressEnabled: Bool = true,
+        longPressDuration: Double = 0.35,
+        dismissOnEscape: Bool = true,
+        onOpenChange: ((Bool, SCHoverCardChangeReason) -> Void)? = nil,
+        onOpenChangeComplete: ((Bool) -> Void)? = nil,
+        @ViewBuilder trigger: () -> Trigger,
+        @ViewBuilder content: () -> CardContent
+    ) {
+        self.externalIsPresented = nil
+        self.defaultPresented = defaultPresented
+        self.openDelay = openDelay
+        self.closeDelay = closeDelay
+        self.side = side
+        self.isHoverEnabled = isHoverEnabled
+        self.isFocusEnabled = isFocusEnabled
+        self.isLongPressEnabled = isLongPressEnabled
+        self.longPressDuration = max(longPressDuration, 0)
+        self.dismissOnEscape = dismissOnEscape
+        self.onOpenChange = onOpenChange
+        self.onOpenChangeComplete = onOpenChangeComplete
+        self.trigger = trigger()
+        self.cardContent = content()
+    }
+
+    public var body: some View {
+        SCHoverCardStateContainer(
+            externalIsPresented: externalIsPresented,
+            defaultPresented: defaultPresented,
             openDelay: openDelay,
             closeDelay: closeDelay,
-            cardContent: content
-        ))
+            side: side,
+            isHoverEnabled: isHoverEnabled,
+            isFocusEnabled: isFocusEnabled,
+            isLongPressEnabled: isLongPressEnabled,
+            longPressDuration: longPressDuration,
+            dismissOnEscape: dismissOnEscape,
+            onOpenChange: onOpenChange,
+            onOpenChangeComplete: onOpenChangeComplete,
+            trigger: trigger,
+            cardContent: cardContent
+        )
     }
 }
 
-// MARK: - Component
+// MARK: - Trigger and content parts
 
-private struct SCHoverCardModifier<CardContent: View>: ViewModifier {
-    @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
+/// The arbitrary link, button, or view used as a hover-card trigger.
+public struct SCHoverCardTrigger<Content: View>: View {
+    private let content: Content
 
-    var openDelay: Double
-    var closeDelay: Double
-    @ViewBuilder var cardContent: () -> CardContent
-
-    @State private var isPresented = false
-    @State private var openTask: Task<Void, Never>?
-    @State private var closeTask: Task<Void, Never>?
-
-    func body(content: Content) -> some View {
-        content
-            .onHover { hovering in
-                guard isEnabled else { return }
-                if hovering {
-                    scheduleOpen()
-                } else {
-                    scheduleClose()
-                }
-            }
-            .scHoverCardTouchActivation {
-                guard isEnabled else { return }
-                openTask?.cancel()
-                closeTask?.cancel()
-                isPresented = true
-            }
-            .popover(isPresented: $isPresented, arrowEdge: .top) {
-                card
-            }
-            .onDisappear {
-                openTask?.cancel()
-                closeTask?.cancel()
-            }
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
     }
 
-    private var card: some View {
-        cardContent()
-            .padding(16)
-            .frame(minWidth: 240, maxWidth: 320, alignment: .leading)
+    public var body: some View { content }
+}
+
+/// Applies the themed hover-card surface to arbitrary preview content.
+public struct SCHoverCardContent<Content: View>: View {
+    @Environment(\.theme) private var theme
+
+    private let padding: CGFloat
+    private let minimumWidth: CGFloat?
+    private let idealWidth: CGFloat?
+    private let maximumWidth: CGFloat?
+    private let content: Content
+
+    public init(
+        padding: CGFloat = 16,
+        minimumWidth: CGFloat? = 240,
+        idealWidth: CGFloat? = 288,
+        maximumWidth: CGFloat? = 320,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.padding = max(padding, 0)
+        self.minimumWidth = minimumWidth.map { max($0, 0) }
+        self.idealWidth = idealWidth.map { max($0, 0) }
+        self.maximumWidth = maximumWidth.map { max($0, 0) }
+        self.content = content()
+    }
+
+    public var body: some View {
+        content
+            .padding(padding)
+            .frame(
+                minWidth: minimumWidth,
+                idealWidth: idealWidth,
+                maxWidth: maximumWidth,
+                alignment: .leading
+            )
             .foregroundStyle(theme.popoverForeground)
+            .background(
+                theme.popover,
+                in: RoundedRectangle(cornerRadius: theme.radius + 2, style: .continuous)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: theme.radius + 2, style: .continuous)
+                    .strokeBorder(theme.border)
+            }
             .presentationBackground(theme.popover)
             .presentationCompactAdaptation(.popover)
-            .onHover { hovering in
-                // Keep the card open while the pointer is over it.
-                if hovering {
-                    closeTask?.cancel()
-                } else {
-                    scheduleClose()
-                }
-            }
     }
-
-    // MARK: Scheduling
-
-    private func scheduleOpen() {
-        closeTask?.cancel()
-        guard !isPresented else { return }
-        openTask?.cancel()
-        openTask = Task {
-            try? await Task.sleep(for: .seconds(openDelay))
-            guard !Task.isCancelled else { return }
-            isPresented = true
-        }
-    }
-
-    private func scheduleClose() {
-        openTask?.cancel()
-        guard isPresented else { return }
-        closeTask?.cancel()
-        closeTask = Task {
-            try? await Task.sleep(for: .seconds(closeDelay))
-            guard !Task.isCancelled else { return }
-            isPresented = false
-        }
-    }
-}
-
-// MARK: - Platform helpers
-
-private extension View {
-    /// Touch activation: long-press opens the hover card on iPhone/iPad.
-    @ViewBuilder
-    func scHoverCardTouchActivation(perform action: @escaping () -> Void) -> some View {
-        #if os(iOS)
-        onLongPressGesture(minimumDuration: 0.35, perform: action)
-        #else
-        self
-        #endif
-    }
-}
-
-// MARK: - Previews
-
-#Preview("HoverCard") {
-    SCPreview {
-        Text("@swiftcn")
-            .font(.subheadline.weight(.medium))
-            .foregroundStyle(Theme.default.primary)
-            .underline()
-            .scHoverCard {
-                HStack(alignment: .top, spacing: 12) {
-                    Circle()
-                        .fill(Theme.default.muted)
-                        .frame(width: 40, height: 40)
-                        .overlay {
-                            Text("SC")
-                                .font(.caption.weight(.medium))
-                                .foregroundStyle(Theme.default.mutedForeground)
-                        }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("@swiftcn")
-                            .font(.subheadline.weight(.semibold))
-                        Text("shadcn/ui for SwiftUI — copy-paste components themed by design tokens.")
-                            .font(.footnote)
-                            .foregroundStyle(Theme.default.mutedForeground)
-                        HStack(spacing: 4) {
-                            Image(systemName: "calendar")
-                            Text("Joined July 2026")
-                        }
-                        .font(.caption)
-                        .foregroundStyle(Theme.default.mutedForeground)
-                        .padding(.top, 2)
-                    }
-                }
-            }
-    }
-    .frame(height: 360)
 }

@@ -1,234 +1,439 @@
 // ============================================================
 // Calendar.swift — swiftcn-ui
-// Depends on: Theme/
+// Depends on: Theme/, Button.swift
 // ============================================================
 import SwiftUI
 
-// MARK: - Component
+// MARK: - Configuration
 
-/// A month-view date grid — shadcn's Calendar (react-day-picker look) rebuilt
-/// on Foundation's `Calendar`, so the week start, weekday symbols, and
-/// numerals all follow the user's locale rather than assuming a Sunday-first
-/// English calendar.
-///
-/// Two selection modes, chosen by initializer:
-///
-///     SCCalendar(selection: $date)                     // single date
-///     SCCalendar(range: $stay)                         // date range
-///     SCCalendar(selection: $date, bounds: today...max)
-///     SCCalendar(selection: $date, disabled: { date in
-///         Calendar.current.isDateInWeekend(date)       // custom disabling
-///     })
-///
-/// Range interaction: the first tap sets the start, the second tap completes
-/// the range (tapping a day before the start restarts from that day), and any
-/// tap on a completed range starts a new one.
-public struct SCCalendar: View {
+public enum SCCalendarCaptionLayout: CaseIterable, Sendable {
+    case label
+    case dropdown
+    case dropdownMonths
+    case dropdownYears
+}
+
+/// Layout and interaction options shared by every calendar selection mode.
+public struct SCCalendarConfiguration: Sendable {
+    public var defaultMonth: Date?
+    public var showOutsideDays: Bool
+    public var fixedWeeks: Bool
+    public var showWeekNumber: Bool
+    public var numberOfMonths: Int
+    public var captionLayout: SCCalendarCaptionLayout
+    public var navigationButtonVariant: SCButtonVariant
+    public var cellSize: CGFloat
+    public var yearRange: ClosedRange<Int>?
+    public var allowsDeselection: Bool
+
+    public init(
+        defaultMonth: Date? = nil,
+        showOutsideDays: Bool = true,
+        fixedWeeks: Bool = false,
+        showWeekNumber: Bool = false,
+        numberOfMonths: Int = 1,
+        captionLayout: SCCalendarCaptionLayout = .label,
+        navigationButtonVariant: SCButtonVariant = .ghost,
+        cellSize: CGFloat = 36,
+        yearRange: ClosedRange<Int>? = nil,
+        allowsDeselection: Bool = true
+    ) {
+        self.defaultMonth = defaultMonth
+        self.showOutsideDays = showOutsideDays
+        self.fixedWeeks = fixedWeeks
+        self.showWeekNumber = showWeekNumber
+        self.numberOfMonths = max(numberOfMonths, 1)
+        self.captionLayout = captionLayout
+        self.navigationButtonVariant = navigationButtonVariant
+        self.cellSize = max(cellSize, 24)
+        self.yearRange = yearRange
+        self.allowsDeselection = allowsDeselection
+    }
+}
+
+/// Public state supplied to custom day content and `SCCalendarDayButton`.
+public struct SCCalendarDayState: Sendable, Equatable {
+    public var isOutside: Bool
+    public var isToday: Bool
+    public var isSelected: Bool
+    public var isRangeStart: Bool
+    public var isRangeMiddle: Bool
+    public var isRangeEnd: Bool
+    public var isDisabled: Bool
+
+    public init(
+        isOutside: Bool = false,
+        isToday: Bool = false,
+        isSelected: Bool = false,
+        isRangeStart: Bool = false,
+        isRangeMiddle: Bool = false,
+        isRangeEnd: Bool = false,
+        isDisabled: Bool = false
+    ) {
+        self.isOutside = isOutside
+        self.isToday = isToday
+        self.isSelected = isSelected
+        self.isRangeStart = isRangeStart
+        self.isRangeMiddle = isRangeMiddle
+        self.isRangeEnd = isRangeEnd
+        self.isDisabled = isDisabled
+    }
+}
+
+// MARK: - Calendar
+
+/// A localized, composable month calendar with single, multiple, and range selection.
+public struct SCCalendar<DayContent: View>: View {
     private enum Mode {
         case single(Binding<Date?>)
+        case multiple(Binding<Set<Date>>)
         case range(Binding<ClosedRange<Date>?>)
     }
 
-    @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
     @Environment(\.calendar) private var calendar
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.layoutDirection) private var layoutDirection
+    @Environment(\.theme) private var theme
+
+    @FocusState private var focusedDate: Date?
+    @State private var localMonth: Date
+    @State private var rangeAnchor: Date?
 
     private let mode: Mode
     private let bounds: ClosedRange<Date>?
     private let isDayDisabled: ((Date) -> Bool)?
-    private let cellSize: CGFloat = 36
+    private let controlledMonth: Binding<Date>?
+    private let configuration: SCCalendarConfiguration
+    private let onMonthChange: ((Date) -> Void)?
+    private let dayContent: (Date, SCCalendarDayState) -> DayContent
 
-    /// Any instant inside the month currently shown.
-    @State private var displayedMonth: Date
-    /// Pending range start after the first tap in range mode.
-    @State private var rangeAnchor: Date?
+    private init(
+        mode: Mode,
+        initialSelection: Date?,
+        bounds: ClosedRange<Date>?,
+        disabled: ((Date) -> Bool)?,
+        month: Binding<Date>?,
+        configuration: SCCalendarConfiguration,
+        onMonthChange: ((Date) -> Void)?,
+        dayContent: @escaping (Date, SCCalendarDayState) -> DayContent
+    ) {
+        self.mode = mode
+        self.bounds = bounds
+        self.isDayDisabled = disabled
+        self.controlledMonth = month
+        self.configuration = configuration
+        self.onMonthChange = onMonthChange
+        self.dayContent = dayContent
 
-    /// Creates a calendar that selects a single date.
-    ///
-    /// - Parameters:
-    ///   - selection: The selected day, written at the tapped day's midnight.
-    ///   - bounds: Days outside this range are disabled, and months beyond it
-    ///     cannot be shown.
-    ///   - disabled: Return `true` to disable an individual day.
+        let proposed = month?.wrappedValue ?? configuration.defaultMonth ?? initialSelection ?? Date()
+        self._localMonth = State(initialValue: Self.clamped(proposed, to: bounds))
+    }
+
     public init(
         selection: Binding<Date?>,
         bounds: ClosedRange<Date>? = nil,
-        disabled: ((Date) -> Bool)? = nil
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil,
+        @ViewBuilder dayContent: @escaping (Date, SCCalendarDayState) -> DayContent
     ) {
-        self.mode = .single(selection)
-        self.bounds = bounds
-        self.isDayDisabled = disabled
-        self._displayedMonth = State(
-            initialValue: Self.initialMonth(for: selection.wrappedValue, bounds: bounds)
+        self.init(
+            mode: .single(selection),
+            initialSelection: selection.wrappedValue,
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange,
+            dayContent: dayContent
         )
     }
 
-    /// Creates a calendar that selects a contiguous date range.
-    ///
-    /// - Parameters:
-    ///   - range: The selected range. Stays `nil` until a second tap completes
-    ///     the range; endpoints are the tapped days' midnights.
-    ///   - bounds: Days outside this range are disabled, and months beyond it
-    ///     cannot be shown.
-    ///   - disabled: Return `true` to disable an individual day.
+    public init(
+        selections: Binding<Set<Date>>,
+        bounds: ClosedRange<Date>? = nil,
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil,
+        @ViewBuilder dayContent: @escaping (Date, SCCalendarDayState) -> DayContent
+    ) {
+        self.init(
+            mode: .multiple(selections),
+            initialSelection: selections.wrappedValue.min(),
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange,
+            dayContent: dayContent
+        )
+    }
+
     public init(
         range: Binding<ClosedRange<Date>?>,
         bounds: ClosedRange<Date>? = nil,
-        disabled: ((Date) -> Bool)? = nil
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil,
+        @ViewBuilder dayContent: @escaping (Date, SCCalendarDayState) -> DayContent
     ) {
-        self.mode = .range(range)
-        self.bounds = bounds
-        self.isDayDisabled = disabled
-        self._displayedMonth = State(
-            initialValue: Self.initialMonth(for: range.wrappedValue?.lowerBound, bounds: bounds)
+        self.init(
+            mode: .range(range),
+            initialSelection: range.wrappedValue?.lowerBound,
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange,
+            dayContent: dayContent
         )
     }
 
     public var body: some View {
-        VStack(spacing: 8) {
-            header
-            weekdayHeader
-            dayGrid
-        }
-        .frame(width: cellSize * 7)
-        .fixedSize()
-        .opacity(isEnabled ? 1 : 0.5)
+        keyboardEnabledContent
+            .fixedSize()
+            .opacity(isEnabled ? 1 : 0.5)
+            .environment(\.layoutDirection, layoutDirection)
     }
 
-    // MARK: Header
+    @ViewBuilder
+    private var keyboardEnabledContent: some View {
+        #if os(macOS)
+            months
+                .onMoveCommand(perform: moveFocus)
+        #else
+            months
+        #endif
+    }
 
-    private var header: some View {
-        ZStack {
-            Text(monthStart, format: .dateTime.year().month(.wide))
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(theme.foreground)
-                .id(monthStart)
-                .transition(.opacity)
-
-            HStack {
-                navButton(systemImage: "chevron.left", step: -1, label: "Previous month")
-                Spacer()
-                navButton(systemImage: "chevron.right", step: 1, label: "Next month")
+    private var months: some View {
+        HStack(alignment: .top, spacing: 16) {
+            ForEach(0..<configuration.numberOfMonths, id: \.self) { index in
+                if let month = calendar.date(
+                    byAdding: .month,
+                    value: index,
+                    to: firstVisibleMonth
+                ) {
+                    monthView(month, index: index)
+                }
             }
         }
     }
 
-    private func navButton(systemImage: String, step: Int, label: String) -> some View {
+    private func monthView(_ month: Date, index: Int) -> some View {
+        VStack(spacing: 8) {
+            monthHeader(month, index: index)
+            weekdayHeader
+            weekRows(for: month)
+        }
+        .frame(width: configuration.cellSize * CGFloat(configuration.showWeekNumber ? 8 : 7))
+    }
+
+    // MARK: Caption and navigation
+
+    private func monthHeader(_ month: Date, index: Int) -> some View {
+        ZStack {
+            caption(for: month, index: index)
+            HStack {
+                if index == 0 {
+                    navigationButton(step: -1, label: "Previous month")
+                }
+                Spacer()
+                if index == configuration.numberOfMonths - 1 {
+                    navigationButton(step: 1, label: "Next month")
+                }
+            }
+        }
+        .frame(height: configuration.cellSize)
+    }
+
+    @ViewBuilder
+    private func caption(for month: Date, index: Int) -> some View {
+        switch configuration.captionLayout {
+        case .label:
+            Text(month, format: .dateTime.year().month(.wide))
+                .font(.subheadline.weight(.medium))
+        case .dropdown:
+            HStack(spacing: 6) {
+                monthPicker(for: month, index: index)
+                yearPicker(for: month, index: index)
+            }
+        case .dropdownMonths:
+            HStack(spacing: 6) {
+                monthPicker(for: month, index: index)
+                Text(month, format: .dateTime.year())
+            }
+        case .dropdownYears:
+            HStack(spacing: 6) {
+                Text(month, format: .dateTime.month(.abbreviated))
+                yearPicker(for: month, index: index)
+            }
+        }
+    }
+
+    private func monthPicker(for month: Date, index: Int) -> some View {
+        Picker(
+            "Month",
+            selection: Binding(
+                get: { calendar.component(.month, from: month) },
+                set: { setCaptionMonth($0, current: month, visibleIndex: index) }
+            )
+        ) {
+            ForEach(1...12, id: \.self) { value in
+                Text(calendar.shortMonthSymbols[value - 1]).tag(value)
+            }
+        }
+        .labelsHidden()
+        .pickerStyle(.menu)
+        .fixedSize()
+    }
+
+    private func yearPicker(for month: Date, index: Int) -> some View {
+        Picker(
+            "Year",
+            selection: Binding(
+                get: { calendar.component(.year, from: month) },
+                set: { setCaptionYear($0, current: month, visibleIndex: index) }
+            )
+        ) {
+            ForEach(yearRange, id: \.self) { year in
+                Text(String(year)).tag(year)
+            }
+        }
+        .labelsHidden()
+        .pickerStyle(.menu)
+        .fixedSize()
+    }
+
+    private var yearRange: ClosedRange<Int> {
+        if let configured = configuration.yearRange { return configured }
+        if let bounds {
+            let lower = calendar.component(.year, from: bounds.lowerBound)
+            let upper = calendar.component(.year, from: bounds.upperBound)
+            return lower...upper
+        }
+        let current = calendar.component(.year, from: Date())
+        return (current - 100)...(current + 100)
+    }
+
+    private func navigationButton(step: Int, label: String) -> some View {
         Button {
             stepMonth(by: step)
         } label: {
-            Image(systemName: systemImage)
+            Image(systemName: step < 0 ? "chevron.backward" : "chevron.forward")
         }
-        .buttonStyle(SCCalendarNavButtonStyle())
+        .buttonStyle(.sc(configuration.navigationButtonVariant, size: .icon))
         .disabled(!canStepMonth(by: step))
-        .accessibilityLabel(label)
+        .accessibilityLabel(Text(label))
     }
 
-    // MARK: Weekday header
+    // MARK: Grid
 
     private var weekdayHeader: some View {
         HStack(spacing: 0) {
+            if configuration.showWeekNumber {
+                Text("#")
+                    .accessibilityLabel(Text("Week"))
+                    .frame(width: configuration.cellSize)
+            }
             ForEach(Array(orderedWeekdaySymbols.enumerated()), id: \.offset) { _, symbol in
                 Text(symbol)
-                    .font(.caption2)
-                    .foregroundStyle(theme.mutedForeground)
-                    .frame(width: cellSize)
+                    .frame(width: configuration.cellSize)
             }
         }
+        .font(.caption2)
+        .foregroundStyle(theme.mutedForeground)
     }
 
-    /// Very-short weekday symbols rotated so the locale's first weekday
-    /// (`calendar.firstWeekday`) comes first.
     private var orderedWeekdaySymbols: [String] {
         let symbols = calendar.veryShortStandaloneWeekdaySymbols
+        guard !symbols.isEmpty else { return [] }
         let shift = (calendar.firstWeekday - 1) % symbols.count
         return Array(symbols[shift...] + symbols[..<shift])
     }
 
-    // MARK: Day grid
-
-    private var dayGrid: some View {
-        LazyVGrid(
-            columns: Array(repeating: GridItem(.fixed(cellSize), spacing: 0), count: 7),
-            spacing: 4
-        ) {
-            ForEach(gridDates, id: \.self) { date in
-                dayCell(for: date)
+    private func weekRows(for month: Date) -> some View {
+        let weeks = gridDates(for: month).chunked(into: 7)
+        return VStack(spacing: 4) {
+            ForEach(Array(weeks.enumerated()), id: \.offset) { _, week in
+                HStack(spacing: 0) {
+                    if configuration.showWeekNumber, let first = week.first {
+                        Text(String(calendar.component(.weekOfYear, from: first)))
+                            .font(.caption2)
+                            .foregroundStyle(theme.mutedForeground)
+                            .frame(width: configuration.cellSize, height: configuration.cellSize)
+                            .accessibilityLabel(
+                                Text("Week \(calendar.component(.weekOfYear, from: first))")
+                            )
+                    }
+                    ForEach(week, id: \.self) { date in
+                        dayCell(for: date, displayedMonth: month)
+                    }
+                }
             }
         }
-        .id(monthStart)
-        .transition(.opacity)
     }
 
     @ViewBuilder
-    private func dayCell(for date: Date) -> some View {
-        if calendar.isDate(date, equalTo: monthStart, toGranularity: .month) {
-            let disabled = isDisabled(date)
-            SCCalendarDayCell(
-                date: date,
-                size: cellSize,
-                isToday: calendar.isDateInToday(date),
-                isSelected: isSelected(date),
-                band: bandSegment(for: date)
-            ) {
-                select(date)
-            }
-            .disabled(disabled)
-            .opacity(disabled ? 0.35 : 1)
-        } else {
-            // Adjacent-month filler — shown for grid continuity, not interactive.
-            Text(date, format: .dateTime.day())
-                .font(.footnote)
-                .monospacedDigit()
-                .foregroundStyle(theme.mutedForeground.opacity(0.5))
-                .frame(width: cellSize, height: cellSize)
+    private func dayCell(for date: Date, displayedMonth: Date) -> some View {
+        let outside = !calendar.isDate(date, equalTo: displayedMonth, toGranularity: .month)
+        if outside && !configuration.showOutsideDays {
+            Color.clear
+                .frame(width: configuration.cellSize, height: configuration.cellSize)
                 .accessibilityHidden(true)
+        } else {
+            let state = dayState(for: date, isOutside: outside)
+            SCCalendarDayButton(
+                date: date,
+                state: state,
+                size: configuration.cellSize,
+                focusedDate: $focusedDate
+            ) {
+                select(date, outside: outside)
+            } content: {
+                dayContent(date, state)
+            }
         }
     }
 
-    // MARK: Month math
-
-    private var monthStart: Date {
-        calendar.dateInterval(of: .month, for: displayedMonth)?.start ?? displayedMonth
-    }
-
-    /// The visible dates: leading filler from the previous month, the whole
-    /// displayed month, and trailing filler padding to a full week.
-    private var gridDates: [Date] {
-        let start = monthStart
+    private func gridDates(for month: Date) -> [Date] {
+        let start = monthStart(month)
         let leading = (calendar.component(.weekday, from: start) - calendar.firstWeekday + 7) % 7
         guard
             let dayCount = calendar.range(of: .day, in: .month, for: start)?.count,
             let gridStart = calendar.date(byAdding: .day, value: -leading, to: start)
         else { return [] }
-        let total = ((leading + dayCount + 6) / 7) * 7
-        return (0..<total).compactMap { calendar.date(byAdding: .day, value: $0, to: gridStart) }
-    }
-
-    private func stepMonth(by value: Int) {
-        guard let target = calendar.date(byAdding: .month, value: value, to: monthStart) else { return }
-        withAnimation(.snappy(duration: 0.2)) {
-            displayedMonth = target
+        let naturalCount = ((leading + dayCount + 6) / 7) * 7
+        let total = configuration.fixedWeeks ? 42 : naturalCount
+        return (0..<total).compactMap {
+            calendar.date(byAdding: .day, value: $0, to: gridStart)
         }
     }
 
-    private func canStepMonth(by value: Int) -> Bool {
-        guard
-            let target = calendar.date(byAdding: .month, value: value, to: monthStart),
-            let interval = calendar.dateInterval(of: .month, for: target)
-        else { return false }
-        guard let bounds else { return true }
-        // The target month must contain at least one in-bounds day.
-        return interval.start <= bounds.upperBound && interval.end > bounds.lowerBound
-    }
+    // MARK: State and selection
 
-    private static func initialMonth(for date: Date?, bounds: ClosedRange<Date>?) -> Date {
-        let base = date ?? Date()
-        guard let bounds else { return base }
-        return min(max(base, bounds.lowerBound), bounds.upperBound)
+    private func dayState(for date: Date, isOutside: Bool) -> SCCalendarDayState {
+        let range = rangeSelection
+        let rangeStart = range.map { sameDay(date, $0.lowerBound) } ?? false
+        let rangeEnd = range.map { sameDay(date, $0.upperBound) } ?? false
+        let rangeMiddle =
+            range.map {
+                date > calendar.startOfDay(for: $0.lowerBound)
+                    && date < calendar.startOfDay(for: $0.upperBound)
+            } ?? false
+        return SCCalendarDayState(
+            isOutside: isOutside,
+            isToday: calendar.isDateInToday(date),
+            isSelected: isSelected(date),
+            isRangeStart: rangeStart,
+            isRangeMiddle: rangeMiddle,
+            isRangeEnd: rangeEnd,
+            isDisabled: isDisabled(date)
+        )
     }
-
-    // MARK: Selection
 
     private var rangeSelection: ClosedRange<Date>? {
         if case .range(let binding) = mode { return binding.wrappedValue }
@@ -238,54 +443,48 @@ public struct SCCalendar: View {
     private func isSelected(_ date: Date) -> Bool {
         switch mode {
         case .single(let binding):
-            guard let selected = binding.wrappedValue else { return false }
-            return calendar.isDate(date, inSameDayAs: selected)
+            return binding.wrappedValue.map { sameDay(date, $0) } ?? false
+        case .multiple(let binding):
+            return binding.wrappedValue.contains { sameDay(date, $0) }
         case .range(let binding):
             if let range = binding.wrappedValue {
-                return calendar.isDate(date, inSameDayAs: range.lowerBound)
-                    || calendar.isDate(date, inSameDayAs: range.upperBound)
+                return sameDay(date, range.lowerBound) || sameDay(date, range.upperBound)
             }
-            if let anchor = rangeAnchor {
-                return calendar.isDate(date, inSameDayAs: anchor)
-            }
-            return false
+            return rangeAnchor.map { sameDay(date, $0) } ?? false
         }
     }
 
-    private func bandSegment(for date: Date) -> SCCalendarDayCell.Band {
-        guard let range = rangeSelection else { return .none }
-        let isStart = calendar.isDate(date, inSameDayAs: range.lowerBound)
-        let isEnd = calendar.isDate(date, inSameDayAs: range.upperBound)
-        switch (isStart, isEnd) {
-        case (true, true): return .none // single-day range — endpoint circle only
-        case (true, false): return .start
-        case (false, true): return .end
-        case (false, false):
-            return date > range.lowerBound && date < range.upperBound ? .middle : .none
-        }
-    }
+    private func select(_ date: Date, outside: Bool) {
+        let date = calendar.startOfDay(for: date)
+        guard !isDisabled(date) else { return }
 
-    private func select(_ date: Date) {
         switch mode {
         case .single(let binding):
-            binding.wrappedValue = date
+            if configuration.allowsDeselection, binding.wrappedValue.map({ sameDay($0, date) }) == true {
+                binding.wrappedValue = nil
+            } else {
+                binding.wrappedValue = date
+            }
+        case .multiple(let binding):
+            if let stored = binding.wrappedValue.first(where: { sameDay($0, date) }) {
+                binding.wrappedValue.remove(stored)
+            } else {
+                binding.wrappedValue.insert(date)
+            }
         case .range(let binding):
             if binding.wrappedValue != nil {
-                // Tapping a completed range starts a new one.
                 binding.wrappedValue = nil
                 rangeAnchor = date
             } else if let anchor = rangeAnchor {
-                if calendar.compare(date, to: anchor, toGranularity: .day) == .orderedAscending {
-                    // Earlier than the pending start — restart from here.
-                    rangeAnchor = date
-                } else {
-                    binding.wrappedValue = min(anchor, date)...max(anchor, date)
-                    rangeAnchor = nil
-                }
+                binding.wrappedValue = min(anchor, date)...max(anchor, date)
+                rangeAnchor = nil
             } else {
                 rangeAnchor = date
             }
         }
+
+        focusedDate = date
+        if outside { setFirstVisibleMonth(date) }
     }
 
     private func isDisabled(_ date: Date) -> Bool {
@@ -299,151 +498,350 @@ public struct SCCalendar: View {
         }
         return isDayDisabled?(date) ?? false
     }
+
+    private func sameDay(_ lhs: Date, _ rhs: Date) -> Bool {
+        calendar.isDate(lhs, inSameDayAs: rhs)
+    }
+
+    // MARK: Month ownership
+
+    private var firstVisibleMonth: Date {
+        monthStart(controlledMonth?.wrappedValue ?? localMonth)
+    }
+
+    private func monthStart(_ date: Date) -> Date {
+        calendar.dateInterval(of: .month, for: date)?.start ?? date
+    }
+
+    private func stepMonth(by value: Int) {
+        guard let target = calendar.date(byAdding: .month, value: value, to: firstVisibleMonth) else {
+            return
+        }
+        setFirstVisibleMonth(target)
+    }
+
+    private func canStepMonth(by value: Int) -> Bool {
+        guard let target = calendar.date(byAdding: .month, value: value, to: firstVisibleMonth) else {
+            return false
+        }
+        guard let bounds else { return true }
+        let lastOffset = configuration.numberOfMonths - 1
+        let lastMonth = calendar.date(byAdding: .month, value: lastOffset, to: target) ?? target
+        guard
+            let firstInterval = calendar.dateInterval(of: .month, for: target),
+            let lastInterval = calendar.dateInterval(of: .month, for: lastMonth)
+        else { return false }
+        return firstInterval.start <= bounds.upperBound && lastInterval.end > bounds.lowerBound
+    }
+
+    private func setFirstVisibleMonth(_ date: Date) {
+        let value = monthStart(Self.clamped(date, to: bounds))
+        withAnimation(.snappy(duration: 0.2)) {
+            localMonth = value
+            controlledMonth?.wrappedValue = value
+        }
+        onMonthChange?(value)
+    }
+
+    private func setCaptionMonth(_ value: Int, current: Date, visibleIndex: Int) {
+        var components = calendar.dateComponents([.year], from: current)
+        components.month = value
+        components.day = 1
+        guard let target = calendar.date(from: components) else { return }
+        setVisibleMonth(target, at: visibleIndex)
+    }
+
+    private func setCaptionYear(_ value: Int, current: Date, visibleIndex: Int) {
+        var components = calendar.dateComponents([.month], from: current)
+        components.year = value
+        components.day = 1
+        guard let target = calendar.date(from: components) else { return }
+        setVisibleMonth(target, at: visibleIndex)
+    }
+
+    private func setVisibleMonth(_ date: Date, at index: Int) {
+        let target = calendar.date(byAdding: .month, value: -index, to: date) ?? date
+        setFirstVisibleMonth(target)
+    }
+
+    private static func clamped(_ date: Date, to bounds: ClosedRange<Date>?) -> Date {
+        guard let bounds else { return date }
+        return min(max(date, bounds.lowerBound), bounds.upperBound)
+    }
+
+    // MARK: Keyboard focus
+
+    #if os(macOS)
+        private func moveFocus(_ direction: MoveCommandDirection) {
+            let offset: Int
+            switch direction {
+            case .left: offset = layoutDirection == .leftToRight ? -1 : 1
+            case .right: offset = layoutDirection == .leftToRight ? 1 : -1
+            case .up: offset = -7
+            case .down: offset = 7
+            default: return
+            }
+
+            var candidate = focusedDate ?? firstSelectedDate ?? Date()
+            for _ in 0..<366 {
+                guard let next = calendar.date(byAdding: .day, value: offset, to: candidate) else {
+                    return
+                }
+                candidate = calendar.startOfDay(for: next)
+                if !isDisabled(candidate) { break }
+            }
+            focusedDate = candidate
+
+            let finalMonth = monthStart(candidate)
+            let visibleMonths = (0..<configuration.numberOfMonths).compactMap {
+                calendar.date(byAdding: .month, value: $0, to: firstVisibleMonth)
+            }
+            if !visibleMonths.contains(where: { monthStart($0) == finalMonth }) {
+                setFirstVisibleMonth(finalMonth)
+            }
+        }
+    #endif
+
+    private var firstSelectedDate: Date? {
+        switch mode {
+        case .single(let binding): return binding.wrappedValue
+        case .multiple(let binding): return binding.wrappedValue.min()
+        case .range(let binding): return binding.wrappedValue?.lowerBound ?? rangeAnchor
+        }
+    }
 }
 
-// MARK: - Day cell
+// MARK: - Default day content
 
-/// One tappable day in the grid, drawing the today/selected/in-range layers.
-private struct SCCalendarDayCell: View {
+extension SCCalendar where DayContent == Text {
+    public init(
+        selection: Binding<Date?>,
+        bounds: ClosedRange<Date>? = nil,
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil
+    ) {
+        self.init(
+            selection: selection,
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange
+        ) { date, _ in
+            Text(date, format: .dateTime.day())
+        }
+    }
+
+    public init(
+        selections: Binding<Set<Date>>,
+        bounds: ClosedRange<Date>? = nil,
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil
+    ) {
+        self.init(
+            selections: selections,
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange
+        ) { date, _ in
+            Text(date, format: .dateTime.day())
+        }
+    }
+
+    public init(
+        range: Binding<ClosedRange<Date>?>,
+        bounds: ClosedRange<Date>? = nil,
+        disabled: ((Date) -> Bool)? = nil,
+        month: Binding<Date>? = nil,
+        configuration: SCCalendarConfiguration = .init(),
+        onMonthChange: ((Date) -> Void)? = nil
+    ) {
+        self.init(
+            range: range,
+            bounds: bounds,
+            disabled: disabled,
+            month: month,
+            configuration: configuration,
+            onMonthChange: onMonthChange
+        ) { date, _ in
+            Text(date, format: .dateTime.day())
+        }
+    }
+}
+
+// MARK: - Day button
+
+/// A reusable calendar day button that accepts arbitrary day content.
+public struct SCCalendarDayButton<Content: View>: View {
     @Environment(\.theme) private var theme
 
-    /// Where the day sits in a completed range's `theme.secondary` band.
-    enum Band {
-        case none, start, middle, end
+    private let date: Date
+    private let state: SCCalendarDayState
+    private let size: CGFloat
+    private let focusedDate: FocusState<Date?>.Binding?
+    private let action: () -> Void
+    private let content: Content
+
+    public init(
+        date: Date,
+        state: SCCalendarDayState,
+        size: CGFloat = 36,
+        action: @escaping () -> Void,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.date = date
+        self.state = state
+        self.size = size
+        self.focusedDate = nil
+        self.action = action
+        self.content = content()
     }
 
-    let date: Date
-    let size: CGFloat
-    let isToday: Bool
-    let isSelected: Bool
-    let band: Band
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(date, format: .dateTime.day())
-                .font(.footnote)
-                .monospacedDigit()
-                .frame(width: size, height: size)
-                .background { backgroundLayer }
-                .foregroundStyle(foreground)
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    fileprivate init(
+        date: Date,
+        state: SCCalendarDayState,
+        size: CGFloat,
+        focusedDate: FocusState<Date?>.Binding,
+        action: @escaping () -> Void,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.date = date
+        self.state = state
+        self.size = size
+        self.focusedDate = focusedDate
+        self.action = action
+        self.content = content()
     }
 
-    private var backgroundLayer: some View {
-        ZStack {
-            bandShape
-            if isSelected {
-                Circle().fill(theme.primary)
-            } else if isToday {
-                Circle().fill(theme.accent)
+    public var body: some View {
+        Group {
+            if let focusedDate {
+                button.focused(focusedDate, equals: date)
+            } else {
+                button
             }
         }
     }
 
-    @ViewBuilder private var bandShape: some View {
-        switch band {
-        case .none:
-            EmptyView()
-        case .start:
+    private var button: some View {
+        Button(action: action) {
+            VStack(spacing: 1) {
+                content
+            }
+            .font(.footnote)
+            .monospacedDigit()
+            .frame(width: size, height: size)
+            .background { backgroundLayer }
+            .foregroundStyle(foreground)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(state.isDisabled)
+        .opacity(state.isDisabled ? 0.35 : 1)
+        .accessibilityLabel(Text(date.formatted(date: .complete, time: .omitted)))
+        .accessibilityAddTraits(state.isSelected ? .isSelected : [])
+    }
+
+    private var backgroundLayer: some View {
+        ZStack {
+            rangeBand
+            if state.isSelected || state.isRangeStart || state.isRangeEnd {
+                RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+                    .fill(theme.primary)
+            } else if state.isToday {
+                RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+                    .fill(theme.muted)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var rangeBand: some View {
+        if state.isRangeMiddle {
+            Rectangle().fill(theme.muted)
+        } else if state.isRangeStart, !state.isRangeEnd {
             UnevenRoundedRectangle(
-                cornerRadii: .init(topLeading: size / 2, bottomLeading: size / 2),
+                cornerRadii: .init(
+                    topLeading: theme.radius,
+                    bottomLeading: theme.radius
+                ),
                 style: .continuous
             )
-            .fill(theme.secondary)
-        case .middle:
-            Rectangle().fill(theme.secondary)
-        case .end:
+            .fill(theme.muted)
+        } else if state.isRangeEnd, !state.isRangeStart {
             UnevenRoundedRectangle(
-                cornerRadii: .init(bottomTrailing: size / 2, topTrailing: size / 2),
+                cornerRadii: .init(
+                    bottomTrailing: theme.radius,
+                    topTrailing: theme.radius
+                ),
                 style: .continuous
             )
-            .fill(theme.secondary)
+            .fill(theme.muted)
         }
     }
 
     private var foreground: Color {
-        if isSelected {
-            theme.primaryForeground
-        } else if isToday {
-            theme.accentForeground
-        } else if band == .middle {
-            theme.secondaryForeground
-        } else {
-            theme.foreground
+        if state.isSelected || state.isRangeStart || state.isRangeEnd {
+            return theme.primaryForeground
         }
+        if state.isOutside { return theme.mutedForeground }
+        return theme.foreground
     }
 }
 
-// MARK: - Nav button style
-
-/// Ghost icon-button chrome for the month-stepping chevrons.
-private struct SCCalendarNavButtonStyle: ButtonStyle {
-    @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.footnote.weight(.medium))
-            .frame(width: 36, height: 36)
-            .background(configuration.isPressed ? theme.accent : .clear, in: shape)
-            .foregroundStyle(theme.foreground)
-            .contentShape(shape)
-            .opacity(isEnabled ? 1 : 0.35)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
-    }
-
-    private var shape: RoundedRectangle {
-        RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
+extension Array {
+    fileprivate func chunked(into size: Int) -> [[Element]] {
+        guard size > 0 else { return [] }
+        return stride(from: 0, to: count, by: size).map {
+            Array(self[$0..<Swift.min($0 + size, count)])
+        }
     }
 }
 
 // MARK: - Previews
 
-#Preview("Calendar · single") {
+#Preview("Calendar · modes") {
     @Previewable @State var date: Date? = Date()
-    SCPreview {
-        SCCalendar(selection: $date)
-    }
-}
+    @Previewable @State var dates: Set<Date> = []
+    @Previewable @State var range: ClosedRange<Date>?
 
-#Preview("Calendar · range") {
-    @Previewable @State var range: ClosedRange<Date>? = nil
     SCPreview {
-        VStack(spacing: 12) {
-            SCCalendar(range: $range)
-            Text(
-                range.map {
-                    "\($0.lowerBound.formatted(date: .abbreviated, time: .omitted)) – \($0.upperBound.formatted(date: .abbreviated, time: .omitted))"
-                } ?? "No range selected"
+        HStack(alignment: .top, spacing: 20) {
+            SCCalendar(
+                selection: $date,
+                configuration: .init(captionLayout: .dropdown)
             )
-            .font(.caption)
-            .foregroundStyle(Theme.default.mutedForeground)
+            SCCalendar(selections: $dates)
+            SCCalendar(range: $range)
         }
     }
 }
 
-#Preview("Calendar · bounds & disabled days") {
-    @Previewable @State var date: Date? = nil
-    let today = Calendar.current.startOfDay(for: Date())
-    let limit = Calendar.current.date(byAdding: .month, value: 2, to: today) ?? today
+#Preview("Calendar · multi-month custom days") {
+    @Previewable @State var range: ClosedRange<Date>?
+
     SCPreview {
         SCCalendar(
-            selection: $date,
-            bounds: today...limit,
-            disabled: { Calendar.current.isDateInWeekend($0) }
-        )
-    }
-}
-
-#Preview("Calendar · disabled") {
-    @Previewable @State var date: Date? = Date()
-    SCPreview {
-        SCCalendar(selection: $date)
-            .disabled(true)
+            range: $range,
+            configuration: .init(
+                fixedWeeks: true,
+                showWeekNumber: true,
+                numberOfMonths: 2
+            )
+        ) { date, state in
+            VStack(spacing: 1) {
+                Text(date, format: .dateTime.day())
+                if !state.isOutside {
+                    Text(Calendar.current.isDateInWeekend(date) ? "$120" : "$100")
+                        .font(.system(size: 8))
+                }
+            }
+        }
     }
 }

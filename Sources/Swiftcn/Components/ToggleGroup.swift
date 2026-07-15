@@ -1,203 +1,326 @@
 // ============================================================
 // ToggleGroup.swift — swiftcn-ui
-// Depends on: Theme/
+// Depends on: Theme/ · Toggle.swift
 // ============================================================
 import SwiftUI
 
-// MARK: - Item
+// MARK: - Configuration
 
-/// One cell of an `SCToggleGroup`: a value plus a text and/or icon label.
-public struct SCToggleGroupItem<Value: Hashable>: Identifiable {
-    public let value: Value
-    let label: String?
-    let systemImage: String?
+/// The visual axis and arrow-key axis of a toggle group.
+public enum SCToggleGroupOrientation: Hashable, Sendable {
+    case horizontal
+    case vertical
+}
 
-    public var id: Value { value }
+// MARK: - Shared state
 
-    public init(value: Value, label: String) {
-        self.value = value
-        self.label = label
-        self.systemImage = nil
+private final class SCToggleGroupKeyboardCoordinator {
+    private struct Entry {
+        let id: UUID
+        var isDisabled: Bool
+        var focus: () -> Void
     }
 
-    public init(value: Value, systemImage: String) {
-        self.value = value
-        self.label = nil
-        self.systemImage = systemImage
+    private var entries: [Entry] = []
+
+    func register(id: UUID, isDisabled: Bool, focus: @escaping () -> Void) {
+        if let index = entries.firstIndex(where: { $0.id == id }) {
+            entries[index].isDisabled = isDisabled
+            entries[index].focus = focus
+        } else {
+            entries.append(Entry(id: id, isDisabled: isDisabled, focus: focus))
+        }
     }
 
-    public init(value: Value, label: String, systemImage: String) {
-        self.value = value
-        self.label = label
-        self.systemImage = systemImage
+    func unregister(id: UUID) {
+        entries.removeAll { $0.id == id }
+    }
+
+    func move(from id: UUID, offset: Int, loops: Bool) {
+        guard
+            !entries.isEmpty,
+            offset != 0,
+            let currentIndex = entries.firstIndex(where: { $0.id == id })
+        else { return }
+
+        for step in 1...entries.count {
+            let candidate = currentIndex + offset * step
+            let index: Int
+            if loops {
+                index = (candidate % entries.count + entries.count) % entries.count
+            } else {
+                guard entries.indices.contains(candidate) else { return }
+                index = candidate
+            }
+            guard !entries[index].isDisabled else { continue }
+            entries[index].focus()
+            return
+        }
     }
 }
 
-// MARK: - Component
+struct SCToggleGroupContext {
+    var values: Set<AnyHashable> = []
+    var variant: SCToggleVariant = .default
+    var size: SCToggleSize = .default
+    var orientation: SCToggleGroupOrientation = .horizontal
+    var spacing: CGFloat = 2
+    var isDisabled = false
+    var toggle: (AnyHashable) -> Void = { _ in }
+    var register: (UUID, Bool, @escaping () -> Void) -> Void = { _, _, _ in }
+    var unregister: (UUID) -> Void = { _ in }
+    var move: (UUID, Int) -> Void = { _, _ in }
+}
 
-/// A horizontal set of toggle buttons sharing one bordered container —
-/// shadcn's ToggleGroup (outline look). Supports single-select via
-/// `Binding<Value?>` and multi-select via `Binding<Set<Value>>`.
-/// Item values must be unique.
+private struct SCToggleGroupContextKey: EnvironmentKey {
+    nonisolated(unsafe) static let defaultValue: SCToggleGroupContext? = nil
+}
+
+extension EnvironmentValues {
+    var scToggleGroupContext: SCToggleGroupContext? {
+        get { self[SCToggleGroupContextKey.self] }
+        set { self[SCToggleGroupContextKey.self] = newValue }
+    }
+}
+
+// MARK: - Root
+
+/// Provides shared single- or multiple-selection state to composed toggle items.
 ///
-///     SCToggleGroup(selection: $alignment, items: [
-///         .init(value: Alignment.left, systemImage: "text.alignleft"),
-///         .init(value: Alignment.center, systemImage: "text.aligncenter"),
-///         .init(value: Alignment.right, systemImage: "text.alignright"),
-///     ])
+/// The builder form follows shadcn's Root/Item composition and accepts arbitrary
+/// SwiftUI labels:
 ///
-///     SCToggleGroup(selection: $styles, items: [   // Set<String> binding
-///         .init(value: "bold", systemImage: "bold"),
-///         .init(value: "italic", systemImage: "italic"),
-///     ])
-public struct SCToggleGroup<Value: Hashable>: View {
-    @Environment(\.theme) private var theme
+///     SCToggleGroup(selection: $alignment, variant: .outline, spacing: 0) {
+///         SCToggleGroupItem(value: Alignment.left) {
+///             Image(systemName: "text.alignleft")
+///         }
+///         SCToggleGroupItem(value: Alignment.center) {
+///             Image(systemName: "text.aligncenter")
+///         }
+///     }
+///
+/// Use a `Binding<Value?>` for single selection or `Binding<Set<Value>>` for
+/// multiple selection. The `defaultValue` and `defaultValues` initializers own
+/// state internally. Existing array-based call sites remain available as thin
+/// connected-outline compositions over the same root and item engine.
+public struct SCToggleGroup<Value: Hashable, Content: View>: View {
     @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.theme) private var theme
+    @State private var internalValues: Set<Value>
+    @State private var keyboard = SCToggleGroupKeyboardCoordinator()
 
-    private enum Mode {
-        case single(Binding<Value?>)
-        case multiple(Binding<Set<Value>>)
+    private enum Selection {
+        case single(Binding<Value?>?)
+        case multiple(Binding<Set<Value>>?)
     }
 
-    private let mode: Mode
-    private let items: [SCToggleGroupItem<Value>]
+    private let selection: Selection
+    private let variant: SCToggleVariant
+    private let size: SCToggleSize
+    private let spacing: CGFloat
+    private let orientation: SCToggleGroupOrientation
+    private let loopsFocus: Bool
+    private let isDisabled: Bool
+    private let accessibilityLabel: String
+    private let onValuesChange: (Set<Value>) -> Void
+    private let content: Content
 
-    private let cellHeight: CGFloat = 36
-
-    /// Single-select: tapping the selected item deselects it.
-    public init(selection: Binding<Value?>, items: [SCToggleGroupItem<Value>]) {
-        self.mode = .single(selection)
-        self.items = items
+    /// Creates a caller-controlled single-selection group.
+    public init(
+        selection: Binding<Value?>,
+        variant: SCToggleVariant = .default,
+        size: SCToggleSize = .default,
+        spacing: CGFloat = 2,
+        orientation: SCToggleGroupOrientation = .horizontal,
+        loopsFocus: Bool = true,
+        isDisabled: Bool = false,
+        accessibilityLabel: String = "Toggle group",
+        onValueChange: ((Value?) -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.selection = .single(selection)
+        self._internalValues = State(initialValue: Set(selection.wrappedValue.map { [$0] } ?? []))
+        self.variant = variant
+        self.size = size
+        self.spacing = max(spacing, 0)
+        self.orientation = orientation
+        self.loopsFocus = loopsFocus
+        self.isDisabled = isDisabled
+        self.accessibilityLabel = accessibilityLabel
+        self.onValuesChange = { onValueChange?($0.first) }
+        self.content = content()
     }
 
-    /// Multi-select: each item toggles independently.
-    public init(selection: Binding<Set<Value>>, items: [SCToggleGroupItem<Value>]) {
-        self.mode = .multiple(selection)
-        self.items = items
+    /// Creates an internally managed single-selection group.
+    public init(
+        defaultValue: Value? = nil,
+        variant: SCToggleVariant = .default,
+        size: SCToggleSize = .default,
+        spacing: CGFloat = 2,
+        orientation: SCToggleGroupOrientation = .horizontal,
+        loopsFocus: Bool = true,
+        isDisabled: Bool = false,
+        accessibilityLabel: String = "Toggle group",
+        onValueChange: ((Value?) -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.selection = .single(nil)
+        self._internalValues = State(initialValue: Set(defaultValue.map { [$0] } ?? []))
+        self.variant = variant
+        self.size = size
+        self.spacing = max(spacing, 0)
+        self.orientation = orientation
+        self.loopsFocus = loopsFocus
+        self.isDisabled = isDisabled
+        self.accessibilityLabel = accessibilityLabel
+        self.onValuesChange = { onValueChange?($0.first) }
+        self.content = content()
+    }
+
+    /// Creates a caller-controlled multiple-selection group.
+    public init(
+        selection: Binding<Set<Value>>,
+        variant: SCToggleVariant = .default,
+        size: SCToggleSize = .default,
+        spacing: CGFloat = 2,
+        orientation: SCToggleGroupOrientation = .horizontal,
+        loopsFocus: Bool = true,
+        isDisabled: Bool = false,
+        accessibilityLabel: String = "Toggle group",
+        onValueChange: ((Set<Value>) -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.selection = .multiple(selection)
+        self._internalValues = State(initialValue: selection.wrappedValue)
+        self.variant = variant
+        self.size = size
+        self.spacing = max(spacing, 0)
+        self.orientation = orientation
+        self.loopsFocus = loopsFocus
+        self.isDisabled = isDisabled
+        self.accessibilityLabel = accessibilityLabel
+        self.onValuesChange = { onValueChange?($0) }
+        self.content = content()
+    }
+
+    /// Creates an internally managed multiple-selection group.
+    public init(
+        defaultValues: Set<Value>,
+        variant: SCToggleVariant = .default,
+        size: SCToggleSize = .default,
+        spacing: CGFloat = 2,
+        orientation: SCToggleGroupOrientation = .horizontal,
+        loopsFocus: Bool = true,
+        isDisabled: Bool = false,
+        accessibilityLabel: String = "Toggle group",
+        onValueChange: ((Set<Value>) -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.selection = .multiple(nil)
+        self._internalValues = State(initialValue: defaultValues)
+        self.variant = variant
+        self.size = size
+        self.spacing = max(spacing, 0)
+        self.orientation = orientation
+        self.loopsFocus = loopsFocus
+        self.isDisabled = isDisabled
+        self.accessibilityLabel = accessibilityLabel
+        self.onValuesChange = { onValueChange?($0) }
+        self.content = content()
     }
 
     public var body: some View {
-        HStack(spacing: 0) {
-            ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
-                if index > 0 {
-                    Rectangle()
-                        .fill(theme.border)
-                        .frame(width: 1)
-                }
-                cell(for: item)
-            }
-        }
-        .frame(height: cellHeight)
-        .fixedSize(horizontal: true, vertical: false)
-        .clipShape(shape)
-        .overlay(shape.strokeBorder(theme.border, lineWidth: 1))
-        .opacity(isEnabled ? 1 : 0.5)
-    }
-
-    // MARK: Cells
-
-    private func cell(for item: SCToggleGroupItem<Value>) -> some View {
-        let selected = isSelected(item.value)
-        return Button {
-            toggle(item.value)
-        } label: {
-            HStack(spacing: 6) {
-                if let systemImage = item.systemImage {
-                    Image(systemName: systemImage)
-                }
-                if let label = item.label {
-                    Text(label)
+        laidOutContent
+            .environment(\.scToggleGroupContext, context)
+            .disabled(isDisabled)
+            .clipShape(groupShape)
+            .overlay {
+                if spacing == 0, variant == .outline {
+                    groupShape.strokeBorder(theme.border)
                 }
             }
-            .font(.subheadline.weight(.medium))
-            .lineLimit(1)
-            .padding(.horizontal, 12)
-            .frame(minWidth: cellHeight, maxHeight: .infinity)
-            .background(selected ? theme.accent : .clear)
-            .foregroundStyle(selected ? theme.accentForeground : theme.foreground)
-            .contentShape(Rectangle())
-            .animation(.easeOut(duration: 0.12), value: selected)
-        }
-        .buttonStyle(SCToggleGroupCellPressStyle())
-        .accessibilityAddTraits(selected ? [.isSelected] : [])
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel(accessibilityLabel)
     }
 
-    private var shape: RoundedRectangle {
+    @ViewBuilder
+    private var laidOutContent: some View {
+        switch orientation {
+        case .horizontal:
+            HStack(spacing: effectiveSpacing) { content }
+        case .vertical:
+            VStack(spacing: effectiveSpacing) { content }
+        }
+    }
+
+    private var currentValues: Set<Value> {
+        switch selection {
+        case .single(let binding):
+            if let value = binding?.wrappedValue { [value] } else { internalValues }
+        case .multiple(let binding): binding?.wrappedValue ?? internalValues
+        }
+    }
+
+    private var context: SCToggleGroupContext {
+        SCToggleGroupContext(
+            values: Set(currentValues.map(AnyHashable.init)),
+            variant: variant,
+            size: size,
+            orientation: orientation,
+            spacing: spacing,
+            isDisabled: isDisabled,
+            toggle: toggle,
+            register: { id, isDisabled, focus in
+                keyboard.register(id: id, isDisabled: isDisabled, focus: focus)
+            },
+            unregister: { id in keyboard.unregister(id: id) },
+            move: { id, offset in
+                keyboard.move(from: id, offset: offset, loops: loopsFocus)
+            }
+        )
+    }
+
+    private var effectiveSpacing: CGFloat {
+        spacing == 0 && variant == .outline ? -1 : spacing
+    }
+
+    private var groupShape: RoundedRectangle {
         RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
     }
 
-    // MARK: Selection
+    private func toggle(_ erasedValue: AnyHashable) {
+        guard
+            isEnabled,
+            !isDisabled,
+            let value = erasedValue.base as? Value
+        else { return }
 
-    private func isSelected(_ value: Value) -> Bool {
-        switch mode {
-        case .single(let selection):   selection.wrappedValue == value
-        case .multiple(let selection): selection.wrappedValue.contains(value)
-        }
-    }
-
-    private func toggle(_ value: Value) {
-        switch mode {
-        case .single(let selection):
-            selection.wrappedValue = selection.wrappedValue == value ? nil : value
-        case .multiple(let selection):
-            if selection.wrappedValue.contains(value) {
-                selection.wrappedValue.remove(value)
+        var next = currentValues
+        switch selection {
+        case .single:
+            next = next.contains(value) ? [] : [value]
+        case .multiple:
+            if next.contains(value) {
+                next.remove(value)
             } else {
-                selection.wrappedValue.insert(value)
+                next.insert(value)
             }
         }
-    }
-}
 
-// MARK: - Inner button style
-
-/// Pressed feedback for toggle-group cells.
-private struct SCToggleGroupCellPressStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .opacity(configuration.isPressed ? 0.7 : 1)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
-    }
-}
-
-// MARK: - Previews
-
-#Preview("ToggleGroup · single") {
-    @Previewable @State var alignment: String? = "left"
-    SCPreview {
-        SCToggleGroup(selection: $alignment, items: [
-            .init(value: "left", systemImage: "text.alignleft"),
-            .init(value: "center", systemImage: "text.aligncenter"),
-            .init(value: "right", systemImage: "text.alignright"),
-        ])
-    }
-}
-
-#Preview("ToggleGroup · multiple") {
-    @Previewable @State var styles: Set<String> = ["bold"]
-    SCPreview {
-        SCToggleGroup(selection: $styles, items: [
-            .init(value: "bold", systemImage: "bold"),
-            .init(value: "italic", systemImage: "italic"),
-            .init(value: "underline", systemImage: "underline"),
-        ])
-    }
-}
-
-#Preview("ToggleGroup · labels & disabled") {
-    @Previewable @State var period: String? = "week"
-    SCPreview {
-        VStack(spacing: 16) {
-            SCToggleGroup(selection: $period, items: [
-                .init(value: "day", label: "Day"),
-                .init(value: "week", label: "Week"),
-                .init(value: "month", label: "Month"),
-            ])
-            SCToggleGroup(selection: $period, items: [
-                .init(value: "day", label: "Day"),
-                .init(value: "week", label: "Week"),
-            ])
-            .disabled(true)
+        switch selection {
+        case .single(let binding):
+            if let binding {
+                binding.wrappedValue = next.first
+            } else {
+                internalValues = next
+            }
+        case .multiple(let binding):
+            if let binding {
+                binding.wrappedValue = next
+            } else {
+                internalValues = next
+            }
         }
+        onValuesChange(next)
     }
 }

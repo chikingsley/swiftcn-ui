@@ -7,7 +7,7 @@ import SwiftUI
 // MARK: - Effect
 
 /// A soft, slowly drifting color wash — large blurred circles moving on
-/// sinusoidal paths over `theme.background`, the magicui aurora look.
+/// sinusoidal paths over a caller-selected background.
 /// Motion is derived from `TimelineView(.animation)` time (no accumulated
 /// animation state), rendered through `.drawingGroup()` and clipped to its
 /// frame. Place it behind content in a `ZStack`; extending under the safe
@@ -20,11 +20,13 @@ import SwiftUI
 ///
 ///     SCAuroraBackground(colors: [.purple.opacity(0.3), .cyan.opacity(0.3)], speed: 2)
 public struct SCAuroraBackground: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.theme) private var theme
 
-    var colors: [Color]?
-    var speed: Double
-    var blur: CGFloat
+    private let colors: [Color]?
+    private let speed: Double
+    private let blur: CGFloat
+    private let backgroundColor: Color?
 
     /// - Parameters:
     ///   - colors: Blob colors, one blob per color (cycled up to a minimum
@@ -32,26 +34,39 @@ public struct SCAuroraBackground: View {
     ///   - speed: Drift-rate multiplier — `1` is a slow ambient drift,
     ///     `0` freezes the aurora.
     ///   - blur: Blur radius applied to the blobs, in points.
-    public init(colors: [Color]? = nil, speed: Double = 1, blur: CGFloat = 60) {
+    ///   - backgroundColor: Base color under the blobs; `nil` uses the theme
+    ///     background.
+    public init(
+        colors: [Color]? = nil,
+        speed: Double = 1,
+        blur: CGFloat = 60,
+        backgroundColor: Color? = nil
+    ) {
         self.colors = colors
         self.speed = speed
         self.blur = blur
+        self.backgroundColor = backgroundColor
     }
 
     public var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
-            TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
-                let time = context.date.timeIntervalSinceReferenceDate * speed
+            TimelineView(
+                .animation(
+                    minimumInterval: 1.0 / 30.0,
+                    paused: reduceMotion || resolvedSpeed == 0
+                )
+            ) { context in
+                let time = reduceMotion ? 0 : context.date.timeIntervalSinceReferenceDate * resolvedSpeed
                 let blobs = resolvedBlobs
                 ZStack {
-                    theme.background
+                    backgroundColor ?? theme.background
                     ZStack {
                         ForEach(blobs.indices, id: \.self) { index in
                             blobView(blobs[index], size: size, time: time)
                         }
                     }
-                    .blur(radius: blur)
+                    .blur(radius: resolvedBlur)
                 }
                 .drawingGroup()
             }
@@ -76,20 +91,30 @@ public struct SCAuroraBackground: View {
         var phase: Double
     }
 
+    private struct Motion {
+        var scale: CGFloat
+        var xAmplitude: CGFloat
+        var yAmplitude: CGFloat
+        var xFrequency: Double
+        var yFrequency: Double
+        var phase: Double
+    }
+
     /// Distinct radius/amplitude/frequency/phase per blob slot.
-    private static let motions: [(scale: CGFloat, xAmp: CGFloat, yAmp: CGFloat, xFreq: Double, yFreq: Double, phase: Double)] = [
-        (0.90, 0.28, 0.22, 0.23, 0.31, 0.0),
-        (0.75, 0.32, 0.26, 0.17, 0.26, 2.1),
-        (0.80, 0.24, 0.30, 0.29, 0.19, 4.2),
-        (0.65, 0.30, 0.24, 0.13, 0.22, 1.3),
+    private static let motions: [Motion] = [
+        Motion(scale: 0.90, xAmplitude: 0.28, yAmplitude: 0.22, xFrequency: 0.23, yFrequency: 0.31, phase: 0.0),
+        Motion(scale: 0.75, xAmplitude: 0.32, yAmplitude: 0.26, xFrequency: 0.17, yFrequency: 0.26, phase: 2.1),
+        Motion(scale: 0.80, xAmplitude: 0.24, yAmplitude: 0.30, xFrequency: 0.29, yFrequency: 0.19, phase: 4.2),
+        Motion(scale: 0.65, xAmplitude: 0.30, yAmplitude: 0.24, xFrequency: 0.13, yFrequency: 0.22, phase: 1.3),
     ]
 
     private var resolvedBlobs: [Blob] {
-        let palette = colors ?? [
-            theme.chart1.opacity(0.35),
-            theme.chart2.opacity(0.35),
-            theme.chart5.opacity(0.35),
-        ]
+        let palette =
+            colors ?? [
+                theme.chart1.opacity(0.35),
+                theme.chart2.opacity(0.35),
+                theme.chart5.opacity(0.35),
+            ]
         guard !palette.isEmpty else { return [] }
         let count = max(palette.count, 3)
         return (0..<count).map { index in
@@ -97,13 +122,21 @@ public struct SCAuroraBackground: View {
             return Blob(
                 color: palette[index % palette.count],
                 scale: motion.scale,
-                xAmplitude: motion.xAmp,
-                yAmplitude: motion.yAmp,
-                xFrequency: motion.xFreq,
-                yFrequency: motion.yFreq,
+                xAmplitude: motion.xAmplitude,
+                yAmplitude: motion.yAmplitude,
+                xFrequency: motion.xFrequency,
+                yFrequency: motion.yFrequency,
                 phase: motion.phase
             )
         }
+    }
+
+    private var resolvedSpeed: Double {
+        speed.isFinite ? speed : 0
+    }
+
+    private var resolvedBlur: CGFloat {
+        blur.isFinite ? max(blur, 0) : 0
     }
 
     private func blobView(_ blob: Blob, size: CGSize, time: Double) -> some View {

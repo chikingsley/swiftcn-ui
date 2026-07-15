@@ -1,0 +1,50 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  macos:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install current SwiftLint
+        run: brew install swiftlint
+
+      - name: Official Swift format
+        run: >-
+          swift format lint --configuration .swift-format --recursive --parallel --strict
+          Sources Showcase/Sources cli/Sources
+
+      - name: SwiftLint
+        run: swiftlint lint --strict --config .swiftlint.yml
+
+      - name: macOS Showcase
+        run: swift build --package-path Showcase --product SwiftcnShowcase
+
+      - name: Registry freshness
+        run: python3 scripts/generate_registry.py --check
+
+      - name: Official registry schema
+        run: npx --yes shadcn@latest registry validate ./registry.json
+
+      - name: Shadcn source parity ledger
+        run: python3 scripts/check_shadcn_parity.py
+
+      - name: ElevenLabs source parity ledger
+        run: python3 scripts/check_elevenlabs_parity.py
+
+  ipados:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Swiftcn for iPadOS/iOS Simulator
+        run: >-
+          xcodebuild -scheme swiftcn-ui
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath "$RUNNER_TEMP/swiftcn-ipados"
+          CODE_SIGNING_ALLOWED=NO build

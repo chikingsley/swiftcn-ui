@@ -16,23 +16,30 @@ import SwiftUI
 ///     SCTextarea("Bio", text: $bio, minHeight: 140)
 public struct SCTextarea: View {
     @Environment(\.theme) private var theme
-    @Environment(\.isEnabled) private var isEnabled
-    @Environment(\.scFieldInvalid) private var isInvalid
+    @Environment(\.scFieldInvalid) private var fieldIsInvalid
+    @Environment(\.scInputGroupControl) private var inputGroupControl
     @FocusState private var isFocused: Bool
 
     @Binding private var text: String
     private let placeholder: String
     private let minHeight: CGFloat
+    private let explicitIsInvalid: SCFieldInvalidState
 
     /// Creates a text area.
     /// - Parameters:
     ///   - placeholder: Muted text shown while `text` is empty.
     ///   - text: The edited string.
     ///   - minHeight: Minimum editor height in points (grows with content).
-    public init(_ placeholder: String, text: Binding<String>, minHeight: CGFloat = 100) {
+    public init(
+        _ placeholder: String = "",
+        text: Binding<String>,
+        minHeight: CGFloat = 64,
+        isInvalid: SCFieldInvalidState = .inherited
+    ) {
         self.placeholder = placeholder
         self._text = text
-        self.minHeight = minHeight
+        self.minHeight = max(minHeight, 0)
+        self.explicitIsInvalid = isInvalid
     }
 
     public var body: some View {
@@ -43,6 +50,7 @@ public struct SCTextarea: View {
                 .scrollContentBackground(.hidden)
                 .focused($isFocused)
                 .frame(minHeight: minHeight, alignment: .topLeading)
+                .accessibilityHint(text.isEmpty ? placeholder : "")
 
             if text.isEmpty {
                 Text(placeholder)
@@ -50,15 +58,84 @@ public struct SCTextarea: View {
                     .foregroundStyle(theme.mutedForeground)
                     .padding(editorTextInsets)
                     .allowsHitTesting(false)
+                    .accessibilityHidden(true)
             }
         }
-        .padding(contentPadding)
-        .background(theme.background, in: shape)
-        .overlay(shape.strokeBorder(strokeColor, lineWidth: isFocused ? 1.5 : 1))
-        .contentShape(shape)
+        .modifier(
+            SCTextareaChrome(
+                contentPadding: contentPadding,
+                isFocused: isFocused,
+                isInvalid: resolvedIsInvalid,
+                suppressesChrome: inputGroupControl.isGrouped
+            )
+        )
         .onTapGesture { isFocused = true }
-        .opacity(isEnabled ? 1 : 0.5)
         .animation(.easeOut(duration: 0.15), value: isFocused)
+        .onChange(of: isFocused) { _, focused in
+            inputGroupControl.reportFocus(focused)
+        }
+        .onChange(of: inputGroupControl.focusRequestID) { _, _ in
+            guard inputGroupControl.isGrouped else { return }
+            isFocused = true
+        }
+        .preference(
+            key: SCInputGroupInvalidPreferenceKey.self,
+            value: inputGroupControl.isGrouped && resolvedIsInvalid
+        )
+        .onDisappear {
+            if isFocused {
+                inputGroupControl.reportFocus(false)
+            }
+        }
+    }
+
+    private var resolvedIsInvalid: Bool {
+        explicitIsInvalid.resolve(inherited: fieldIsInvalid)
+    }
+
+    /// Outer padding, minus `TextEditor`'s intrinsic insets (5pt line-fragment
+    /// padding on both platforms; 8pt top inset on iOS only), so the text
+    /// sits 12pt from the border like `SCInput`.
+    private var contentPadding: EdgeInsets {
+        #if os(iOS)
+            EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
+        #else
+            EdgeInsets(top: 12, leading: 7, bottom: 12, trailing: 7)
+        #endif
+    }
+
+    /// Aligns the placeholder with `TextEditor`'s intrinsic text origin.
+    private var editorTextInsets: EdgeInsets {
+        #if os(iOS)
+            EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0)
+        #else
+            EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
+        #endif
+    }
+}
+
+private struct SCTextareaChrome: ViewModifier {
+    @Environment(\.theme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
+
+    let contentPadding: EdgeInsets
+    let isFocused: Bool
+    let isInvalid: Bool
+    let suppressesChrome: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if suppressesChrome {
+            content
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            content
+                .padding(contentPadding)
+                .background(theme.background, in: shape)
+                .overlay(shape.strokeBorder(strokeColor, lineWidth: isFocused ? 1.5 : 1))
+                .contentShape(shape)
+                .opacity(isEnabled ? 1 : 0.5)
+        }
     }
 
     private var shape: RoundedRectangle {
@@ -73,26 +150,6 @@ public struct SCTextarea: View {
         } else {
             theme.input
         }
-    }
-
-    /// Outer padding, minus `TextEditor`'s intrinsic insets (5pt line-fragment
-    /// padding on both platforms; 8pt top inset on iOS only), so the text
-    /// sits 12pt from the border like `SCInput`.
-    private var contentPadding: EdgeInsets {
-        #if os(iOS)
-        EdgeInsets(top: 4, leading: 7, bottom: 4, trailing: 7)
-        #else
-        EdgeInsets(top: 12, leading: 7, bottom: 12, trailing: 7)
-        #endif
-    }
-
-    /// Aligns the placeholder with `TextEditor`'s intrinsic text origin.
-    private var editorTextInsets: EdgeInsets {
-        #if os(iOS)
-        EdgeInsets(top: 8, leading: 5, bottom: 0, trailing: 0)
-        #else
-        EdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 0)
-        #endif
     }
 }
 

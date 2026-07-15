@@ -1,0 +1,4082 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "project": "shadcn/ui",
+    "style": "base",
+    "checkedAt": "2026-07-14",
+    "componentCatalog": "https://ui.shadcn.com/docs/components",
+    "blockCatalog": "https://ui.shadcn.com/blocks"
+  },
+  "expectedCounts": {
+    "components": 64,
+    "blocks": 26
+  },
+  "catalog": {
+    "components": [
+      "accordion",
+      "alert",
+      "alert-dialog",
+      "aspect-ratio",
+      "attachment",
+      "avatar",
+      "badge",
+      "breadcrumb",
+      "bubble",
+      "button",
+      "button-group",
+      "calendar",
+      "card",
+      "carousel",
+      "chart",
+      "checkbox",
+      "collapsible",
+      "combobox",
+      "command",
+      "context-menu",
+      "data-table",
+      "date-picker",
+      "dialog",
+      "direction",
+      "drawer",
+      "dropdown-menu",
+      "empty",
+      "field",
+      "hover-card",
+      "input",
+      "input-group",
+      "input-otp",
+      "item",
+      "kbd",
+      "label",
+      "marker",
+      "menubar",
+      "message",
+      "message-scroller",
+      "native-select",
+      "navigation-menu",
+      "pagination",
+      "popover",
+      "progress",
+      "radio-group",
+      "resizable",
+      "scroll-area",
+      "select",
+      "separator",
+      "sheet",
+      "sidebar",
+      "skeleton",
+      "slider",
+      "sonner",
+      "spinner",
+      "switch",
+      "table",
+      "tabs",
+      "textarea",
+      "toast",
+      "toggle",
+      "toggle-group",
+      "tooltip",
+      "typography"
+    ],
+    "blocks": [
+      "dashboard-01",
+      "sidebar-01",
+      "sidebar-02",
+      "sidebar-03",
+      "sidebar-04",
+      "sidebar-05",
+      "sidebar-07",
+      "sidebar-08",
+      "sidebar-09",
+      "sidebar-10",
+      "sidebar-11",
+      "sidebar-12",
+      "sidebar-13",
+      "sidebar-14",
+      "sidebar-15",
+      "sidebar-16",
+      "login-01",
+      "login-02",
+      "login-03",
+      "login-04",
+      "login-05",
+      "signup-01",
+      "signup-02",
+      "signup-03",
+      "signup-04",
+      "signup-05"
+    ]
+  },
+  "coverage": {
+    "componentAliases": {},
+    "missingComponents": [],
+    "blockAliases": {
+      "login-01": "login-block",
+      "login-02": "login02-block",
+      "login-03": "login03-block",
+      "login-04": "login04-block",
+      "login-05": "login05-block",
+      "signup-01": "signup01-block",
+      "signup-02": "signup02-block",
+      "signup-03": "signup03-block",
+      "signup-04": "signup04-block",
+      "signup-05": "signup05-block",
+      "sidebar-01": "sidebar01-block",
+      "sidebar-02": "sidebar02-block",
+      "sidebar-03": "sidebar03-block",
+      "sidebar-04": "sidebar04-block",
+      "sidebar-05": "sidebar05-block",
+      "sidebar-07": "sidebar-block",
+      "sidebar-08": "sidebar08-block",
+      "sidebar-09": "sidebar09-block",
+      "sidebar-10": "sidebar10-block",
+      "sidebar-11": "sidebar11-block",
+      "sidebar-12": "sidebar12-block",
+      "sidebar-13": "sidebar13-block",
+      "sidebar-14": "sidebar14-block",
+      "sidebar-15": "sidebar15-block",
+      "sidebar-16": "sidebar16-block",
+      "dashboard-01": "dashboard01-block"
+    },
+    "missingBlocks": [],
+    "unlistedBlocks": [
+      {
+        "name": "sidebar-06",
+        "preview": "https://ui.shadcn.com/view/new-york-v4/sidebar-06",
+        "status": "classify-before-porting"
+      }
+    ]
+  },
+  "structuralMaps": [
+    {
+      "name": "accordion",
+      "source": "Sources/Swiftcn/Components/Accordion.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/accordion",
+      "upstreamParts": [
+        "Accordion",
+        "AccordionItem",
+        "AccordionTrigger",
+        "AccordionContent"
+      ],
+      "swiftSymbols": [
+        "SCAccordion",
+        "SCAccordionItem",
+        "SCAccordionTrigger",
+        "SCAccordionContent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "controlled or internally owned expanded values",
+        "default expanded values",
+        "single, multiple, and non-collapsible single modes",
+        "root and item disabled states",
+        "arbitrary trigger and content slots",
+        "expanded-value change callback"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI environment state replaces Base UI context",
+        "a Set<String> binding replaces the web value array",
+        "native SwiftUI Button semantics replace the web trigger primitive"
+      ]
+    },
+    {
+      "name": "alert",
+      "source": "Sources/Swiftcn/Components/Alert.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/alert",
+      "upstreamParts": [
+        "Alert",
+        "AlertTitle",
+        "AlertDescription",
+        "AlertAction"
+      ],
+      "swiftSymbols": [
+        "SCAlert",
+        "SCAlertTitle",
+        "SCAlertDescription",
+        "SCAlertAction"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default and destructive variants",
+        "arbitrary title, description, and action content",
+        "arbitrary leading content",
+        "inline non-modal presentation"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI view-builder slots replace generic HTML children",
+        "accessibility containment replaces the web alert element while live announcement remains a validation requirement",
+        "an arbitrary leading SwiftUI slot replaces CSS-positioned child media"
+      ]
+    },
+    {
+      "name": "alert-dialog",
+      "source": "Sources/Swiftcn/Components/AlertDialog.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/alert-dialog",
+      "upstreamParts": [
+        "AlertDialog",
+        "AlertDialogTrigger",
+        "AlertDialogPortal",
+        "AlertDialogOverlay",
+        "AlertDialogContent",
+        "AlertDialogHeader",
+        "AlertDialogFooter",
+        "AlertDialogMedia",
+        "AlertDialogTitle",
+        "AlertDialogDescription",
+        "AlertDialogAction",
+        "AlertDialogCancel"
+      ],
+      "swiftSymbols": [
+        "SCAlertDialog",
+        "SCAlertDialogTrigger",
+        "SCAlertDialogOverlay",
+        "SCAlertDialogContent",
+        "SCAlertDialogHeader",
+        "SCAlertDialogFooter",
+        "SCAlertDialogMedia",
+        "SCAlertDialogTitle",
+        "SCAlertDialogDescription",
+        "SCAlertDialogAction",
+        "SCAlertDialogCancel"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "theme"
+      ],
+      "behaviors": [
+        "controlled presentation binding",
+        "non-dismissible backdrop",
+        "default and small content sizes",
+        "arbitrary media, title, description, and action slots",
+        "cancel and confirm dismiss before invoking caller callbacks",
+        "default and destructive confirmation roles"
+      ],
+      "intentionalAdaptations": [
+        "the SwiftUI root overlay owns the web Portal responsibility",
+        "a SwiftUI modal accessibility trait replaces the browser dialog role",
+        "native Button actions replace Base UI close and render primitives"
+      ]
+    },
+    {
+      "name": "aspect-ratio",
+      "source": "Sources/Swiftcn/Components/AspectRatio.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/aspect-ratio",
+      "upstreamParts": [
+        "AspectRatio"
+      ],
+      "swiftSymbols": [
+        "SCAspectRatio"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "required positive finite width-to-height ratio",
+        "arbitrary child content",
+        "content fills and clips to the ratio container"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI aspectRatio and overlay layout replace the CSS custom-property wrapper",
+        "an optional SwiftUI alignment extends the upstream wrapper without restricting content"
+      ]
+    },
+    {
+      "name": "attachment",
+      "source": "Sources/Swiftcn/Components/Attachment.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/attachment",
+      "upstreamParts": [
+        "Attachment",
+        "AttachmentGroup",
+        "AttachmentMedia",
+        "AttachmentContent",
+        "AttachmentTitle",
+        "AttachmentDescription",
+        "AttachmentActions",
+        "AttachmentAction",
+        "AttachmentTrigger"
+      ],
+      "swiftSymbols": [
+        "SCAttachment",
+        "SCAttachmentGroup",
+        "SCAttachmentMedia",
+        "SCAttachmentContent",
+        "SCAttachmentTitle",
+        "SCAttachmentDescription",
+        "SCAttachmentActions",
+        "SCAttachmentAction",
+        "SCAttachmentTrigger"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "scroll-fade",
+        "shimmer",
+        "theme"
+      ],
+      "behaviors": [
+        "idle, uploading, processing, error, and done states",
+        "default, small, and extra-small sizes",
+        "horizontal and vertical orientations",
+        "arbitrary media, content, title, description, and action slots",
+        "individual caller-owned actions and disabled states",
+        "full-card trigger semantics",
+        "horizontally scrolling view-aligned groups"
+      ],
+      "intentionalAdaptations": [
+        "a full-card SwiftUI Button wrapper replaces the absolute web trigger",
+        "native horizontal ScrollView view alignment replaces CSS snap scrolling",
+        "SF Symbol and arbitrary SwiftUI media replace generic DOM media"
+      ]
+    },
+    {
+      "name": "avatar",
+      "source": "Sources/Swiftcn/Components/Avatar.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/avatar",
+      "upstreamParts": [
+        "Avatar",
+        "AvatarImage",
+        "AvatarFallback",
+        "AvatarBadge",
+        "AvatarGroup",
+        "AvatarGroupCount"
+      ],
+      "swiftSymbols": [
+        "SCAvatar",
+        "SCAvatarImage",
+        "SCAvatarFallback",
+        "SCAvatarBadge",
+        "SCAvatarGroup",
+        "SCAvatarGroupCount"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "small, default, large, and custom native sizes",
+        "idle, loading, loaded, and error image states",
+        "caller-observable image loading changes",
+        "arbitrary delayed fallback content",
+        "arbitrary badge content",
+        "arbitrary overlapping group children and group counts",
+        "URL and initials convenience composition"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI AsyncImage replaces the HTML image element",
+        "a root-scoped environment binding replaces Base UI loading context",
+        "native accessibility labels replace image alt attributes",
+        "the group shares a native size environment so group counts align with avatars"
+      ]
+    },
+    {
+      "name": "badge",
+      "source": "Sources/Swiftcn/Components/Badge.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/badge",
+      "upstreamParts": [
+        "Badge",
+        "badgeVariants"
+      ],
+      "swiftSymbols": [
+        "SCBadge",
+        "SCBadgeVariant",
+        "SCBadgeModifier",
+        "SCBadgeButtonStyle",
+        "scBadge"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default, secondary, destructive, outline, ghost, and link variants",
+        "arbitrary horizontally composed content",
+        "native Button and Link activation ownership",
+        "invalid, hover, pressed, and disabled visual states",
+        "custom background, foreground, and border color escape hatches"
+      ],
+      "intentionalAdaptations": [
+        "a reusable SwiftUI ViewModifier replaces the class-variance helper",
+        "a native ButtonStyle replaces Base UI render-prop element substitution",
+        "callers retain native Button or Link semantics instead of embedding actions in a decorative view"
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "source": "Sources/Swiftcn/Components/Breadcrumb.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/breadcrumb",
+      "upstreamParts": [
+        "Breadcrumb",
+        "BreadcrumbList",
+        "BreadcrumbItem",
+        "BreadcrumbLink",
+        "BreadcrumbPage",
+        "BreadcrumbSeparator",
+        "BreadcrumbEllipsis"
+      ],
+      "swiftSymbols": [
+        "SCBreadcrumb",
+        "SCBreadcrumbList",
+        "SCBreadcrumbItem",
+        "SCBreadcrumbLink",
+        "SCBreadcrumbPage",
+        "SCBreadcrumbSeparator",
+        "SCBreadcrumbEllipsis"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "semantic breadcrumb container labeling",
+        "arbitrary root, list, item, link, page, and separator content",
+        "native action and URL link ownership",
+        "caller-owned native navigation-link styling",
+        "current-page accessibility value",
+        "accessible ellipsis and presentation-only separators",
+        "width-aware wrapping and right-to-left placement",
+        "collapsing array convenience API"
+      ],
+      "intentionalAdaptations": [
+        "a custom SwiftUI Layout replaces the web flex-wrap list",
+        "native Button and Link replace anchor render props",
+        "a reusable view modifier supports caller-owned NavigationLink composition",
+        "the directional chevron.forward SF Symbol replaces CSS RTL icon flipping"
+      ]
+    },
+    {
+      "name": "button",
+      "source": "Sources/Swiftcn/Components/Button.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/button",
+      "upstreamParts": [
+        "Button",
+        "buttonVariants"
+      ],
+      "swiftSymbols": [
+        "SCButtonVariant",
+        "SCButtonSize",
+        "SCButtonStyle",
+        "sc"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default, destructive, outline, secondary, ghost, and link variants",
+        "default, extra-small, small, large, and four icon-only sizes",
+        "pointer hover, pressed, keyboard focus, and disabled visual states",
+        "arbitrary native SwiftUI labels including icons and progress indicators",
+        "native Button action, role, keyboard, and accessibility ownership"
+      ],
+      "intentionalAdaptations": [
+        "a ButtonStyle replaces the web component wrapper and cva class helper",
+        "SwiftUI Label or caller-owned HStack composition replaces data-icon child selectors",
+        "native Button disabled and focus state replace DOM attributes",
+        "Link can reuse the style without overriding native link semantics",
+        "consumer-owned style composition replaces arbitrary className radius overrides"
+      ]
+    },
+    {
+      "name": "button-group",
+      "source": "Sources/Swiftcn/Components/ButtonGroup.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/button-group",
+      "upstreamParts": [
+        "ButtonGroup",
+        "ButtonGroupText",
+        "ButtonGroupSeparator",
+        "buttonGroupVariants"
+      ],
+      "swiftSymbols": [
+        "SCButtonGroupOrientation",
+        "SCButtonGroup",
+        "SCButtonGroupText",
+        "SCButtonGroupTextModifier",
+        "SCButtonGroupSeparator",
+        "SCButtonGroupItem",
+        "scButtonGroupText"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "separator",
+        "theme"
+      ],
+      "behaviors": [
+        "horizontal and vertical attached-control orientation",
+        "arbitrary Button, Input, Select, text, separator, and nested-group children",
+        "group-aware flattened Button, Input, and Select chrome",
+        "arbitrary static text and caller-owned Label styling",
+        "horizontal and vertical separator orientations",
+        "optional accessible group labeling",
+        "compatibility item API with required caller-owned actions and disabled state"
+      ],
+      "intentionalAdaptations": [
+        "one-point SwiftUI layout overlap replaces CSS adjacent-border removal",
+        "shared environment context replaces data-slot child selectors for group-aware controls",
+        "a custom vertical Layout stretches controls to the widest intrinsic child",
+        "a reusable ViewModifier replaces ButtonGroupText render-prop substitution",
+        "SCSeparator supplies the native horizontal and vertical rules"
+      ]
+    },
+    {
+      "name": "bubble",
+      "source": "Sources/Swiftcn/Components/Bubble.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/bubble",
+      "upstreamParts": [
+        "BubbleGroup",
+        "Bubble",
+        "BubbleContent",
+        "BubbleReactions"
+      ],
+      "swiftSymbols": [
+        "SCBubbleVariant",
+        "SCBubbleAlignment",
+        "SCBubbleReactionsSide",
+        "SCBubbleGroup",
+        "SCBubble",
+        "SCBubbleContent",
+        "SCBubbleContentModifier",
+        "SCBubbleContentButtonStyle",
+        "SCBubbleReactions",
+        "scBubbleContent",
+        "scBubbleReactions"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default, secondary, muted, tinted, outline, ghost, and destructive variants",
+        "start and end inline alignment",
+        "content-fit width capped at 80% of the container with ghost full width",
+        "grouped consecutive bubbles",
+        "reactions overlapped on a chosen edge and inline end with an accessibility label",
+        "arbitrary bubble content beyond text",
+        "native Button and Link activation ownership",
+        "custom background, foreground, and border escape hatches"
+      ],
+      "intentionalAdaptations": [
+        "a SwiftUI environment variant replaces CSS data-attribute selectors between Bubble and BubbleContent",
+        "a custom Layout implements the 80% width cap instead of CSS max-width",
+        "a public reactions view plus overlay modifier replace absolute CSS positioning",
+        "group alignment is passed explicitly instead of inherited through message CSS group selectors",
+        "a reusable modifier and native ButtonStyle replace the polymorphic render prop"
+      ]
+    },
+    {
+      "name": "calendar",
+      "source": "Sources/Swiftcn/Components/Calendar.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/calendar",
+      "upstreamParts": [
+        "Calendar",
+        "CalendarDayButton"
+      ],
+      "swiftSymbols": [
+        "SCCalendarCaptionLayout",
+        "SCCalendarConfiguration",
+        "SCCalendarDayState",
+        "SCCalendar",
+        "SCCalendarDayButton"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "theme"
+      ],
+      "behaviors": [
+        "single, multiple, and contiguous range selection bindings",
+        "controlled or internally owned visible month with change callbacks",
+        "bounds and caller-defined disabled dates",
+        "outside-day visibility and selection",
+        "fixed six-week grids and optional week numbers",
+        "one or more visible months",
+        "label, dropdown, month-dropdown, and year-dropdown captions",
+        "caller-configurable navigation button variant",
+        "public custom day state and arbitrary CalendarDayButton content",
+        "locale-aware calendar symbols and right-to-left directional navigation",
+        "macOS arrow-key focus movement that skips disabled dates"
+      ],
+      "intentionalAdaptations": [
+        "Foundation Calendar replaces react-day-picker date and locale machinery",
+        "typed SwiftUI bindings replace selected and onSelect prop pairs",
+        "a typed configuration replaces styling and behavior prop spreading",
+        "SwiftUI FocusState and move commands replace DOM day-button focus effects",
+        "a public day-state value replaces React modifier data attributes"
+      ]
+    },
+    {
+      "name": "card",
+      "source": "Sources/Swiftcn/Components/Card.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/card",
+      "upstreamParts": [
+        "Card",
+        "CardHeader",
+        "CardTitle",
+        "CardDescription",
+        "CardAction",
+        "CardContent",
+        "CardFooter"
+      ],
+      "swiftSymbols": [
+        "SCCardSize",
+        "SCCard",
+        "SCCardHeader",
+        "SCCardTitle",
+        "SCCardDescription",
+        "SCCardAction",
+        "SCCardContent",
+        "SCCardFooter"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default and small card sizing",
+        "arbitrary root, title, description, action, content, and footer slots",
+        "automatic top-trailing action placement beside title and description",
+        "size-aware per-region horizontal insets and root vertical spacing",
+        "header accessibility traits on arbitrary title content"
+      ],
+      "intentionalAdaptations": [
+        "a custom SwiftUI Layout replaces the CSS header grid",
+        "a layout value identifies CardAction without restricting its content",
+        "SwiftUI environment sizing replaces card data-size selectors",
+        "native ViewBuilder regions replace generic div children"
+      ]
+    },
+    {
+      "name": "carousel",
+      "source": "Sources/Swiftcn/Components/Carousel.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/carousel",
+      "upstreamParts": [
+        "Carousel",
+        "CarouselContent",
+        "CarouselItem",
+        "CarouselPrevious",
+        "CarouselNext",
+        "useCarousel",
+        "CarouselApi"
+      ],
+      "swiftSymbols": [
+        "SCCarouselOrientation",
+        "SCCarouselPlugin",
+        "SCCarouselState",
+        "SCCarousel",
+        "SCCarouselContent",
+        "SCCarouselItem",
+        "SCCarouselPrevious",
+        "SCCarouselNext"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "theme"
+      ],
+      "behaviors": [
+        "horizontal and vertical snapping tracks",
+        "externally owned observable API state and programmatic scrolling",
+        "selection change callbacks",
+        "connect and disconnect lifecycle for caller-defined plugins",
+        "arbitrary identified slide content and multiple visible-item spans",
+        "customizable previous and next controls with disabled boundaries",
+        "horizontal and vertical arrow-key navigation",
+        "adjustable accessibility navigation and slide-position values",
+        "optional wrapped programmatic navigation",
+        "data-driven convenience composition with optional controls and indicators"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI ScrollView snapping replaces Embla's DOM viewport",
+        "an ObservableObject in the environment replaces React context and useCarousel",
+        "item ID preferences replace Embla slide registration",
+        "a Swift protocol lifecycle replaces JavaScript plugin installation",
+        "typed state injection replaces the setApi callback"
+      ]
+    },
+    {
+      "name": "chart",
+      "source": "Sources/Swiftcn/Components/Chart.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/chart",
+      "upstreamParts": [
+        "ChartConfig",
+        "ChartContainer",
+        "ChartStyle",
+        "ChartTooltip",
+        "ChartTooltipContent",
+        "ChartLegend",
+        "ChartLegendContent",
+        "getPayloadConfigFromPayload"
+      ],
+      "swiftSymbols": [
+        "SCChartSeriesConfiguration",
+        "SCChartConfiguration",
+        "SCChartContainer",
+        "SCChartStyle",
+        "SCChartTooltip",
+        "SCChartTooltipContent",
+        "SCChartLegendContent",
+        "scChartStyle",
+        "scChartTooltip"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "ordered per-series configuration with adaptive colors and arbitrary labels and icons",
+        "shared container configuration and semantic Swift Charts styling",
+        "real x-selection and overlay tooltip positioning",
+        "active and empty tooltip suppression",
+        "dot, line, and dashed tooltip indicators",
+        "label and indicator hiding, color overrides, and arbitrary row formatting",
+        "payload-key to series-configuration resolution",
+        "configuration-aware top or bottom legend content"
+      ],
+      "intentionalAdaptations": [
+        "Swift Charts replaces Recharts and its responsive DOM container",
+        "typed SwiftUI environment configuration replaces React context and CSS variables",
+        "chartXSelection and ChartProxy overlay replace the Recharts Tooltip primitive",
+        "SwiftUI legend content replaces the Recharts Legend payload renderer",
+        "adaptive Color values replace injected light and dark CSS variables"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "source": "Sources/Swiftcn/Components/Checkbox.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/checkbox",
+      "upstreamParts": [
+        "Checkbox",
+        "CheckboxPrimitive.Root",
+        "CheckboxPrimitive.Indicator"
+      ],
+      "swiftSymbols": [
+        "SCCheckboxState",
+        "SCCheckboxIndicator",
+        "SCCheckbox",
+        "SCCheckboxStyle",
+        "scCheckbox"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "caller-owned checked, unchecked, and mixed state",
+        "mixed-state activation resolves to checked",
+        "arbitrary label and indicator composition",
+        "unlabeled control composition for fields and table cells",
+        "invalid and disabled visual states",
+        "native keyboard activation and toggle accessibility representation",
+        "boolean binding and native ToggleStyle conveniences"
+      ],
+      "intentionalAdaptations": [
+        "a typed three-state binding replaces separate React checked and indeterminate props",
+        "SwiftUI environment disabled state replaces the DOM disabled attribute",
+        "accessibilityRepresentation exposes native Toggle semantics for the custom visual control",
+        "an EmptyView label supports sibling Field and table composition without HTML id association",
+        "a ToggleStyle convenience preserves direct use with native SwiftUI Toggle"
+      ]
+    },
+    {
+      "name": "collapsible",
+      "source": "Sources/Swiftcn/Components/Collapsible.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/collapsible",
+      "upstreamParts": [
+        "Collapsible",
+        "CollapsibleTrigger",
+        "CollapsibleContent",
+        "CollapsiblePrimitive.Root",
+        "CollapsiblePrimitive.Trigger",
+        "CollapsiblePrimitive.Panel"
+      ],
+      "swiftSymbols": [
+        "SCCollapsibleRoot",
+        "SCCollapsibleTrigger",
+        "SCCollapsibleContent",
+        "SCCollapsible"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "controlled and uncontrolled open state with a configurable initial value",
+        "caller-owned open-change callback",
+        "root-level disabled interaction",
+        "independently composable trigger and content parts",
+        "open-state-aware root, trigger, and content builders",
+        "optional keep-mounted panel content without hit-testing or accessibility exposure while closed",
+        "expanded and collapsed accessibility values",
+        "animated insertion and removal with reduced-motion suppression",
+        "a bundled root-trigger-content convenience composition"
+      ],
+      "intentionalAdaptations": [
+        "a typed SwiftUI environment binding replaces React context and data attributes",
+        "native Button styling and state-aware builders replace the polymorphic render prop",
+        "a Boolean callback replaces browser event details and cancelation",
+        "SwiftUI view retention replaces DOM keepMounted behavior",
+        "browser hidden-until-found behavior has no native macOS or iPadOS equivalent"
+      ]
+    },
+    {
+      "name": "combobox",
+      "source": "Sources/Swiftcn/Components/Combobox.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/combobox",
+      "upstreamParts": [
+        "Combobox",
+        "ComboboxValue",
+        "ComboboxTrigger",
+        "ComboboxClear",
+        "ComboboxInput",
+        "ComboboxContent",
+        "ComboboxList",
+        "ComboboxItem",
+        "ComboboxGroup",
+        "ComboboxLabel",
+        "ComboboxCollection",
+        "ComboboxEmpty",
+        "ComboboxSeparator",
+        "ComboboxChips",
+        "ComboboxChip",
+        "ComboboxChipsInput",
+        "useComboboxAnchor"
+      ],
+      "swiftSymbols": [
+        "SCComboboxOption",
+        "SCComboboxSnapshot",
+        "SCComboboxRoot",
+        "SCComboboxInput",
+        "SCComboboxTrigger",
+        "SCComboboxValue",
+        "SCComboboxClear",
+        "SCComboboxContent",
+        "SCComboboxList",
+        "SCComboboxItem",
+        "SCComboboxGroup",
+        "SCComboboxLabel",
+        "SCComboboxCollection",
+        "SCComboboxEmpty",
+        "SCComboboxSeparator",
+        "SCComboboxChips",
+        "SCComboboxChip",
+        "SCComboboxChipsInput",
+        "SCCombobox"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "caller-owned typed single and multiple selection",
+        "controlled or uncontrolled query and presentation state with callbacks",
+        "item-to-string synchronization for selected input values",
+        "independent input, trigger, value, clear, content, list, item, group, label, collection, empty, and separator composition",
+        "localized filtering with caller-defined filter and row rendering",
+        "group ordering and disabled item handling",
+        "optional automatic highlight, pointer highlight, cyclic arrow navigation, Return selection, and Escape dismissal",
+        "native popover presentation and single-selection dismissal",
+        "wrapping multi-select chips with real remove and clear actions",
+        "disabled and invalid field states",
+        "data-driven single and multiple convenience composed over the same primitive engine"
+      ],
+      "intentionalAdaptations": [
+        "typed Swift bindings and environment context replace the Base UI root context",
+        "native SwiftUI popover placement replaces Portal, Positioner, and useComboboxAnchor",
+        "SCComboboxOption and ViewBuilder closures replace JavaScript items and render functions",
+        "a native keyboard coordinator connects separately composed inputs and collections",
+        "a SwiftUI Layout provides wrapping chips without DOM flexbox",
+        "SCCombobox is a thin convenience composition over the same primitive root and collection engine"
+      ]
+    },
+    {
+      "name": "command",
+      "source": "Sources/Swiftcn/Components/Command.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/command",
+      "upstreamParts": [
+        "Command",
+        "CommandDialog",
+        "CommandInput",
+        "CommandList",
+        "CommandEmpty",
+        "CommandGroup",
+        "CommandItem",
+        "CommandShortcut",
+        "CommandSeparator"
+      ],
+      "swiftSymbols": [
+        "SCCommandItem",
+        "SCCommandGroup",
+        "SCCommandSection",
+        "SCCommandRoot",
+        "SCCommandInput",
+        "SCCommandResults",
+        "SCCommandEmpty",
+        "SCCommandGroupView",
+        "SCCommandItemView",
+        "SCCommandShortcut",
+        "SCCommandSeparator",
+        "SCCommandDataCollection",
+        "SCCommandCollection",
+        "SCCommandList",
+        "SCCommandDialog",
+        "scCommandDialog",
+        "scCommandPalette"
+      ],
+      "requiredRegistryDependencies": [
+        "dialog",
+        "kbd",
+        "theme"
+      ],
+      "behaviors": [
+        "controlled or uncontrolled query with change callbacks",
+        "independently composable root, input, results, empty, group, item, shortcut, and separator parts",
+        "arbitrary typed data collections with custom filtering, rows, headings, and empty content",
+        "disabled item exclusion from keyboard selection",
+        "automatic or explicit highlight, pointer highlight, cyclic arrow navigation, Return execution, and scroll tracking",
+        "inline command composition and data-driven menu convenience over one engine",
+        "arbitrary modal command content with hidden title and description semantics, optional close control, scrim dismissal, and Escape dismissal",
+        "palette execution dismisses before running the caller-owned action",
+        "checked item and keyboard shortcut presentation"
+      ],
+      "intentionalAdaptations": [
+        "a typed SwiftUI environment and keyboard coordinator replace cmdk context and DOM state attributes",
+        "SCCommandDataCollection replaces cmdk child discovery and JavaScript filtering",
+        "SwiftUI focus and key-press handlers replace browser keyboard events",
+        "SCCommandDialog composes the shared native Dialog implementation instead of a DOM portal",
+        "SCCommandList and the command-palette modifier are thin conveniences over the same root and data engine",
+        "SF Symbols and SCKbd replace web icon and span shortcut elements"
+      ]
+    },
+    {
+      "name": "context-menu",
+      "source": "Sources/Swiftcn/Components/ContextMenu.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/context-menu",
+      "upstreamParts": [
+        "ContextMenu",
+        "ContextMenuTrigger",
+        "ContextMenuContent",
+        "ContextMenuItem",
+        "ContextMenuCheckboxItem",
+        "ContextMenuRadioItem",
+        "ContextMenuLabel",
+        "ContextMenuSeparator",
+        "ContextMenuShortcut",
+        "ContextMenuGroup",
+        "ContextMenuPortal",
+        "ContextMenuSub",
+        "ContextMenuSubContent",
+        "ContextMenuSubTrigger",
+        "ContextMenuRadioGroup"
+      ],
+      "swiftSymbols": [
+        "SCContextMenuItemVariant",
+        "SCContextMenuShortcut",
+        "SCContextMenu",
+        "scContextMenu",
+        "SCContextMenuItem",
+        "SCContextMenuCheckboxItem",
+        "SCContextMenuRadioGroup",
+        "SCContextMenuRadioItem",
+        "SCContextMenuGroup",
+        "SCContextMenuLabel",
+        "SCContextMenuSub",
+        "SCContextMenuSeparator"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "native pointer context-click and touch long-press invocation",
+        "arbitrary trigger and menu composition",
+        "real default and destructive actions",
+        "disabled native menu items",
+        "caller-controlled checkbox items",
+        "caller-controlled radio groups and tagged radio items",
+        "native semantic groups, labels, and separators",
+        "native nested submenus",
+        "real keyboard shortcuts attached to actions",
+        "system-owned placement, focus, dismissal, and accessibility"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI contextMenu collapses the web Root, Trigger, Content, Portal, and Positioner into one native attachment",
+        "native Menu combines Sub, SubTrigger, and SubContent without decorative wrapper views",
+        "native Section combines Group and GroupLabel semantics",
+        "Toggle and Picker replace checkbox and radio DOM primitives",
+        "the operating system chooses menu side and alignment instead of caller-controlled web coordinates",
+        "KeyEquivalent and EventModifiers replace visual-only shortcut spans"
+      ]
+    },
+    {
+      "name": "data-table",
+      "source": "Sources/Swiftcn/Components/DataTable.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/data-table",
+      "upstreamParts": [
+        "Basic Table",
+        "Column Definitions",
+        "Row Actions",
+        "Pagination",
+        "Sorting",
+        "Filtering",
+        "Visibility",
+        "Row Selection",
+        "DataTableColumnHeader",
+        "DataTablePagination",
+        "DataTableViewOptions"
+      ],
+      "swiftSymbols": [
+        "SCDataTableController",
+        "SCDataTableToolbar",
+        "SCDataTableSearchField",
+        "SCDataTableViewOptions",
+        "SCDataTableColumnHeader",
+        "SCDataTablePagination",
+        "SCDataTable"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "table",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-owned typed query, sort, selection, visibility, page index, and page size state",
+        "global filtering over column-provided search values or a caller-defined predicate",
+        "whole-dataset sorting before pagination",
+        "page-row select-all with mixed selection state through SCTable",
+        "hideable columns with a controlled native view-options menu",
+        "sortable and hideable custom column-header control",
+        "selection summary and configurable rows-per-page control",
+        "first, previous, next, and last page actions with disabled boundaries",
+        "custom cells for badges, row actions, menus, and arbitrary content",
+        "custom empty content, optional toolbar, optional pagination, row activation, and captions",
+        "horizontal overflow and responsive column sizing inherited from SCTable"
+      ],
+      "intentionalAdaptations": [
+        "the implementation follows shadcn's headless guide instead of inventing a rigid universal grid",
+        "an Observation controller replaces TanStack Table state and row-model hooks",
+        "SCTableColumn comparators and search extractors replace JavaScript accessor functions",
+        "native Menu and SwiftUI bindings replace dropdown checkbox controls",
+        "typed row IDs replace TanStack string row identifiers",
+        "custom SwiftUI cells remain the row-actions composition point"
+      ]
+    },
+    {
+      "name": "date-picker",
+      "source": "Sources/Swiftcn/Components/DatePicker.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/date-picker",
+      "upstreamParts": [
+        "Popover",
+        "PopoverTrigger",
+        "PopoverContent",
+        "Calendar",
+        "Basic",
+        "Range Picker",
+        "Date of Birth",
+        "Input",
+        "Time Picker",
+        "Natural Language Picker",
+        "Presets",
+        "RTL"
+      ],
+      "swiftSymbols": [
+        "SCDatePickerPreset",
+        "SCDatePicker",
+        "SCDateRangePicker",
+        "SCDateInputPicker",
+        "SCNaturalLanguageDatePicker",
+        "SCDateTimePicker"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "calendar",
+        "field",
+        "input",
+        "popover",
+        "theme"
+      ],
+      "behaviors": [
+        "basic optional-date selection through a real anchored popover and calendar",
+        "controlled or internal presentation with open-change callbacks",
+        "calendar bounds, disabled dates, controlled month, configuration, and month callbacks",
+        "two-click range selection with configurable multi-month calendar",
+        "date-of-birth month and year caption menus",
+        "caller-owned date and date-range preset actions that respect selection constraints",
+        "localized typed input with submission parsing and invalid feedback",
+        "caller-injected natural-language parsing with live parsed-date feedback",
+        "combined calendar date and native time editing through one optional Date binding",
+        "caller-owned selection callbacks and optional selection dismissal",
+        "right-to-left behavior inherited from SwiftUI layout direction and SCCalendar"
+      ],
+      "intentionalAdaptations": [
+        "matching upstream, there is no DatePicker root; callers can directly compose the public scPopover and SCCalendar parts",
+        "SCDatePicker and its variants are preassembled conveniences over the same Popover and Calendar engine",
+        "a caller-injected parser replaces the optional chrono-node JavaScript dependency",
+        "the native SwiftUI DatePicker supplies localized time editing",
+        "typed Date and ClosedRange bindings replace JavaScript Date and DateRange objects",
+        "SwiftUI layoutDirection propagation replaces the web RTL provider"
+      ]
+    },
+    {
+      "name": "dialog",
+      "source": "Sources/Swiftcn/Components/Dialog.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/dialog",
+      "upstreamParts": [
+        "Dialog",
+        "DialogTrigger",
+        "DialogPortal",
+        "DialogOverlay",
+        "DialogContent",
+        "DialogHeader",
+        "DialogFooter",
+        "DialogTitle",
+        "DialogDescription",
+        "DialogClose"
+      ],
+      "swiftSymbols": [
+        "SCDialogSize",
+        "SCDialog",
+        "SCDialogTrigger",
+        "SCDialogOverlay",
+        "SCDialogContent",
+        "SCDialogHeader",
+        "SCDialogFooter",
+        "SCDialogTitle",
+        "SCDialogDescription",
+        "SCDialogScrollContent",
+        "SCDialogClose",
+        "scDialog",
+        "scDismissDialog"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "theme"
+      ],
+      "behaviors": [
+        "controlled or internal presentation with a caller-owned open-change callback",
+        "independently composable trigger, overlay, content, header, footer, title, description, and close parts",
+        "arbitrary custom overlay and dialog content composition",
+        "caller-configurable scrim and Escape dismissal",
+        "underlying pointer, keyboard, and accessibility interaction disabled while open",
+        "trigger focus restoration after dismissal and initial focus entry into the dialog",
+        "reduced-motion-aware overlay and content transitions",
+        "small, default, and large content widths with optional height constraints",
+        "default, custom, or omitted close controls",
+        "inner scrolling body composition with a sticky header and footer",
+        "responsive horizontal or vertical footer actions",
+        "right-to-left alignment inherited from SwiftUI layout direction",
+        "presentation modifier convenience over the same root presentation engine"
+      ],
+      "intentionalAdaptations": [
+        "SCDialog owns the SwiftUI overlay presentation layer that replaces the web Portal and Viewport",
+        "native Button controls replace Base UI render props for Trigger and Close",
+        "a SwiftUI environment binding replaces Base UI root context",
+        "SCDialogScrollContent uses native ScrollView for the documented scrollable and sticky-footer examples",
+        "SwiftUI focus state and key handling replace browser focus and Escape events",
+        "the caller attaches the root or modifier to the container that should own the modal overlay"
+      ]
+    },
+    {
+      "name": "direction",
+      "source": "Sources/Swiftcn/Components/Direction.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/direction",
+      "upstreamParts": [
+        "DirectionProvider",
+        "useDirection"
+      ],
+      "swiftSymbols": [
+        "SCDirection",
+        "SCDirectionProvider",
+        "SCDirectionReader",
+        "scDirection"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "explicit left-to-right and right-to-left direction values",
+        "arbitrary descendant content provider",
+        "nested provider overrides for local subtrees",
+        "public environment value for reading the current direction",
+        "builder reader equivalent to the useDirection hook",
+        "modifier convenience without an additional layout wrapper",
+        "native propagation to text, semantic edges, controls, and directional layouts"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI layoutDirection is the single backing source instead of a React context",
+        "the public scDirection environment value replaces useDirection",
+        "SCDirectionReader supplies a view-builder alternative for callers that do not store an Environment property",
+        "the native environment automatically propagates through presented SwiftUI content"
+      ]
+    },
+    {
+      "name": "drawer",
+      "source": "Sources/Swiftcn/Components/Drawer.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/drawer",
+      "upstreamParts": [
+        "Drawer",
+        "DrawerPortal",
+        "DrawerOverlay",
+        "DrawerSwipeHandle",
+        "DrawerTrigger",
+        "DrawerClose",
+        "DrawerContent",
+        "DrawerHeader",
+        "DrawerFooter",
+        "DrawerTitle",
+        "DrawerDescription"
+      ],
+      "swiftSymbols": [
+        "SCDrawerSwipeDirection",
+        "SCDrawerModalBehavior",
+        "SCDrawerSnapPoint",
+        "SCDrawer",
+        "SCDrawerTrigger",
+        "SCDrawerOverlay",
+        "SCDrawerClose",
+        "SCDrawerContent",
+        "SCDrawerSwipeHandle",
+        "SCDrawerHeader",
+        "SCDrawerTitle",
+        "SCDrawerDescription",
+        "SCDrawerScrollContent",
+        "SCDrawerFooter",
+        "scDrawer",
+        "scDismissDrawer"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "controlled or internal presentation with open-change callbacks",
+        "independently composable trigger, overlay, swipe handle, content, header, footer, title, description, and close parts",
+        "physical up, right, down, and left edge positions with matching swipe dismissal",
+        "modal, non-modal, and focus-scoped pointer-unrestricted presentation modes",
+        "configurable pointer dismissal, Escape dismissal, and swipe interaction",
+        "caller-controlled or internal fractional and point-based vertical snap points",
+        "sequential snap expansion and collapse using projected drag movement",
+        "custom panel and maximum sizing with vertical viewport caps and responsive side widths",
+        "overlay opacity follows swipe and snap progress",
+        "optional automatic swipe handle and whole-panel axis-aware drag gesture",
+        "underlying content remains mounted for nested drawer composition",
+        "initial drawer focus and trigger focus restoration",
+        "reduced-motion-aware transitions and drag settlement",
+        "scrollable body composition with fixed header and footer",
+        "presentation modifier convenience over the same state and gesture engine"
+      ],
+      "intentionalAdaptations": [
+        "the SwiftUI root owns Portal, Viewport, and Popup placement in the caller's overlay container",
+        "GeometryReader and typed snap-point values replace viewport CSS variables",
+        "native DragGesture projected translation replaces browser pointer and swipe events",
+        "a SwiftUI focus scope and accessibility containment replace browser focus management",
+        "non-modal outside activation uses a simultaneous gesture so the underlying native control still receives its action",
+        "native ScrollView and safe-area layout provide keyboard-aware content behavior",
+        "the view modifier is a supported convenience over the same composable drawer engine"
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "source": "Sources/Swiftcn/Components/DropdownMenu.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/dropdown-menu",
+      "upstreamParts": [
+        "DropdownMenu",
+        "DropdownMenuPortal",
+        "DropdownMenuTrigger",
+        "DropdownMenuContent",
+        "DropdownMenuGroup",
+        "DropdownMenuLabel",
+        "DropdownMenuItem",
+        "DropdownMenuCheckboxItem",
+        "DropdownMenuRadioGroup",
+        "DropdownMenuRadioItem",
+        "DropdownMenuSeparator",
+        "DropdownMenuShortcut",
+        "DropdownMenuSub",
+        "DropdownMenuSubTrigger",
+        "DropdownMenuSubContent"
+      ],
+      "swiftSymbols": [
+        "SCDropdownMenuItemVariant",
+        "SCDropdownMenuShortcut",
+        "SCDropdownMenu",
+        "SCDropdownMenuTrigger",
+        "SCDropdownMenuContent",
+        "SCDropdownMenuGroup",
+        "SCDropdownMenuLabel",
+        "SCDropdownMenuItem",
+        "SCDropdownMenuCheckboxItem",
+        "SCDropdownMenuRadioGroup",
+        "SCDropdownMenuRadioItem",
+        "SCDropdownMenuSub",
+        "SCDropdownMenuSubTrigger",
+        "SCDropdownMenuSubContent",
+        "SCDropdownMenuSeparator"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "independently composable arbitrary trigger and menu content",
+        "native labeled and unlabeled menu sections",
+        "arbitrary icon and text labels on every actionable item",
+        "default and destructive actions with disabled state",
+        "real native keyboard shortcuts attached to their actions",
+        "caller-controlled checkbox items backed by Toggle bindings",
+        "caller-controlled radio selection backed by a typed Picker binding",
+        "disabled checkbox and radio choices",
+        "nested native submenus with arbitrary trigger and content composition",
+        "native separators, indicator visibility, and menu ordering",
+        "system-owned keyboard, pointer, touch, focus, dismissal, accessibility, placement, and right-to-left behavior"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Menu owns Root, Portal, Positioner, Popup, and open state as one native control rather than exposing fake DOM-style parts",
+        "the label slot on SCDropdownMenuGroup combines the web Group and GroupLabel roles using native Section semantics",
+        "SCDropdownMenuShortcut is a typed KeyEquivalent and EventModifiers value attached to the native Button instead of visual shortcut text",
+        "SCDropdownMenuSub composes its trigger and content directly because the platform owns submenu portal placement",
+        "native menus choose side, alignment, collision handling, and system appearance instead of accepting web positioning or theme chrome"
+      ]
+    },
+    {
+      "name": "empty",
+      "source": "Sources/Swiftcn/Components/Empty.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/empty",
+      "upstreamParts": [
+        "Empty",
+        "EmptyHeader",
+        "EmptyMedia",
+        "EmptyTitle",
+        "EmptyDescription",
+        "EmptyContent"
+      ],
+      "swiftSymbols": [
+        "SCEmpty",
+        "SCEmptyHeader",
+        "SCEmptyMediaVariant",
+        "SCEmptyMedia",
+        "SCEmptyTitle",
+        "SCEmptyDescription",
+        "SCEmptyContent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "arbitrary caller-composed root content with centered empty-state layout",
+        "independent width-constrained header and recovery-content regions",
+        "arbitrary media with unframed and muted icon variants",
+        "caller control over whether media is decorative for accessibility",
+        "arbitrary title and description content with semantic theme treatment",
+        "title header accessibility traits without combining child controls",
+        "content region accepts real buttons, links, inputs, and any other SwiftUI view",
+        "caller-configurable root padding, minimum height, region width, and spacing",
+        "background, border, clipping, and parent sizing compose through standard SwiftUI modifiers",
+        "title, description, SF Symbol, and actions convenience initializer over the same public parts"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI ViewBuilder slots replace polymorphic HTML child elements",
+        "SCEmptyMediaVariant replaces the class-variance helper with a typed enum",
+        "SwiftUI Link and Text composition replace embedded HTML anchors in descriptions",
+        "standard background, overlay, and clipShape modifiers replace className border and background examples",
+        "accessibility containment and title heading traits add native semantics to the otherwise presentational web component"
+      ]
+    },
+    {
+      "name": "field",
+      "source": "Sources/Swiftcn/Components/Field.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/field",
+      "upstreamParts": [
+        "FieldSet",
+        "FieldLegend",
+        "FieldGroup",
+        "Field",
+        "FieldContent",
+        "FieldLabel",
+        "FieldTitle",
+        "FieldDescription",
+        "FieldSeparator",
+        "FieldError"
+      ],
+      "swiftSymbols": [
+        "scFieldInvalid",
+        "SCFieldSet",
+        "SCFieldLegendVariant",
+        "SCFieldLegend",
+        "SCFieldGroup",
+        "SCFieldOrientation",
+        "SCField",
+        "SCFieldContent",
+        "SCFieldLabel",
+        "SCFieldTitle",
+        "SCFieldDescription",
+        "SCFieldSeparator",
+        "SCFieldError"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "arbitrary nested field-set, legend, group, field, and field-content composition",
+        "legend and label visual variants with native heading treatment for legends",
+        "vertical, horizontal, and width-responsive field orientations",
+        "caller-configurable responsive breakpoint and layout spacing",
+        "invalid state propagated through a public environment value for custom controls",
+        "disabled state propagated to every native control in a field or field set",
+        "arbitrary field labels, titles, and descriptions including badges and links",
+        "required label indicator with an explicit accessibility label",
+        "plain and arbitrarily labeled field separators",
+        "custom validation content or deduplicated string error lists",
+        "native accessibility announcements when string errors appear or change",
+        "compact label, control, description, and error convenience over the same parts"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI accessibility containment replaces HTML fieldset and group roles",
+        "ViewThatFits and a caller-selectable point breakpoint replace CSS container queries",
+        "the compact initializer applies its visual label directly as the control accessibility label instead of using HTML for/id attributes",
+        "arbitrary compositions use native control labels or caller-applied accessibilityLabel because SwiftUI has no detached for/id relationship",
+        "AccessibilityNotification announcements replace the browser alert role for string errors",
+        "standard Divider and themed background composition replace the web Separator dependency"
+      ]
+    },
+    {
+      "name": "hover-card",
+      "source": "Sources/Swiftcn/Components/HoverCard.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/hover-card",
+      "upstreamParts": [
+        "HoverCard",
+        "HoverCardTrigger",
+        "HoverCardContent"
+      ],
+      "swiftSymbols": [
+        "SCHoverCardSide",
+        "SCHoverCardChangeReason",
+        "SCHoverCard",
+        "SCHoverCardTrigger",
+        "SCHoverCardContent",
+        "scDismissHoverCard",
+        "scHoverCard"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "controlled or internally managed presentation with default-open support",
+        "independently composable arbitrary trigger and preview content",
+        "caller-configurable hover open and close delays",
+        "keyboard-focus opening and focus-loss closing through the same scheduler",
+        "pointer movement into the preview cancels pending dismissal",
+        "configurable nonblocking long-press touch adaptation",
+        "disabled triggers cancel hover, focus, and touch opening",
+        "outside-press dismissal owned by the native popover",
+        "explicit macOS Escape dismissal and native iPad popover keyboard dismissal",
+        "top, bottom, logical leading and trailing, and physical left and right placement",
+        "open-change reason callbacks and native presentation-completion callbacks",
+        "imperative content dismissal through a public environment action",
+        "caller-configurable content padding and width constraints",
+        "modifier convenience over the same state, delay, focus, and presentation engine"
+      ],
+      "intentionalAdaptations": [
+        "a native SwiftUI popover owns Portal, Positioner, Popup, collision handling, outside dismissal, and dialog/window stacking",
+        "native placement chooses alignment and offsets rather than exposing browser positioning values that SwiftUI cannot honor",
+        "leading and trailing provide logical inline placement while left and right resolve against layout direction to remain physical",
+        "the platform popover arrow is retained as native presentation chrome",
+        "touch long press is an optional enhancement; essential information must remain available from the trigger destination",
+        "the current shadcn examples use one attached trigger, so detached multi-trigger handles and payload routing are not represented as fake APIs"
+      ]
+    },
+    {
+      "name": "input",
+      "source": "Sources/Swiftcn/Components/Input.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/input",
+      "upstreamParts": [
+        "Input"
+      ],
+      "swiftSymbols": [
+        "InputConvertible",
+        "SCInputSize",
+        "SCInputKind",
+        "SCInput",
+        "SCDateTimeInputMode",
+        "SCDateTimeInput",
+        "SCDateInput",
+        "SCTimeInput",
+        "SCFileInput"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled String, Int, and Double values with extensible typed conversion",
+        "partial numeric typing retained without reformatting the in-progress text",
+        "plain text, email, password, telephone, URL, search, and numeric intent",
+        "native iPad keyboard, content-type, capitalization, autocorrection, and search-submit adaptation",
+        "secure entry with a real caller-visible reveal and hide action",
+        "external binding changes synchronized without clobbering equivalent partial input",
+        "caller-controlled invalid state or inherited Field invalid state",
+        "native disabled, focus, submit, and accessibility behavior",
+        "default and small sizes using shared grouped-control-aware chrome",
+        "optional leading symbol and arbitrary trailing standalone accessory",
+        "typed native date and time inputs with optional ranges",
+        "single or multiple native file import with UTType filters, URL bindings, selection callbacks, and error callbacks",
+        "date, time, and file variants reuse the same invalid state and visual chrome"
+      ],
+      "intentionalAdaptations": [
+        "SCInputKind maps HTML text-input types to native keyboard and content intent rather than passing string type attributes",
+        "DatePicker replaces HTML date and time string fields so callers retain typed Date values",
+        "fileImporter replaces HTML file input and returns security-scoped native URLs",
+        "InputConvertible provides typed number editing while preserving incomplete user text",
+        "SwiftUI environment disabled and Field invalid values replace disabled and aria-invalid attributes",
+        "standard HStack composition in the official select and button examples remains outside SCInput; Input Group is audited separately"
+      ]
+    },
+    {
+      "name": "input-group",
+      "source": "Sources/Swiftcn/Components/InputGroup.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/input-group",
+      "upstreamParts": [
+        "InputGroup",
+        "InputGroupAddon",
+        "InputGroupButton",
+        "InputGroupText",
+        "InputGroupInput",
+        "InputGroupTextarea"
+      ],
+      "swiftSymbols": [
+        "SCInputGroupAddonAlignment",
+        "SCInputGroupElement",
+        "SCInputGroupBuilder",
+        "SCInputGroup",
+        "SCInputGroupInput",
+        "SCInputGroupTextarea",
+        "SCInputGroupAddon",
+        "SCInputGroupButtonSize",
+        "SCInputGroupButton",
+        "SCInputGroupText"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "input",
+        "textarea",
+        "theme"
+      ],
+      "behaviors": [
+        "typed result-builder composition limited to input, textarea, and addon parts",
+        "inline-start, inline-end, block-start, and block-end addons structurally reordered independent of declaration order",
+        "one group-owned border, focus ring, invalid state, disabled opacity, and semantic container",
+        "group focus state reported by the actual nested Input or Textarea engine",
+        "tapping noninteractive addon content requests focus for the actual control",
+        "Input and Textarea suppress only their standalone chrome while retaining their real editing engines",
+        "explicit group invalid state, inherited Field invalid state, and child-control invalid preferences",
+        "arbitrary addon content including symbols, labels, keyboard hints, spinners, menus, popovers, and tooltips",
+        "real native addon Buttons with ghost, outline, secondary, default, and destructive variants",
+        "extra-small, small, icon-extra-small, and icon-small addon button sizes",
+        "arbitrary themed InputGroupText content",
+        "block addons and multiline controls expand the group height while single-line groups retain control height"
+      ],
+      "intentionalAdaptations": [
+        "a typed Swift result builder replaces CSS child selectors and order properties",
+        "the group environment sends a focus request to the nested native control instead of querying a DOM input",
+        "heterogeneous typed parts are erased only after their structural placement has been recorded",
+        "SwiftUI environment and preference propagation replace parent has selectors for focus, invalid, and disabled state",
+        "nested native buttons keep their own action handling while surrounding noninteractive addon content focuses the control"
+      ]
+    },
+    {
+      "name": "input-otp",
+      "source": "Sources/Swiftcn/Components/InputOTP.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/input-otp",
+      "upstreamParts": [
+        "InputOTP",
+        "InputOTPGroup",
+        "InputOTPSlot",
+        "InputOTPSeparator"
+      ],
+      "swiftSymbols": [
+        "SCInputOTPInputMode",
+        "SCInputOTPPattern",
+        "SCInputOTP",
+        "SCInputOTPGroupBuilder",
+        "SCInputOTPGroup",
+        "SCInputOTPSlot",
+        "SCInputOTPSeparator"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled one-time-code value and maximum length",
+        "one real native text field owns typing, paste, replacement, deletion, selection, and undo",
+        "caller-composed Root, Group, Slot, and Separator parts",
+        "typed digit, alphanumeric, unrestricted single-line, and custom character patterns",
+        "automatic, text, and numeric native input modes",
+        "native iPadOS one-time-code autofill",
+        "invalid state inherited from Field or overridden per root or slot",
+        "disabled state prevents native editing and focus requests",
+        "active-slot focus ring and animated fake caret",
+        "logical grouped corner geometry under left-to-right and right-to-left layout",
+        "caller-configurable slot dimensions and arbitrary group boundaries",
+        "value-change and completion callbacks",
+        "compact length and group-size initializer composed from the same public parts",
+        "a single editable accessibility element exposes the label, entered characters, and completion progress"
+      ],
+      "intentionalAdaptations": [
+        "a native SwiftUI TextField replaces the input-otp package's visually hidden HTML input",
+        "SwiftUI environment context distributes code, focus, active index, and invalid state to visual slots",
+        "SCInputOTPPattern uses a Sendable character predicate instead of a JavaScript regular-expression string",
+        "SCInputOTPInputMode maps the web inputMode property to iPadOS keyboard choice while macOS retains native keyboard entry",
+        "textContentType oneTimeCode replaces browser autocomplete one-time-code on iPadOS",
+        "a typed result builder enforces slot-only group composition and records semantic outer corners without CSS child selectors",
+        "the visual groups are hidden from accessibility because the one native editable field supplies coherent editing semantics"
+      ]
+    },
+    {
+      "name": "item",
+      "source": "Sources/Swiftcn/Components/Item.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/item",
+      "upstreamParts": [
+        "ItemGroup",
+        "ItemSeparator",
+        "Item",
+        "ItemMedia",
+        "ItemContent",
+        "ItemTitle",
+        "ItemDescription",
+        "ItemActions",
+        "ItemHeader",
+        "ItemFooter"
+      ],
+      "swiftSymbols": [
+        "SCItemVariant",
+        "SCItemSize",
+        "SCItemMediaVariant",
+        "SCItem",
+        "SCItemButton",
+        "SCItemLink",
+        "SCItemNavigationLink",
+        "SCItemGroup",
+        "SCItemSeparator",
+        "SCItemMedia",
+        "SCItemContent",
+        "SCItemTitle",
+        "SCItemDescription",
+        "SCItemActions",
+        "SCItemHeader",
+        "SCItemFooter"
+      ],
+      "requiredRegistryDependencies": [
+        "separator",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-composed root, group, separator, media, content, title, description, actions, header, and footer parts",
+        "default, outline, and muted surface variants",
+        "default, small, and extra-small layout sizes",
+        "default, icon, and clipped-image media variants with caller-controlled decorative semantics",
+        "full-width header and footer rows with space distributed between arbitrary children",
+        "a flexible middle row that gives content remaining width while preserving media and action controls",
+        "description wrapping and two-line clamping with caller override",
+        "left-to-right and right-to-left placement for rows and distributed header or footer content",
+        "real native Button, Link, and NavigationLink item roots with hover, press, focus, disabled, keyboard, and accessibility behavior",
+        "interactive roots reuse exactly the same Item root and public composition parts",
+        "a compact title, description, leading, and trailing initializer composed inside the same root",
+        "ItemGroup contains arbitrary items and separators without combining nested controls for accessibility"
+      ],
+      "intentionalAdaptations": [
+        "a custom SwiftUI Layout replaces flex-wrap and basis-full so header and footer parts remain structural rather than decorative",
+        "SCItemButton, SCItemLink, and SCItemNavigationLink replace the web render prop with explicit real native control types",
+        "typed variant and size enums replace the class-variance helper",
+        "native Button, Link, and NavigationLink semantics replace anchor hover and keyboard CSS selectors",
+        "ItemMedia accepts any SwiftUI view instead of selecting HTML img or svg descendants",
+        "SCItemSeparator composes the shared native Separator component"
+      ]
+    },
+    {
+      "name": "kbd",
+      "source": "Sources/Swiftcn/Components/Kbd.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/kbd",
+      "upstreamParts": [
+        "Kbd",
+        "KbdGroup"
+      ],
+      "swiftSymbols": [
+        "SCKbdKey",
+        "SCKbd",
+        "SCKbdGroup"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "arbitrary Kbd content including text, symbols, icons, icon-and-text combinations, and sample output",
+        "caller-composed KbdGroup content with configurable spacing",
+        "concise string-array and typed-key group compositions",
+        "stable visual and spoken values for common macOS and iPadOS modifier, editing, navigation, and arrow keys",
+        "caller-supplied accessibility labels for custom and icon-only keycaps or complete groups",
+        "grouped keycaps combine into one coherent shortcut announcement",
+        "keycaps ignore hit testing so enclosing native controls retain their complete activation region",
+        "fixed keycap geometry composes inside Input Group, Tooltip, Button, and arbitrary text layouts"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI ViewBuilder content replaces arbitrary HTML kbd children",
+        "SCKbdKey provides native platform vocabulary in addition to the official free-form content API",
+        "actual keyboardShortcut behavior remains on the owning Button, Toggle, menu command, or command group because Kbd is presentational upstream",
+        "native accessibility grouping replaces nested HTML kbd reading order"
+      ]
+    },
+    {
+      "name": "label",
+      "source": "Sources/Swiftcn/Components/Label.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/label",
+      "upstreamParts": [
+        "Label"
+      ],
+      "swiftSymbols": [
+        "SCLabel",
+        "SCLabelledControlOrientation",
+        "SCLabelPlacement",
+        "SCLabelledControl"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "arbitrary label content including text, symbols, badges, and composed views",
+        "disabled labels block activation and follow native disabled opacity",
+        "optional required indicator with a spoken Required label",
+        "optional pointer, touch, and accessibility activation forwarded to the associated control",
+        "FocusState convenience sends detached label activation to a real focusable control",
+        "SCLabelledControl creates a native accessibility labelled-pair relationship without string identifiers",
+        "vertical and horizontal control layouts with label-leading or label-trailing placement",
+        "relationship composition supports inputs, textareas, checkboxes, and arbitrary native controls"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI ViewBuilder content replaces arbitrary HTML label children",
+        "accessibilityLabeledPair and a private Namespace replace HTML for and id attributes",
+        "FocusState binding or an explicit activation closure replaces browser label click forwarding",
+        "SCLabelledControl exposes the relationship structurally because SwiftUI has no detached htmlFor equivalent",
+        "the required indicator remains a supported convenience rather than an upstream Label prop"
+      ]
+    },
+    {
+      "name": "marker",
+      "source": "Sources/Swiftcn/Components/Marker.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/marker",
+      "upstreamParts": [
+        "Marker",
+        "MarkerIcon",
+        "MarkerContent",
+        "markerVariants"
+      ],
+      "swiftSymbols": [
+        "SCMarkerVariant",
+        "SCMarkerAlignment",
+        "SCMarkerRole",
+        "SCMarker",
+        "SCMarkerButton",
+        "SCMarkerLink",
+        "SCMarkerNavigationLink",
+        "SCMarkerIcon",
+        "SCMarkerContent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "default, border, and separator variants",
+        "arbitrary caller-composed root, icon, and content parts",
+        "horizontal and vertical content axes with leading, centered, or trailing alignment",
+        "icon slot hidden from assistive technologies",
+        "nested buttons, links, and other controls retain independent accessibility and actions",
+        "explicit status semantics post native accessibility announcements on appearance and change",
+        "real native Button, external Link, and in-app NavigationLink marker roots",
+        "arbitrary content beyond text including rich text, links, buttons, spinners, and drawer triggers",
+        "composes with Accordion, Drawer, Spinner, Button, Link, and the shimmer effect",
+        "separator hairlines remain decorative and border rows expose one structural bottom rule"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI views and theme tokens replace the class-variance helper export",
+        "explicit SCMarkerButton, SCMarkerLink, and SCMarkerNavigationLink types replace the polymorphic render prop with real native controls",
+        "AccessibilityNotification announcements replace the web status role when the caller supplies status text",
+        "accessibility containment preserves nested controls instead of flattening the marker into one element",
+        "typed axis and alignment values replace example-only flex direction and justification classes",
+        "hairline theme-border shapes replace the CSS before and after separator pseudo-elements"
+      ]
+    },
+    {
+      "name": "menubar",
+      "source": "Sources/Swiftcn/Components/Menubar.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/menubar",
+      "upstreamParts": [
+        "Menubar",
+        "MenubarMenu",
+        "MenubarTrigger",
+        "MenubarPortal",
+        "MenubarContent",
+        "MenubarGroup",
+        "MenubarLabel",
+        "MenubarItem",
+        "MenubarShortcut",
+        "MenubarCheckboxItem",
+        "MenubarRadioGroup",
+        "MenubarRadioItem",
+        "MenubarSeparator",
+        "MenubarSub",
+        "MenubarSubTrigger",
+        "MenubarSubContent"
+      ],
+      "swiftSymbols": [
+        "SCMenubarOrientation",
+        "SCMenubarItemVariant",
+        "SCMenubarShortcut",
+        "SCMenubar",
+        "SCMenubarMenu",
+        "SCMenubarTrigger",
+        "SCMenubarContent",
+        "SCMenubarGroup",
+        "SCMenubarLabel",
+        "SCMenubarItem",
+        "SCMenubarCheckboxItem",
+        "SCMenubarRadioGroup",
+        "SCMenubarRadioItem",
+        "SCMenubarSub",
+        "SCMenubarSubTrigger",
+        "SCMenubarSubContent",
+        "SCMenubarSeparator"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "horizontal and vertical in-window menubar orientations",
+        "whole-menubar and individual-menu disabled states",
+        "arbitrary top-level trigger and menu content composition",
+        "native action items with default and destructive roles",
+        "arbitrary action labels including symbols and icon-and-text labels",
+        "typed keyboard shortcuts attached to real Button and Toggle actions",
+        "caller-controlled native checkbox menu items",
+        "caller-controlled generic single-selection radio groups with disabled choices",
+        "native Section groups with arbitrary or plain-text headings",
+        "real nested native submenus with arbitrary triggers and content",
+        "native separators and menu ordering",
+        "platform-owned popup windows, placement, collision handling, dismissal, focus, pointer, touch, keyboard, RTL, and accessibility behavior",
+        "composition inside dialogs and other presentation containers"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Menu replaces the Base UI Menubar and Dropdown Menu coordinator without a second popup state machine",
+        "there is no inert MenubarPortal symbol because each native Menu owns its real presentation surface",
+        "popup side, alignment, and offsets remain platform-owned rather than exposing values SwiftUI cannot honor",
+        "SCMenubarShortcut is a typed value attached to a native action instead of decorative shortcut text",
+        "native Section headings combine MenubarGroup and MenubarLabel semantics",
+        "native menu columns align icons, checks, and text instead of exposing CSS inset padding",
+        "platform focus traversal replaces Base UI loopFocus configuration",
+        "application-level macOS menus continue to use SwiftUI Commands; SCMenubar represents the official in-window component"
+      ]
+    },
+    {
+      "name": "message",
+      "source": "Sources/Swiftcn/Components/Message.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/message",
+      "upstreamParts": [
+        "MessageGroup",
+        "Message",
+        "MessageAvatar",
+        "MessageContent",
+        "MessageHeader",
+        "MessageFooter"
+      ],
+      "swiftSymbols": [
+        "SCMessageAlignment",
+        "SCMessageGroup",
+        "SCMessage",
+        "SCMessageAvatar",
+        "SCMessageContent",
+        "SCMessageHeader",
+        "SCMessageFooter"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "start and end row alignment with the avatar following the row side",
+        "logical start and end placement under both left-to-right and right-to-left layout directions",
+        "avatar anchored to the row bottom and lifted clear of a footer",
+        "empty avatar placeholders reserve the sender column across grouped consecutive messages",
+        "full-width header and footer slots above and below the message surface",
+        "header and footer content alignment follows the message side while preserving arbitrary nested actions",
+        "caller-configurable group, row, content, header, and footer spacing",
+        "grouped consecutive messages with arbitrary row composition",
+        "arbitrary avatar, bubble, attachment, attachment-group, marker, header, footer, and action content",
+        "long text receives the remaining row width and wraps without forcing media or action columns offscreen",
+        "accessibility containment preserves independent buttons, links, attachments, and other nested controls"
+      ],
+      "intentionalAdaptations": [
+        "a layout-direction flip implements flex-row-reverse and restores the reading direction inside each slot",
+        "a SwiftUI preference replaces the CSS group-has footer selector for avatar lifting",
+        "a same-file environment value replaces CSS data-align group selectors between row and slots",
+        "an EmptyView-backed 32-point avatar placeholder replaces an empty styled div while retaining column alignment",
+        "native frame alignment replaces header and footer justify utility classes"
+      ]
+    },
+    {
+      "name": "message-scroller",
+      "source": "Sources/Swiftcn/Components/MessageScroller.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/message-scroller",
+      "upstreamParts": [
+        "MessageScrollerProvider",
+        "MessageScroller",
+        "MessageScrollerViewport",
+        "MessageScrollerContent",
+        "MessageScrollerItem",
+        "MessageScrollerButton",
+        "useMessageScroller",
+        "useMessageScrollerVisibility",
+        "useMessageScrollerScrollable"
+      ],
+      "swiftSymbols": [
+        "SCMessageScrollerPosition",
+        "SCMessageScrollerButtonDirection",
+        "SCMessageScrollerScrollAlignment",
+        "SCMessageScrollerScrollOptions",
+        "SCMessageScrollerState",
+        "SCMessageScroller",
+        "SCMessageScrollerViewport",
+        "SCMessageScrollerContent",
+        "SCMessageScrollerItem",
+        "SCMessageScrollerButton",
+        "scMessageScroller",
+        "scrollToMessage",
+        "scrollToEnd",
+        "scrollToStart",
+        "visibleMessageIds",
+        "currentAnchorId",
+        "canScrollToStart",
+        "canScrollToEnd"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "scroll-fade"
+      ],
+      "behaviors": [
+        "end, start, and last-anchor opening positions",
+        "published defaults of auto-scroll off, eight-point edge threshold, sixty-four-point previous-turn peek, and zero scroll margin",
+        "follow-output pinned to the live edge only while the reader is already at the end",
+        "turn anchoring that settles new anchored rows near the top with a previous-turn peek",
+        "multiple newly appended anchored turns settle at the live edge while auto-following",
+        "optional position preservation while history is prepended",
+        "jump-to-message with start, center, end, and nearest alignment plus per-command animation and margin",
+        "early jump requests held until the initially empty transcript registers the target row",
+        "jump-to-message returning false when a nonempty transcript does not contain the requested row",
+        "scroll-to-end and scroll-to-start commands returning success",
+        "visibility tracking of row identifiers and the current anchor",
+        "configurable content spacing and optional identifiers for transient unregistered rows",
+        "scroll controls that inert themselves when their direction has no content and release focus after activation",
+        "scroll controls accept the official Button variant, size, direction, and smooth-or-immediate behavior",
+        "bottom scroll-fade on the viewport",
+        "focusable Messages viewport with configurable accessibility label and scroll indicators",
+        "interactive keyboard dismissal on iOS",
+        "observable can-scroll, live-edge, visible-message, and current-anchor state"
+      ],
+      "intentionalAdaptations": [
+        "an observable state object in the SwiftUI environment replaces the Provider and the three hooks",
+        "ScrollViewReader commands with computed unit-point anchors replace DOM scroll positioning",
+        "geometry preferences replace ResizeObserver and IntersectionObserver visibility plumbing",
+        "a plain VStack keeps every row mounted because content-visibility has no SwiftUI equivalent, keeping jump-to-message reliable",
+        "prepend preservation is restored explicitly from the last visible row because SwiftUI has no scroll anchoring primitive",
+        "a transient item without messageId remains visible but intentionally does not register for jumping or visibility",
+        "SCButtonVariant and SCButtonSize replace the web render prop while keeping the scroll control a real native Button",
+        "native focusable ScrollView semantics replace the web region role and tabIndex"
+      ]
+    },
+    {
+      "name": "native-select",
+      "source": "Sources/Swiftcn/Components/NativeSelect.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/native-select",
+      "upstreamParts": [
+        "NativeSelect",
+        "NativeSelectOption",
+        "NativeSelectOptGroup"
+      ],
+      "swiftSymbols": [
+        "SCNativeSelectSize",
+        "SCNativeSelect",
+        "SCNativeSelectOption",
+        "SCNativeSelectOptGroup"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled generic Hashable selection",
+        "internally managed selection with an explicit default value",
+        "default and small native control sizes",
+        "arbitrary tagged option content with per-option disabled state",
+        "native Section-backed option groups with arbitrary headings",
+        "explicit disabled state plus inherited parent disabled state",
+        "explicit invalid state or inherited Field invalid state",
+        "native focus, keyboard, touch, popup dismissal, selection, and accessibility behavior",
+        "caller-supplied accessibility label and value-change callback",
+        "placeholder choices represented by real caller-defined values rather than an untyped sentinel"
+      ],
+      "intentionalAdaptations": [
+        "a generic SwiftUI Picker replaces the string-only HTML select while retaining controlled and default-value forms",
+        "Picker menu style owns the real popup and disclosure indicator instead of drawing a decorative chevron",
+        "tagged views replace option value attributes",
+        "native Section replaces optgroup and its label attribute",
+        "SCNativeSelectSize and ControlSize replace the HTML size-name collision",
+        "SwiftUI environment disabled and Field invalid values replace disabled and aria-invalid attributes"
+      ]
+    },
+    {
+      "name": "navigation-menu",
+      "source": "Sources/Swiftcn/Components/NavigationMenu.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/navigation-menu",
+      "upstreamParts": [
+        "NavigationMenu",
+        "NavigationMenuList",
+        "NavigationMenuItem",
+        "NavigationMenuTrigger",
+        "NavigationMenuContent",
+        "NavigationMenuPositioner",
+        "NavigationMenuLink",
+        "NavigationMenuIndicator",
+        "navigationMenuTriggerStyle"
+      ],
+      "swiftSymbols": [
+        "SCNavigationMenu",
+        "SCNavigationMenuList",
+        "SCNavigationMenuItem",
+        "SCNavigationMenuTrigger",
+        "SCNavigationMenuContent",
+        "SCNavigationMenuPositioner",
+        "SCNavigationMenuLink",
+        "SCNavigationMenuIndicator",
+        "scNavigationMenuLinkStyle"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled or internally managed active item value",
+        "optional default active item and typed Hashable item values",
+        "horizontal and vertical menu orientations",
+        "caller-configurable delayed pointer opening and closing",
+        "stable Item identity pairing an arbitrary Trigger with arbitrary rich Content",
+        "native trigger press, hover, focus, disabled, and expanded-state semantics",
+        "RTL-aware top, bottom, logical leading, and logical trailing popup placement with start, center, and end alignment",
+        "native popup collision avoidance, outside dismissal, Escape dismissal, focus containment, and compact iPad presentation",
+        "horizontal or vertical arrow-key traversal with wraparound and direction-aware ordering",
+        "arrow-key popup opening and closing plus active-popup switching during list navigation",
+        "real URL Link, value-based NavigationLink, and Button action variants",
+        "active-link styling, close-on-activation control, and caller-accessible programmatic dismissal",
+        "nested roots remain independently stateful for submenu composition",
+        "arbitrary custom controls can reuse the same content-link or top-level-trigger chrome"
+      ],
+      "intentionalAdaptations": [
+        "a native SwiftUI popover replaces Base Portal, Positioner, Popup, and Viewport while retaining the exported Positioner as real side and alignment configuration",
+        "each Item receives distinct trigger and content builders because SwiftUI requires presented content at the native popover attachment site",
+        "AnyHashable erasure carries Base UI's any-valued controlled identity through a non-generic root while typed initializers preserve caller values",
+        "native Button, Link, and NavigationLink controls replace render props without weakening activation or accessibility semantics",
+        "logical leading and trailing placement follows SwiftUI layoutDirection instead of exposing physical CSS coordinates",
+        "SwiftUI owns transition timing and collision offsets, so unsupported pixel offset and DOM animation props are not exposed as inert API"
+      ]
+    },
+    {
+      "name": "pagination",
+      "source": "Sources/Swiftcn/Components/Pagination.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/pagination",
+      "upstreamParts": [
+        "Pagination",
+        "PaginationContent",
+        "PaginationItem",
+        "PaginationLink",
+        "PaginationPrevious",
+        "PaginationNext",
+        "PaginationEllipsis"
+      ],
+      "swiftSymbols": [
+        "SCPagination",
+        "SCPaginationContent",
+        "SCPaginationItem",
+        "SCPaginationLink",
+        "SCPaginationNavigationLink",
+        "SCPaginationPrevious",
+        "SCPaginationNext",
+        "SCPaginationEllipsis"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-composed navigation Root, Content, Item, Link, Previous, Next, and Ellipsis parts",
+        "real URL Link, value-based NavigationLink, and native Button activation paths",
+        "outline active-page and ghost inactive-page variants through the shared Button engine",
+        "all shared Button sizes plus disabled control state",
+        "active-page accessibility value and selected trait",
+        "localized previous and next visible text plus caller-defined accessibility labels",
+        "automatic, always-visible, and icon-only previous and next labels",
+        "logical backward and forward SF Symbols with native RTL placement",
+        "noninteractive ellipsis with official accessibility-hidden default and an explicit announced option",
+        "root navigation label, arbitrary alignment, optional full-width layout, and inherited disabled state",
+        "controlled windowed convenience with first and last pages, sliding current-page window, and distinct leading and trailing gaps",
+        "caller-defined page formatting and page accessibility labels for localized numerals",
+        "zero-page handling, out-of-range current-page clamping on activation, and page-change callback"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Link, NavigationLink, and Button replace the web anchor and framework render-prop paths while sharing one visual and accessibility modifier",
+        "SCButtonStyle supplies the same outline-current and ghost-inactive variants as the upstream Button component",
+        "chevron.backward and chevron.forward plus SwiftUI layoutDirection replace manually RTL-flipped SVGs",
+        "ViewThatFits replaces the CSS small-screen text breakpoint for previous and next controls",
+        "the former data-driven pager is a convenience composed entirely from the public official parts rather than a second component engine"
+      ]
+    },
+    {
+      "name": "popover",
+      "source": "Sources/Swiftcn/Components/Popover.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/popover",
+      "upstreamParts": [
+        "Popover",
+        "PopoverTrigger",
+        "PopoverContent",
+        "PopoverHeader",
+        "PopoverTitle",
+        "PopoverDescription"
+      ],
+      "swiftSymbols": [
+        "SCPopover",
+        "SCPopoverTrigger",
+        "SCPopoverContent",
+        "SCPopoverHeader",
+        "SCPopoverTitle",
+        "SCPopoverDescription",
+        "SCPopoverClose",
+        "SCPopoverPosition",
+        "SCPopoverCompactAdaptation",
+        "SCPopoverChangeReason",
+        "scPopover",
+        "scDismissPopover"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled presentation or internally managed presentation with an explicit default",
+        "independent arbitrary Trigger and Content builders",
+        "real native Button trigger with root and trigger disabled states",
+        "press opening plus optional delayed pointer opening and closing",
+        "presentation change callbacks with trigger, hover, native dismissal, Escape, close, focus-out, and programmatic reasons",
+        "top, bottom, logical leading and trailing, and physical left and right placement",
+        "start, center, and end attachment alignment with native layout-direction handling",
+        "native portal, attachment anchoring, collision avoidance, arrow, outside dismissal, focus movement and return, and accessibility presentation",
+        "explicit compact-environment popover, sheet, or platform-default adaptation",
+        "themed arbitrary rich content including forms and nested controls",
+        "composable Header, semantic Title, and Description parts",
+        "real Close button plus a public nearest-popover dismissal environment action",
+        "Escape dismissal from focused content and hover-safe content traversal",
+        "a modifier convenience that shares the same native presentation host"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI popover replaces Base Portal, Positioner, and Popup while owning real platform presentation behavior",
+        "the real trigger view is the native attachment anchor instead of exposing a separate DOM Anchor primitive",
+        "native Button activation replaces render props without weakening keyboard, pointer, touch, or accessibility behavior",
+        "logical leading and trailing placement follows SwiftUI layoutDirection while physical left and right remain available explicitly",
+        "SwiftUI compact presentation adaptation replaces browser responsive composition",
+        "the native popover arrow is retained as platform chrome rather than exposed as a decorative child",
+        "unsupported DOM transitions, CSS transform origins, and pixel offsets are omitted instead of becoming inert Swift API"
+      ]
+    },
+    {
+      "name": "progress",
+      "source": "Sources/Swiftcn/Components/Progress.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/progress",
+      "upstreamParts": [
+        "Progress",
+        "ProgressTrack",
+        "ProgressIndicator",
+        "ProgressLabel",
+        "ProgressValue"
+      ],
+      "swiftSymbols": [
+        "SCProgress",
+        "SCProgressTrack",
+        "SCProgressIndicator",
+        "SCProgressLabel",
+        "SCProgressValue",
+        "SCProgressSnapshot",
+        "SCProgressStatus",
+        "SCProgressValueFormat",
+        "SCProgressStyle",
+        "scLinear"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "public Root, Track, Indicator, Label, and Value composition parts",
+        "official default composition appending a themed Track and Indicator after optional header content",
+        "explicit custom-composition path using the same root state and public parts",
+        "determinate values plus a real nil indeterminate state",
+        "caller-defined minimum and maximum bounds with safe clamping and normalization",
+        "public indeterminate, progressing, and complete status",
+        "localized percentage or raw-number formatting through the current SwiftUI locale",
+        "snapshot-driven custom Value rendering with value, range, fraction, formatted text, and status",
+        "arbitrary Label content and arbitrary custom Indicator fill content",
+        "shared theme colors, configurable track height and radius, and inherited disabled appearance",
+        "animated determinate changes and a TimelineView indeterminate sweep",
+        "stationary indeterminate fallback and immediate value changes when Reduce Motion is enabled",
+        "native ProgressView accessibility representation with caller-defined label and value text",
+        "the existing ProgressViewStyle convenience composed over the same root and parts"
+      ],
+      "intentionalAdaptations": [
+        "a native ProgressView accessibility representation replaces the web progressbar role and aria value attributes",
+        "SwiftUI environment state replaces Base UI context and status data attributes",
+        "Swift FormatStyle and the environment locale replace Intl.NumberFormat",
+        "TimelineView replaces CSS keyframe animation for the indeterminate indicator",
+        "Reduce Motion changes the visual algorithm instead of relying on a media-query class override",
+        "the prior SCProgressStyle remains a supported convenience over SCProgress rather than a parallel visual engine"
+      ]
+    },
+    {
+      "name": "radio-group",
+      "source": "Sources/Swiftcn/Components/RadioGroup.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/radio-group",
+      "upstreamParts": [
+        "RadioGroup",
+        "RadioGroupItem"
+      ],
+      "swiftSymbols": [
+        "SCRadioGroup",
+        "SCRadioGroupItem",
+        "SCRadioGroupLayout",
+        "SCRadioGroupItemLabelPosition"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "typed mutually exclusive selection shared by a Root and arbitrary Item descendants",
+        "controlled non-optional selection, controlled optional selection, and internally managed default selection",
+        "value-change callback after a genuinely changed selection",
+        "vertical, horizontal, and caller-sized grid root layouts",
+        "arbitrary rich Item labels with leading or trailing indicator placement",
+        "indicator-only Item composition beside Field labels and content",
+        "root and per-item disabled, read-only, required, and invalid states",
+        "automatic invalid styling inherited from an enclosing Field",
+        "real native Button activation with selected traits, value text, focus, and disabled semantics",
+        "wrapping up, down, left, and right keyboard traversal that skips disabled and read-only items",
+        "layout-direction-aware horizontal arrow ordering and programmatic focus movement",
+        "minimum 44-point iOS touch targets and compact macOS pointer targets",
+        "focus ring, theme chrome, and reduced-motion-aware selection animation",
+        "a text-label shorthand implemented as a type alias over the same Item engine"
+      ],
+      "intentionalAdaptations": [
+        "a typed SwiftUI binding or internal State replaces Base UI string values and hidden input synchronization",
+        "arbitrary Item label builders replace HTML id and label-for coupling while making the complete visible row actionable",
+        "SCField environment state replaces Field data-valid and data-invalid attributes",
+        "a shared native focus coordinator replaces browser radio-group arrow traversal",
+        "native application state has no HTML form owner or submitted name field, so inert name and form properties are omitted",
+        "real Button controls plus selected accessibility state replace render props without creating decorative indicators"
+      ]
+    },
+    {
+      "name": "resizable",
+      "source": "Sources/Swiftcn/Components/Resizable.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/resizable",
+      "upstreamParts": [
+        "ResizablePanelGroup",
+        "ResizablePanel",
+        "ResizableHandle"
+      ],
+      "swiftSymbols": [
+        "SCResizablePanelGroup",
+        "SCResizablePanel",
+        "SCResizableHandle",
+        "SCResizableLayout",
+        "SCResizableGroupContent",
+        "SCResizableGroupBuilder",
+        "SCResizableSplit"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "public Panel Group, Panel, and Handle composition parts",
+        "arbitrary panel and handle sequences produced by a typed result builder",
+        "horizontal and vertical group orientations",
+        "stable string panel IDs and keyed fractional layout values",
+        "internally managed default layout or caller-controlled layout binding",
+        "normalized defaults for fully specified, partially specified, or unspecified panel sizes",
+        "group layout-change callback and per-panel resize callbacks",
+        "nested groups using the same engine and arbitrary panel content",
+        "per-panel minimum, maximum, collapsible, and collapsed-size constraints",
+        "adjacent-pair resizing that preserves the pair total while leaving other panels unchanged",
+        "drag handles with configurable visible line, pointer target, and optional grip",
+        "focusable orientation-aware arrow-key resizing with configurable increments",
+        "double-click reset to the initial normalized layout",
+        "native macOS resize cursors and focus or active handle styling",
+        "accessibility-adjustable handle with a live leading-panel percentage value",
+        "the two-pane split convenience composed from the same Group, Panels, and Handle"
+      ],
+      "intentionalAdaptations": [
+        "a typed SCResizableGroupBuilder replaces React child discovery and runtime element cloning",
+        "SCResizableLayout uses stable fractional values instead of CSS percentage strings",
+        "GeometryReader maps fractions to the current native window or container geometry",
+        "SwiftUI DragGesture, focus, key presses, and adjustable accessibility actions replace DOM pointer and separator events",
+        "native macOS resize cursors replace browser cursor classes while iPad retains touch interaction",
+        "SCResizableSplit remains only as a convenience composition rather than a separate two-pane engine"
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "source": "Sources/Swiftcn/Components/ScrollArea.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/scroll-area",
+      "upstreamParts": [
+        "ScrollArea",
+        "ScrollBar"
+      ],
+      "swiftSymbols": [
+        "SCScrollArea",
+        "SCScrollBar",
+        "SCScrollBarVisibility",
+        "SCScrollAreaBuilder",
+        "SCScrollAreaContent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "public Root and Scrollbar composition parts",
+        "arbitrary viewport content separated from Scrollbar declarations by a typed result builder",
+        "vertical, horizontal, or simultaneous two-axis native scrolling",
+        "default vertical axis when no Scrollbar is declared and inferred axes when Scrollbars are declared",
+        "optional explicit axis selection for programmatic composition",
+        "per-axis automatic, always-visible, or hidden native indicators",
+        "native draggable thumbs and native two-axis corner behavior",
+        "configurable content-sized bounce behavior",
+        "root-level disabled scrolling that also respects the SwiftUI enabled environment",
+        "focusable viewport with optional themed focus ring",
+        "optional themed border, clipping radius, and accessibility label"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI ScrollView owns Base UI Viewport, Scrollbar, Thumb, and Corner behavior so macOS and iPad retain native interaction",
+        "SCScrollBar is a real configuration token consumed by the nearest Root rather than a decorative overlay with a fake thumb",
+        "SCScrollAreaBuilder hoists Scrollbar declarations while preserving arbitrary native viewport content",
+        "native indicators intentionally replace browser scrollbar styling because platform scrollbar appearance and input behavior are user-controlled"
+      ]
+    },
+    {
+      "name": "select",
+      "source": "Sources/Swiftcn/Components/Select.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/select",
+      "upstreamParts": [
+        "Select",
+        "SelectContent",
+        "SelectGroup",
+        "SelectItem",
+        "SelectLabel",
+        "SelectScrollDownButton",
+        "SelectScrollUpButton",
+        "SelectSeparator",
+        "SelectTrigger",
+        "SelectValue"
+      ],
+      "swiftSymbols": [
+        "SCSelect",
+        "SCSelectTrigger",
+        "SCSelectValue",
+        "SCSelectValueState",
+        "SCSelectContent",
+        "SCSelectGroup",
+        "SCSelectLabel",
+        "SCSelectItem",
+        "SCSelectSeparator",
+        "SCSelectSize",
+        "SCSelectBuilder",
+        "SCSelectContentBuilder",
+        "SCSelectOption"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "public Root, Trigger, Value, Content, Group, Label, Item, and Separator composition parts",
+        "typed result builders with ordinary Swift conditional and loop composition",
+        "caller-controlled or internally managed single selection",
+        "caller-controlled or internally managed multiple selection",
+        "single-value and multiple-value change callbacks",
+        "arbitrary rich Item labels with required keyboard text values",
+        "arbitrary rich selected-value rendering from live typed selection state",
+        "placeholder and menu-order display state for selected values",
+        "default and small Trigger sizes with intrinsic-height rich content",
+        "root disabled, read-only, required, explicit invalid, and Field-inherited invalid states",
+        "per-Item disabled state and required multiple-selection last-value protection",
+        "native grouped Sections, semantic labels, Dividers, single-selection Buttons, and multiple-selection Toggles",
+        "real selected indicators and accessibility selected state",
+        "native keyboard navigation, typeahead, focus, pointer, touch, dismissal, scrolling, and long-list behavior",
+        "existing string and option-array initializers composed over the same Root engine"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Menu owns Base UI Portal, Positioner, Popup, List, scroll arrows, open state, focus restoration, and outside dismissal",
+        "platform menu placement replaces side, offset, and alignItemWithTrigger controls instead of exposing inert positioning props",
+        "typed Hashable bindings and State replace Base UI value arrays, object comparison hooks, and hidden form submission values",
+        "SCSelectValueState replaces render-prop state while retaining arbitrary rich selected-value content",
+        "native Section, Divider, Button, and Toggle controls replace web Group, Separator, Item, and ItemIndicator behavior",
+        "SCSelectContentBuilder and SCSelectBuilder replace React child discovery without retaining a second array-based engine",
+        "the disclosure glyph belongs to the real Menu trigger and is accessibility-hidden rather than presented as an independent control"
+      ]
+    },
+    {
+      "name": "separator",
+      "source": "Sources/Swiftcn/Components/Separator.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/separator",
+      "upstreamParts": [
+        "Separator"
+      ],
+      "swiftSymbols": [
+        "SCSeparator"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "horizontal orientation by default and explicit vertical orientation",
+        "one-point themed border rule that fills the available primary axis",
+        "screen-reader-visible semantic separator by default",
+        "explicit decorative opt-out for purely visual rules",
+        "optional centered String label between two horizontal rules",
+        "optional arbitrary centered SwiftUI label content",
+        "one combined accessibility element for labeled separators",
+        "horizontal, vertical-menu, and list composition without owning surrounding layout"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Axis replaces the web orientation string and data-orientation attribute",
+        "native accessibility labels and orientation values replace the HTML separator role",
+        "an explicit isDecorative flag prevents semantic behavior from being silently removed",
+        "the arbitrary labeled divider is a Swiftcn extension over the same Separator engine",
+        "caller View modifiers replace className, style, and render-prop customization",
+        "Color-backed native layout replaces the one-pixel CSS block"
+      ]
+    },
+    {
+      "name": "sheet",
+      "source": "Sources/Swiftcn/Components/Sheet.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/sheet",
+      "upstreamParts": [
+        "Sheet",
+        "SheetTrigger",
+        "SheetClose",
+        "SheetContent",
+        "SheetHeader",
+        "SheetFooter",
+        "SheetTitle",
+        "SheetDescription"
+      ],
+      "swiftSymbols": [
+        "SCSheet",
+        "SCSheetTrigger",
+        "SCSheetClose",
+        "SCSheetOverlay",
+        "SCSheetContent",
+        "SCSheetHeader",
+        "SCSheetFooter",
+        "SCSheetTitle",
+        "SCSheetDescription",
+        "SCSheetEdge",
+        "SCDismissSheetAction",
+        "scSheet",
+        "scDismissSheet"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "drawer",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled or internally managed Root presentation",
+        "open-change callback for Trigger, Close, scrim, Escape, and external state changes",
+        "public arbitrary Trigger, Overlay, Content, Header, Footer, Title, Description, and Close composition",
+        "automatic top-trailing Close control that can be omitted without removing caller-composed Close controls",
+        "semantic top, bottom, leading, and trailing edges with layout-direction-aware side placement",
+        "optional fixed and maximum panel dimensions",
+        "configurable scrim dismissal and Escape dismissal",
+        "Trigger focus restoration after the Sheet closes",
+        "underlying pointer and accessibility interaction made inert while open",
+        "modal accessibility, initial content focus, and reduced-motion-aware edge transitions",
+        "caller-composed long or scrollable body content and bottom action regions",
+        "the scSheet modifier and compatibility dismiss environment share the Root presentation engine"
+      ],
+      "intentionalAdaptations": [
+        "Sheet specializes the existing native Drawer state and presentation engine with swipe and snap behavior disabled",
+        "a shared SwiftUI ZStack presentation layer replaces Base UI Portal, Backdrop, and Popup without retaining the previous duplicate overlay engine",
+        "semantic leading and trailing replace physical left and right so placement follows the native layout direction",
+        "SwiftUI focus state, Escape handling, disabled background content, and modal traits replace DOM focus guards and inert management",
+        "typed Binding or internal State replaces open, defaultOpen, and onOpenChange prop coordination",
+        "caller View builders and modifiers replace render props and className customization"
+      ]
+    },
+    {
+      "name": "sidebar",
+      "source": "Sources/Swiftcn/Components/Sidebar.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/sidebar",
+      "upstreamParts": [
+        "SidebarProvider",
+        "Sidebar",
+        "SidebarHeader",
+        "SidebarContent",
+        "SidebarFooter",
+        "SidebarGroup",
+        "SidebarGroupLabel",
+        "SidebarGroupAction",
+        "SidebarGroupContent",
+        "SidebarMenu",
+        "SidebarMenuItem",
+        "SidebarMenuButton",
+        "SidebarMenuAction",
+        "SidebarMenuBadge",
+        "SidebarMenuSkeleton",
+        "SidebarMenuSub",
+        "SidebarMenuSubItem",
+        "SidebarMenuSubButton",
+        "SidebarInput",
+        "SidebarInset",
+        "SidebarTrigger",
+        "SidebarSeparator",
+        "SidebarRail"
+      ],
+      "swiftSymbols": [
+        "SCSidebarCollapsible",
+        "SCSidebarSide",
+        "SCSidebarVariant",
+        "SCSidebarState",
+        "SCSidebarLayout",
+        "SCSidebarHeader",
+        "SCSidebarContent",
+        "SCSidebarFooter",
+        "SCSidebarGroup",
+        "SCSidebarGroupLabel",
+        "SCSidebarGroupAction",
+        "SCSidebarGroupContent",
+        "SCSidebarMenu",
+        "SCSidebarMenuItem",
+        "SCSidebarMenuButtonVariant",
+        "SCSidebarMenuButtonSize",
+        "SCSidebarMenuButton",
+        "SCSidebarMenuAction",
+        "SCSidebarMenuBadge",
+        "SCSidebarMenuSkeleton",
+        "SCSidebarMenuSub",
+        "SCSidebarMenuSubItem",
+        "SCSidebarMenuSubButtonSize",
+        "SCSidebarMenuSubButton",
+        "SCSidebarInput",
+        "SCSidebarInset",
+        "SCSidebarTrigger",
+        "SCSidebarSeparator",
+        "SCSidebarRail",
+        "SCSidebarExpandedOnly"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "input",
+        "separator",
+        "sheet",
+        "skeleton",
+        "theme",
+        "tooltip"
+      ],
+      "behaviors": [
+        "controlled or layout-owned open state with onOpenChange notification",
+        "one shared toggle routes to regular collapse state or compact Sheet state",
+        "icon, offcanvas, and non-collapsible modes",
+        "sidebar, floating, and inset visual variants with configurable regular, icon, and compact widths",
+        "leading and trailing placement",
+        "Command-B and Control-B keyboard toggles",
+        "persisted desktop state",
+        "compact-width leading or trailing Sheet adaptation",
+        "header, scrollable content, footer, group, label, group action, content, menu, item, badge, and nested menu composition",
+        "menu button default and outline variants, default/sm/lg sizes, active state, disabled state, arbitrary builders, and collapsed tooltip",
+        "menu action real button with optional show-on-hover behavior",
+        "submenu button sm/md sizes, active state, disabled state, and arbitrary content",
+        "SidebarInput, SidebarSeparator, SidebarMenuSkeleton, and SidebarTrigger compose the accepted Input, Separator, Skeleton, and Button engines",
+        "rail supports click, directional drag, pointer resize cursor, and accessibility action"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI environment state replaces React context and useSidebar",
+        "UserDefaults replaces the web cookie persistence mechanism",
+        "horizontal size class replaces the web useIsMobile hook",
+        "the accepted Sheet engine provides the compact side panel, modal focus, scrim, Escape, and background-inert behavior",
+        "SF Symbols and SwiftUI View builders replace web icon packages and render props"
+      ]
+    },
+    {
+      "name": "skeleton",
+      "source": "Sources/Swiftcn/Components/Skeleton.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/skeleton",
+      "upstreamParts": [
+        "Skeleton"
+      ],
+      "swiftSymbols": [
+        "SCSkeleton",
+        "SCSkeletonAnimation",
+        "scSkeleton"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "theme-muted placeholder hidden from accessibility",
+        "pulse animation by default matching shadcn animate-pulse",
+        "caller-selected pulse, shimmer, or static animation in one engine",
+        "Reduce Motion automatically disables animation",
+        "fixed or flexible width and height with caller tint and corner radius",
+        "arbitrary SwiftUI Shape composition",
+        "conditional content redaction modifier shares the same animation engine, disables hit testing, and hides pending content from accessibility"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Shape and frame inputs replace className-based shape and sizing",
+        "the optional shimmer mode is an extension of the same primitive rather than a second Skeleton implementation"
+      ]
+    },
+    {
+      "name": "slider",
+      "source": "Sources/Swiftcn/Components/Slider.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/slider",
+      "upstreamParts": [
+        "Slider.Root",
+        "Slider.Control",
+        "Slider.Track",
+        "Slider.Indicator",
+        "Slider.Thumb"
+      ],
+      "swiftSymbols": [
+        "SCSlider",
+        "SCSliderCollisionBehavior",
+        "SCSliderThumbAlignment",
+        "SCSliderChangeReason",
+        "SCSliderEvent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "one controlled-or-internally-managed engine for scalar, range, and arbitrary multiple-thumb values",
+        "horizontal and vertical orientation with edge or center thumb alignment",
+        "continuous or stepped values with configurable large step and minimum steps between thumbs",
+        "push, swap, or stop collision behavior",
+        "track press, drag, keyboard, and accessibility change reasons plus committed-value callback",
+        "Arrow, Shift-Arrow, Page Up, Page Down, Home, and End keyboard interaction",
+        "root disabled state and independently disabled thumbs",
+        "caller labels and formatting with a native adjustable accessibility control for every thumb",
+        "configurable track and thumb sizing with theme track, indicator, thumb, focus ring, and disabled appearance"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Binding or internal State replaces controlled/defaultValue web props",
+        "Axis and native drag geometry replace DOM orientation and pointer handlers",
+        "accessibilityRepresentation supplies native adjustable semantics while the custom SwiftUI parts preserve shadcn styling"
+      ]
+    },
+    {
+      "name": "sonner",
+      "source": "Sources/Swiftcn/Components/Sonner.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/sonner",
+      "upstreamParts": [
+        "Toaster",
+        "toast"
+      ],
+      "swiftSymbols": [
+        "SCSonner",
+        "SCSonnerPromise",
+        "SCSonnerToaster",
+        "scSonnerToaster"
+      ],
+      "requiredRegistryDependencies": [
+        "toast"
+      ],
+      "behaviors": [
+        "one shared queue engine for default, success, info, warning, error, and persistent loading notifications",
+        "stable toast identifiers with in-place updates, individual dismissal, and dismiss-all",
+        "title, description, primary action, cancel action, close button, and per-toast dismissal policy",
+        "six corner or centered top and bottom positions with configurable visible count, gap, and collapsed or expanded stacking",
+        "pause-on-hover timing and directional swipe dismissal",
+        "automatic accessibility announcements plus dismissal and auto-close callbacks",
+        "async Task success and error transitions through the promise convenience API"
+      ],
+      "intentionalAdaptations": [
+        "the Swift façade and deprecated Toast compatibility API intentionally share one SCToastCenter instead of creating duplicate queues",
+        "Swift Concurrency Task replaces the JavaScript Promise API",
+        "SF Symbols and SwiftUI theme tokens replace Lucide icons and CSS custom properties",
+        "native accessibility announcements replace the web live-region implementation"
+      ]
+    },
+    {
+      "name": "spinner",
+      "source": "Sources/Swiftcn/Components/Spinner.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/spinner",
+      "upstreamParts": [
+        "Spinner"
+      ],
+      "swiftSymbols": [
+        "SCSpinner"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "indeterminate loading status with shadcn's 16-point default size",
+        "caller-defined diameter, line width, and accessibility label",
+        "foreground-style inheritance for composition inside buttons, badges, input groups, empty states, and arbitrary SwiftUI containers",
+        "disabled-state opacity inherited from the SwiftUI environment",
+        "Reduce Motion automatically presents a static progress glyph",
+        "native indeterminate ProgressView accessibility representation"
+      ],
+      "intentionalAdaptations": [
+        "a trimmed SwiftUI Circle replaces the registry-selected web icon family",
+        "foregroundStyle inheritance replaces currentColor CSS behavior",
+        "a native ProgressView accessibility representation replaces role status and aria-label"
+      ]
+    },
+    {
+      "name": "switch",
+      "source": "Sources/Swiftcn/Components/Switch.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/switch",
+      "upstreamParts": [
+        "Switch",
+        "SwitchThumb"
+      ],
+      "swiftSymbols": [
+        "SCSwitch",
+        "SCSwitchSize",
+        "SCSwitchStyle",
+        "scSwitch"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-owned checked binding with real toggle activation",
+        "default and small sizes",
+        "explicit or Field-inherited invalid state",
+        "explicit or environment disabled state",
+        "visible keyboard focus ring and expanded pointer or touch target",
+        "native switch accessibility representation",
+        "Reduce Motion-aware thumb transition",
+        "RTL-aware thumb placement",
+        "standalone Field composition and labeled native Toggle convenience"
+      ],
+      "intentionalAdaptations": [
+        "a required accessibility label replaces the web id and for association when the standalone control is composed beside SCFieldLabel",
+        "SCSwitchStyle preserves the established native Toggle API over the same visual engine",
+        "SwiftUI leading and trailing layout replaces Base UI Thumb transforms",
+        "native Toggle accessibility representation replaces ARIA switch semantics"
+      ]
+    },
+    {
+      "name": "table",
+      "source": "Sources/Swiftcn/Components/Table.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/table",
+      "upstreamParts": [
+        "Table",
+        "TableHeader",
+        "TableBody",
+        "TableFooter",
+        "TableHead",
+        "TableRow",
+        "TableCell",
+        "TableCaption"
+      ],
+      "swiftSymbols": [
+        "SCTableRoot",
+        "SCTableHeader",
+        "SCTableBody",
+        "SCTableFooter",
+        "SCTableHead",
+        "SCTableRow",
+        "SCTableCell",
+        "SCTableCaption"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "public Root, Header, Body, Footer, Head, Row, Cell, and Caption composition",
+        "responsive viewport-filling layout with horizontal overflow from a caller-defined minimum width",
+        "shared fixed, minimum, or flexible column sizing and leading, center, or trailing alignment",
+        "arbitrary rich header, cell, footer, and caption content",
+        "header, body, selected, expanded, hover, separator, and muted footer treatments",
+        "optional real row activation without intercepting independently interactive cell controls",
+        "native header and selected accessibility traits",
+        "RTL-aware leading and trailing alignment",
+        "typed rows, columns, sorting, selection, and activation remain available as a convenience over the visual language"
+      ],
+      "intentionalAdaptations": [
+        "SCTableRoot is distinct from the established generic SCTable data convenience so existing typed call sites remain source compatible",
+        "the caption is a dedicated root builder because SwiftUI cannot hoist a child from horizontal scrolling like an HTML caption element",
+        "SwiftUI ViewBuilder composition and HStack sizing replace HTML table layout and className width utilities",
+        "native controls inside arbitrary cells replace the documented dropdown-menu action composition"
+      ]
+    },
+    {
+      "name": "tabs",
+      "source": "Sources/Swiftcn/Components/Tabs.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/tabs",
+      "upstreamParts": [
+        "Tabs",
+        "TabsList",
+        "TabsTrigger",
+        "TabsContent"
+      ],
+      "swiftSymbols": [
+        "SCTabs",
+        "SCTabsList",
+        "SCTabsTrigger",
+        "SCTabsContent"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "public Root, List, Trigger, and Content composition",
+        "required, optional, or internally managed typed selection",
+        "automatic first-enabled fallback for internal state",
+        "value-change callbacks",
+        "default and line list variants",
+        "horizontal and vertical orientation",
+        "arbitrary trigger labels and panel content",
+        "disabled triggers with internal-state fallback",
+        "manual or focus-activated axis-aware arrow navigation with configurable looping",
+        "RTL-aware horizontal traversal",
+        "optional keep-mounted inactive panels",
+        "data-driven compatibility composition"
+      ],
+      "intentionalAdaptations": [
+        "typed SwiftUI bindings and environment state replace Base UI context and any-valued DOM state",
+        "native Buttons and FocusState replace tab buttons and roving tabindex",
+        "selected-trigger backgrounds and edge overlays replace the web Indicator positioning element",
+        "logical trailing replaces a physical right edge for vertical line tabs under RTL",
+        "the original SCTabItem array API composes the public Root, List, Trigger, and Content views"
+      ]
+    },
+    {
+      "name": "textarea",
+      "source": "Sources/Swiftcn/Components/Textarea.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/textarea",
+      "upstreamParts": [
+        "Textarea"
+      ],
+      "swiftSymbols": [
+        "SCTextarea"
+      ],
+      "requiredRegistryDependencies": [
+        "field",
+        "input-group-context",
+        "theme"
+      ],
+      "behaviors": [
+        "caller-owned multiline text binding",
+        "optional placeholder exposed as a native editor accessibility hint",
+        "current 64-point default minimum height and caller-defined sizing",
+        "explicit or Field-inherited invalid state",
+        "disabled and focused appearance",
+        "native selection, scrolling, undo, keyboard, and RTL behavior",
+        "Input Group chrome and focus integration"
+      ],
+      "intentionalAdaptations": [
+        "native TextEditor replaces the HTML textarea and owns editing behavior",
+        "SwiftUI Binding replaces DOM value and change events",
+        "Field environment state replaces aria-invalid styling propagation",
+        "the visual placeholder is hidden from accessibility and announced as the real editor's hint",
+        "pairing with labels, descriptions, and buttons remains ordinary SwiftUI composition"
+      ]
+    },
+    {
+      "name": "toast",
+      "source": "Sources/Swiftcn/Components/Toast.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/toast",
+      "upstreamParts": [
+        "deprecated Toast compatibility entry"
+      ],
+      "swiftSymbols": [
+        "SCToast",
+        "SCToastCenter",
+        "scToaster"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "spinner",
+        "theme"
+      ],
+      "behaviors": [
+        "deprecated registry entry remains installable for existing Swiftcn consumers",
+        "existing callers retain real queued presentation, actions, timed dismissal, manual dismissal, and swipe dismissal",
+        "new behavior parity is tracked separately under the official Sonner catalog item"
+      ],
+      "intentionalAdaptations": [
+        "the official Toast page now publishes only a deprecation notice directing callers to Sonner",
+        "Swiftcn preserves the existing toast source and API as a migration-compatible entry instead of deleting consumer code",
+        "SCToastCenter is already Sonner-shaped, but the Sonner CODE gate remains separate until its complete current API is audited"
+      ]
+    },
+    {
+      "name": "toggle",
+      "source": "Sources/Swiftcn/Components/Toggle.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/toggle",
+      "upstreamParts": [
+        "Toggle"
+      ],
+      "swiftSymbols": [
+        "SCToggleStyle",
+        "SCToggleButtonStyle"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "caller-controlled pressed binding with native change propagation",
+        "arbitrary text, icon, or rich label content",
+        "default and outline variants",
+        "small, default, and large sizes",
+        "pressed, hover-equivalent pointer, focus-ring, and disabled appearance",
+        "native keyboard and accessibility toggle semantics"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI Toggle and Binding replace Base UI pressed/defaultPressed state and callbacks",
+        "native Toggle owns activation, keyboard, disabled, and accessibility behavior",
+        "ToggleStyle replaces the web render prop while preserving arbitrary caller labels",
+        "native applications have no hidden HTML form value field",
+        "the public button style is shared by Toggle Group so both components use one visual engine"
+      ]
+    },
+    {
+      "name": "toggle-group",
+      "source": "Sources/Swiftcn/Components/ToggleGroup.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/toggle-group",
+      "upstreamParts": [
+        "ToggleGroup",
+        "ToggleGroupItem"
+      ],
+      "swiftSymbols": [
+        "SCToggleGroup",
+        "SCToggleGroupItem"
+      ],
+      "requiredRegistryDependencies": [
+        "theme",
+        "toggle"
+      ],
+      "behaviors": [
+        "caller-controlled or internally managed single selection",
+        "caller-controlled or internally managed multiple selection",
+        "value-change callbacks",
+        "arbitrary item labels and typed Hashable values",
+        "default and outline variants plus small, default, and large sizes",
+        "current two-point default spacing and connected zero-spacing composition",
+        "horizontal and vertical orientation",
+        "root and individual item disabling",
+        "orientation-aware arrow focus with configurable looping",
+        "RTL-aware horizontal arrow traversal"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI environment state replaces Base UI group context",
+        "Binding<Value?> and Binding<Set<Value>> replace string-array single and multiple state",
+        "native Buttons and FocusState replace web toggle primitives and roving tabindex",
+        "the original array API remains a connected-outline composition over the public Root and Item views",
+        "SF Symbols and arbitrary SwiftUI labels replace DOM icon children"
+      ]
+    },
+    {
+      "name": "tooltip",
+      "source": "Sources/Swiftcn/Components/Tooltip.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/tooltip",
+      "upstreamParts": [
+        "TooltipProvider",
+        "Tooltip",
+        "TooltipTrigger",
+        "TooltipContent"
+      ],
+      "swiftSymbols": [
+        "SCTooltipProvider",
+        "SCTooltip",
+        "SCTooltipContent",
+        "scTooltip"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "provider-configurable pointer reveal delay with an immediate default",
+        "dismissal on pointer exit",
+        "keyboard-focus reveal and focus-loss dismissal",
+        "touch long-press adaptation",
+        "provider-level placement outside clipping containers",
+        "top, bottom, leading, and trailing placement with an arrow",
+        "disabled-control support through the outer SCTooltip root",
+        "system help exposure on macOS"
+      ],
+      "intentionalAdaptations": [
+        "SCTooltip's ViewBuilder closure is the SwiftUI-native TooltipTrigger slot",
+        "a View modifier remains as a convenience API over the same presentation path",
+        "SwiftUI provider-overlay placement replaces the web portal and positioning primitive",
+        "leading and trailing replace physical left and right so placement follows layout direction",
+        "touch uses a temporary long-press presentation because hover has no touch equivalent"
+      ]
+    },
+    {
+      "name": "typography",
+      "source": "Sources/Swiftcn/Components/Typography.swift",
+      "upstreamDocs": "https://ui.shadcn.com/docs/components/base/typography",
+      "upstreamParts": [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "p",
+        "blockquote",
+        "table",
+        "list",
+        "inline code",
+        "lead",
+        "large",
+        "small",
+        "muted"
+      ],
+      "swiftSymbols": [
+        "scH1",
+        "scH2",
+        "scH3",
+        "scH4",
+        "scP",
+        "scBlockquote",
+        "SCTypographyTable",
+        "SCBulletList",
+        "scInlineCode",
+        "scLead",
+        "scLarge",
+        "scSmall",
+        "scMuted"
+      ],
+      "requiredRegistryDependencies": [
+        "table",
+        "theme"
+      ],
+      "behaviors": [
+        "all documented heading and prose type treatments",
+        "native accessibility heading levels for h1 through h4",
+        "full-width centered h1 and ruled h2 defaults with compact opt-outs",
+        "direction-aware blockquote rule",
+        "arbitrary bulleted-list row content and duplicate-safe text rows",
+        "theme-backed foreground, muted foreground, border, and inline-code colors"
+      ],
+      "intentionalAdaptations": [
+        "SwiftUI View modifiers make the typography treatments reusable on arbitrary caller content",
+        "document-flow margins and scroll offsets remain with the caller's stack and scroll container",
+        "the shared SCTable component serves the documented prose table example",
+        "SwiftUI has no direct equivalent to CSS text-wrap balance",
+        "semantic native heading traits replace HTML heading elements"
+      ]
+    },
+    {
+      "name": "dashboard-01",
+      "source": "Sources/Swiftcn/Blocks/Dashboard01Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/dashboard-01",
+      "upstreamParts": [
+        "page (SidebarProvider/AppSidebar/SidebarInset)",
+        "app-sidebar (NavMain, NavDocuments, NavSecondary, NavUser)",
+        "site-header",
+        "section-cards",
+        "chart-area-interactive",
+        "data-table (DataTable, DraggableRow, TableCellViewer)",
+        "data.json"
+      ],
+      "swiftSymbols": [
+        "SCDashboard01Block",
+        "SCDashboard01Section",
+        "SCDashboard01Action",
+        "SCDashboard01UserAction",
+        "SCDashboard01DocumentAction",
+        "SCDashboard01SectionAction",
+        "SCDashboard01Data"
+      ],
+      "requiredRegistryDependencies": [
+        "theme",
+        "sidebar",
+        "sidebar-block",
+        "card",
+        "chart",
+        "badge",
+        "button",
+        "tabs",
+        "toggle-group",
+        "select",
+        "table",
+        "data-table",
+        "drawer",
+        "field",
+        "input",
+        "avatar",
+        "separator",
+        "toast"
+      ],
+      "behaviors": [
+        "controlled or internal sidebar navigation selection",
+        "required onAction routing for every visible control",
+        "quick create, inbox, document, secondary, and user menu actions",
+        "interactive 90/30/7-day visitors chart with x-selection tooltip",
+        "sections table: checkbox selection, hideable columns, pagination",
+        "inline target/limit editing with sonner-style save toasts",
+        "reviewer assignment select for unassigned rows",
+        "per-row detail drawer with editable form and submit-to-table",
+        "row duplicate, delete, and reorder with caller notification"
+      ],
+      "intentionalAdaptations": [
+        "SCSidebarLayout(.offcanvas, .inset) owns SidebarProvider/Inset behavior",
+        "dnd-kit row dragging becomes keyboard-accessible Move up/Move down row actions emitting reorderSections",
+        "tab badge counts are label text (SCTabItem has a string label)",
+        "container queries become ViewThatFits (toggle group vs select) and platform drawer edge (trailing on macOS, bottom on iPad)",
+        "SCToastCenter replaces sonner's toast.promise",
+        "Swift Charts AreaMark gradients replace recharts defs/linearGradient",
+        "SwiftUI Link opens the GitHub URL natively",
+        "SF Symbols replace @tabler icons"
+      ]
+    },
+    {
+      "name": "sidebar-01",
+      "source": "Sources/Swiftcn/Blocks/Sidebar01Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-01",
+      "upstreamParts": [
+        "SidebarProvider, AppSidebar, and SidebarInset page shell",
+        "VersionSwitcher",
+        "SearchForm",
+        "grouped documentation navigation",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar01Block",
+        "SCSidebar01Data",
+        "SCSidebar01Section",
+        "SCSidebar01NavigationItem",
+        "SCSidebar01Action",
+        "SCSidebar01VersionSwitcher"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "theme"
+      ],
+      "behaviors": [
+        "offcanvas documentation sidebar with all four upstream grouped navigation sections",
+        "controlled or internal version, search query, and navigation selection",
+        "real version menu with selection state and callback",
+        "search filters section titles and destinations and exposes an empty-result state",
+        "every navigation destination updates selection and emits a typed callback",
+        "responsive section and current-page breadcrumb with a real section action",
+        "caller-supplied detail surface instead of decorative dashboard placeholders",
+        "optional open-state persistence plus compact iPad Sheet behavior inherited from SCSidebarLayout"
+      ],
+      "intentionalAdaptations": [
+        "native Menu replaces DropdownMenu and owns keyboard and compact placement",
+        "SwiftUI bindings and state replace React local state and hash navigation",
+        "the upstream inert sample search form becomes a real case-insensitive navigation filter",
+        "a required caller detail builder replaces the upstream decorative placeholder rectangles",
+        "ViewThatFits replaces the md breadcrumb visibility breakpoint",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-02",
+      "source": "Sources/Swiftcn/Blocks/Sidebar02Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-02",
+      "upstreamParts": [
+        "SidebarProvider, AppSidebar, and SidebarInset page shell",
+        "VersionSwitcher and SearchForm",
+        "five Collapsible documentation groups",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar02Block",
+        "SCSidebar02Action"
+      ],
+      "requiredRegistryDependencies": [
+        "sidebar01-block"
+      ],
+      "behaviors": [
+        "all sidebar-01 version, search, selection, breadcrumb, detail, persistence, and compact behaviors through the same engine",
+        "all five upstream documentation sections including Community",
+        "each section is initially expanded and independently collapsible",
+        "section disclosure has native button semantics, visible chevron state, and typed expansion callbacks",
+        "active search results remain visible without destroying the caller's stored expansion state"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-02 is a thin configuration of the accepted sidebar-01 engine rather than duplicated block code",
+        "SwiftUI disclosure state replaces the web Collapsible context",
+        "native buttons replace CollapsibleTrigger and expose expanded or collapsed accessibility values",
+        "a required caller detail builder replaces the upstream decorative scrolling placeholders"
+      ]
+    },
+    {
+      "name": "sidebar-03",
+      "source": "Sources/Swiftcn/Blocks/Sidebar03Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-03",
+      "upstreamParts": [
+        "SidebarProvider, AppSidebar, and SidebarInset page shell",
+        "static Documentation v1.0.0 brand header",
+        "five parent documentation rows",
+        "always-visible SidebarMenuSub destinations",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar03Block",
+        "SCSidebar03Action"
+      ],
+      "requiredRegistryDependencies": [
+        "sidebar01-block"
+      ],
+      "behaviors": [
+        "sidebar-01's accepted documentation shell, persistence, compact presentation, and caller detail surface through the same engine",
+        "real static brand action instead of the upstream placeholder anchor",
+        "all five parent documentation rows are selectable and emit typed section callbacks",
+        "every nested destination is always visible, selectable, and emits a typed navigation callback",
+        "current section and destination state drives the responsive breadcrumb",
+        "caller-supplied detail content replaces decorative dashboard placeholders"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-03 is a thin configuration of the accepted sidebar-01 engine rather than a duplicated block implementation",
+        "typed Swift callbacks replace the upstream hash and placeholder anchors",
+        "SwiftUI SidebarMenuSub composition replaces the web submenu primitives",
+        "a required caller detail builder replaces the upstream decorative scrolling placeholders",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-04",
+      "source": "Sources/Swiftcn/Blocks/Sidebar04Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-04",
+      "upstreamParts": [
+        "SidebarProvider with a 19rem width, AppSidebar, and SidebarInset page shell",
+        "floating Sidebar variant",
+        "static Documentation v1.0.0 brand header",
+        "five parent documentation rows",
+        "flush, guide-less SidebarMenuSub destinations",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar04Block",
+        "SCSidebar04Action"
+      ],
+      "requiredRegistryDependencies": [
+        "sidebar01-block"
+      ],
+      "behaviors": [
+        "sidebar-01's accepted documentation state, persistence, compact presentation, and caller detail surface through the same engine",
+        "floating sidebar shell with the upstream-equivalent 304-point expanded width",
+        "real static brand action plus selectable parent and nested navigation callbacks",
+        "all five parent rows and every nested destination are visible",
+        "nested menus use the compact flush style without the standard guide line",
+        "current selection drives the responsive breadcrumb and caller detail"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-04 is a floating configuration of the accepted sidebar-01 engine rather than duplicated layout and navigation code",
+        "19rem maps to 304 SwiftUI points",
+        "a reusable SCSidebarMenuSub flush style replaces the web margin, border, and padding utility overrides",
+        "typed Swift callbacks replace the upstream placeholder anchors",
+        "a required caller detail builder replaces the upstream decorative rectangles",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-05",
+      "source": "Sources/Swiftcn/Blocks/Sidebar05Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-05",
+      "upstreamParts": [
+        "SidebarProvider, AppSidebar, SidebarRail, and SidebarInset page shell",
+        "static Documentation v1.0.0 brand header",
+        "SearchForm with accessible label and search icon",
+        "five independently Collapsible parent rows with plus and minus state",
+        "SidebarMenuSub navigation destinations",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar05Block",
+        "SCSidebar05Action"
+      ],
+      "requiredRegistryDependencies": [
+        "sidebar01-block"
+      ],
+      "behaviors": [
+        "sidebar-01's accepted documentation state, persistence, compact presentation, and caller detail surface through the same engine",
+        "real static brand action and real case-insensitive search with a magnifying-glass affordance",
+        "only Build Your Application is initially expanded, matching upstream index 1",
+        "all five parent rows independently disclose their nested menus and emit typed expansion callbacks",
+        "plus and minus symbols plus expanded or collapsed accessibility values follow disclosure state",
+        "nested navigation updates selection, breadcrumb, caller detail, and emits typed callbacks",
+        "search exposes matching parents and destinations without destroying stored disclosure state"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-05 is a collapsible-submenu configuration of the accepted sidebar-01 engine rather than duplicated layout, search, and navigation code",
+        "SwiftUI disclosure state replaces the web Collapsible context while preserving independent open state",
+        "the upstream inert sample SearchForm performs real filtering and uses SCInput's leading symbol slot",
+        "typed Swift callbacks replace placeholder anchors",
+        "a required caller detail builder replaces the upstream decorative rectangles",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-07",
+      "source": "Sources/Swiftcn/Blocks/SidebarBlock.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-07",
+      "upstreamParts": [
+        "SidebarProvider, AppSidebar, and SidebarInset page shell",
+        "TeamSwitcher",
+        "NavMain with collapsible subnavigation",
+        "NavProjects with per-project menu",
+        "NavUser account menu",
+        "responsive breadcrumb header and placeholder detail"
+      ],
+      "swiftSymbols": [
+        "SCSidebarBlock",
+        "SCSidebarBlockData",
+        "SCSidebarBlockAction",
+        "SCSidebarTeamSwitcher",
+        "SCSidebarUserMenu"
+      ],
+      "requiredRegistryDependencies": [
+        "avatar",
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "theme"
+      ],
+      "behaviors": [
+        "icon-collapsible inset sidebar shell with compact Sheet adaptation inherited from SCSidebarLayout",
+        "controlled or internal active-team and navigation selection",
+        "team switching with Command-number shortcuts and add-team callback",
+        "internally managed collapsible main navigation with selected child routing and typed expansion callbacks",
+        "project selection, view, share, delete, and show-more callbacks",
+        "user upgrade, account, billing, notifications, and logout callbacks",
+        "real responsive root breadcrumb action and dynamic current-page title",
+        "required caller-supplied detail builder with no decorative default implementation",
+        "all visible application actions route through required typed callbacks"
+      ],
+      "intentionalAdaptations": [
+        "native Menu replaces DropdownMenu and owns compact placement",
+        "SwiftUI bindings and state replace React local state and hash navigation",
+        "SCSidebarLayout owns SidebarProvider, Inset, Rail, persistence, and compact presentation",
+        "ViewThatFits replaces the md breadcrumb visibility breakpoint",
+        "SF Symbols replace lucide and provider artwork"
+      ]
+    },
+    {
+      "name": "sidebar-08",
+      "source": "Sources/Swiftcn/Blocks/Sidebar08Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-08",
+      "upstreamParts": [
+        "SidebarProvider, inset AppSidebar, and SidebarInset page shell",
+        "static Acme Inc Enterprise organization header",
+        "NavMain with selectable parents and separate Collapsible disclosure actions",
+        "NavProjects with per-project menus and More action",
+        "NavSecondary pinned after the main content",
+        "NavUser account menu",
+        "responsive breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar08Block",
+        "SCSidebar08Action"
+      ],
+      "requiredRegistryDependencies": [
+        "sidebar-block"
+      ],
+      "behaviors": [
+        "sidebar-07's accepted inset application shell, project menus, user menu, breadcrumb, persistence, compact presentation, and required caller detail through the same engine",
+        "static organization header is a real typed action",
+        "primary parent rows select independently from their separate disclosure buttons",
+        "each disclosure owns independent state, a rotating chevron, accessibility labeling, and typed expansion callbacks",
+        "nested destinations update controlled or internal selection and emit typed callbacks",
+        "Support and Feedback secondary actions are pinned after main content and update selection",
+        "Projects exposes select, view, share, delete, and More callbacks",
+        "the complete user menu exposes upgrade, account, billing, notifications, and logout callbacks"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-08 is a static-header and secondary-navigation configuration of the accepted sidebar-07 application engine rather than duplicated shell, project, and user code",
+        "SCSidebarContent gives its stack viewport minimum height so native Spacer provides the upstream mt-auto behavior while preserving scrolling",
+        "native Menu replaces DropdownMenu and owns compact placement",
+        "typed Swift callbacks replace placeholder anchors",
+        "a required caller detail builder replaces the upstream decorative rectangles",
+        "SF Symbols replace lucide icons and provider artwork"
+      ]
+    },
+    {
+      "name": "sidebar-09",
+      "source": "Sources/Swiftcn/Blocks/Sidebar09Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-09",
+      "upstreamParts": [
+        "350px icon-collapsible outer Sidebar",
+        "non-collapsible organization and folder icon rail",
+        "non-collapsible active-folder mail list pane",
+        "active folder heading, Unreads Switch, and SidebarInput search",
+        "ten mail summary rows",
+        "NavUser account menu",
+        "sticky All Inboxes breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar09Block",
+        "SCSidebar09Data",
+        "SCSidebar09Folder",
+        "SCSidebar09Mail",
+        "SCSidebar09Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "switch",
+        "theme",
+        "tooltip"
+      ],
+      "behaviors": [
+        "350-point outer shell expands and collapses between the complete two-pane sidebar and its 56-point folder rail",
+        "controlled or internal folder, search, unread-only, and selected-mail state",
+        "organization, All Inboxes breadcrumb, every folder, every mail, and all user-menu actions emit typed callbacks",
+        "folder selection deterministically resolves caller-owned message membership and reopens the regular-width mail pane",
+        "search filters the active folder by sender, email, subject, and teaser",
+        "Unread switch filters against the mail model's real isUnread value",
+        "mail rows expose sender, date, subject, teaser, selected state, and accessibility labels",
+        "caller-supplied detail receives the current folder and optional selected mail; no decorative detail implementation exists",
+        "open state persists and compact iPad presentation uses the accepted side Sheet engine"
+      ],
+      "intentionalAdaptations": [
+        "deterministic folder mail IDs replace the upstream random shuffle and slice demo behavior",
+        "the previously inert upstream Unreads switch and search input perform real filtering",
+        "one SCSidebarLayout owns the nested 350-point and 56-point geometry instead of nesting provider state",
+        "native Menu through SCSidebarUserMenu replaces DropdownMenu",
+        "typed Swift callbacks replace mail and breadcrumb placeholder anchors",
+        "a required caller detail builder replaces the upstream decorative rows",
+        "SF Symbols replace lucide icons and provider artwork"
+      ]
+    },
+    {
+      "name": "sidebar-10",
+      "source": "Sources/Swiftcn/Blocks/Sidebar10Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-10",
+      "upstreamParts": [
+        "AppSidebar with TeamSwitcher and NavMain header",
+        "ten-row NavFavorites with per-favorite menus",
+        "five collapsible NavWorkspaces with three pages each and add actions",
+        "bottom-pinned five-row NavSecondary",
+        "SidebarRail and borderless offcanvas shell",
+        "page title, edit label, star action, and NavActions Popover header",
+        "four-group, thirteen-action sidebar menu inside Popover"
+      ],
+      "swiftSymbols": [
+        "SCSidebar10Block",
+        "SCSidebar10Data",
+        "SCSidebar10NavigationItem",
+        "SCSidebar10Favorite",
+        "SCSidebar10Workspace",
+        "SCSidebar10Action",
+        "SCSidebar10FavoriteAction",
+        "SCSidebar10PageAction"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "popover",
+        "separator",
+        "sidebar",
+        "sidebar-block"
+      ],
+      "behaviors": [
+        "controlled or internal team, navigation selection, page-star, and page-actions popover state",
+        "team selection with Command-number shortcuts plus add-team callback",
+        "all four primary navigation rows select and Inbox preserves its badge",
+        "all ten favorites select and expose remove, copy-link, open-in-new-window, and delete callbacks plus More",
+        "all five workspaces select, independently disclose, add pages, and expose three selectable child pages plus More",
+        "all five secondary destinations remain bottom-pinned and selectable",
+        "star toggles real state and emits its new value",
+        "popover presentation is caller-controllable and all thirteen grouped page actions emit typed callbacks before dismissal",
+        "required caller detail receives current selection; no decorative detail implementation exists",
+        "open state persists and compact iPad presentation uses the accepted side Sheet engine"
+      ],
+      "intentionalAdaptations": [
+        "the upstream forced-open-on-mount popover demo is removed; the production default is closed",
+        "native Menu replaces each DropdownMenu and owns compact placement",
+        "SCPopover provides the real anchored page-actions surface instead of a simulated overlay",
+        "SCSidebarContent plus native Spacer provides the upstream mt-auto secondary placement",
+        "a reusable SCSidebarLayout showsDivider option implements the upstream border-r-0 shell",
+        "typed Swift callbacks replace all placeholder anchors",
+        "a required caller detail builder replaces the upstream decorative rectangles",
+        "SF Symbols replace lucide icons while emoji content remains caller data"
+      ]
+    },
+    {
+      "name": "sidebar-11",
+      "source": "Sources/Swiftcn/Blocks/Sidebar11Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-11",
+      "upstreamParts": [
+        "offcanvas Sidebar, SidebarContent, and SidebarRail shell",
+        "Changes group with three file rows and state badges",
+        "Files group with recursive Collapsible folder tree",
+        "components and ui folders initially expanded",
+        "button.tsx active file",
+        "dynamic path breadcrumb header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar11Block",
+        "SCSidebar11Data",
+        "SCSidebar11Change",
+        "SCSidebar11TreeNode",
+        "SCSidebar11Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "theme"
+      ],
+      "behaviors": [
+        "arbitrary caller-owned recursive file trees plus the complete upstream sample",
+        "controlled or internal selected path and expanded-folder set",
+        "all change rows and file rows update selection and emit typed callbacks",
+        "folders independently expand and collapse with rotating chevrons, accessibility state, and typed callbacks",
+        "only currently visible nodes are rendered, preserving deep-tree scrolling and stable path identity",
+        "breadcrumb derives every segment from selection and each parent segment emits its full path",
+        "required caller detail receives selected path; no decorative detail implementation exists",
+        "open state persists and compact iPad presentation uses the accepted side Sheet engine"
+      ],
+      "intentionalAdaptations": [
+        "the recursive tuple union becomes a typed recursive SCSidebar11TreeNode model",
+        "visible nodes are flattened with depth indentation to avoid recursive opaque SwiftUI view types while preserving tree behavior",
+        "native SwiftUI state replaces each web Collapsible context",
+        "typed Swift callbacks replace file and breadcrumb placeholder anchors",
+        "a required caller detail builder replaces upstream decorative rectangles",
+        "SF Symbols replace lucide file and folder icons"
+      ]
+    },
+    {
+      "name": "sidebar-12",
+      "source": "Sources/Swiftcn/Blocks/Sidebar12Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-12",
+      "upstreamParts": [
+        "offcanvas Sidebar with user menu header, Calendar content, and New Calendar footer",
+        "October 2024 date picker with 33-point calendar cells",
+        "My Calendars, Favorites, and Other Collapsible groups",
+        "first calendar group initially expanded and first two calendars in every group enabled",
+        "month breadcrumb page header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar12Block",
+        "SCSidebar12Data",
+        "SCSidebar12CalendarGroup",
+        "SCSidebar12CalendarItem",
+        "SCSidebar12Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "calendar",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "theme"
+      ],
+      "behaviors": [
+        "selected date and visible month are independently caller-controlled or internally owned",
+        "all three calendar groups independently disclose and emit their new expanded state",
+        "every calendar row toggles real enabled membership and reports its new value",
+        "the complete Upgrade, Account, Billing, Notifications, and Log out menu emits typed user actions",
+        "New Calendar emits a required create action",
+        "the breadcrumb follows the currently visible calendar month",
+        "required caller detail receives the selected date and enabled-calendar set",
+        "side, collapse mode, and detail chrome can be composed by higher-level blocks"
+      ],
+      "intentionalAdaptations": [
+        "SCCalendar replaces the web calendar while retaining the upstream 33-point cell geometry",
+        "native Menu replaces DropdownMenu and owns platform placement",
+        "typed Set identifiers replace decorative data-active attributes",
+        "the twenty empty page squares are replaced by mandatory caller-owned detail",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-13",
+      "source": "Sources/Swiftcn/Blocks/Sidebar13Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-13",
+      "upstreamParts": [
+        "Open Dialog trigger and Settings dialog",
+        "twelve-destination settings sidebar",
+        "Messages and media initially active",
+        "Settings and current-destination breadcrumb header",
+        "scrolling settings detail region"
+      ],
+      "swiftSymbols": [
+        "SCSidebar13Block",
+        "SCSidebar13Data",
+        "SCSidebar13NavigationItem",
+        "SCSidebar13Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "button",
+        "dialog",
+        "sidebar",
+        "theme"
+      ],
+      "behaviors": [
+        "dialog presentation is caller-controlled or internally owned and every transition emits its new value",
+        "the trigger label is caller-composable while retaining native focus restoration",
+        "all twelve settings destinations select and emit typed navigation actions",
+        "the Settings breadcrumb emits a real root action",
+        "regular width shows the full settings sidebar and compact width retains the selected destination",
+        "required caller detail receives current selection inside the scrolling content region"
+      ],
+      "intentionalAdaptations": [
+        "SCDialog provides native escape, scrim dismissal, focus restoration, and modal accessibility",
+        "SCDialogContent gained reusable max-width and padding controls for zero-padding application dialogs",
+        "ViewThatFits replaces the upstream md breakpoint",
+        "the ten empty video cards are replaced by mandatory caller-owned detail",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "sidebar-14",
+      "source": "Sources/Swiftcn/Blocks/Sidebar14Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-14",
+      "upstreamParts": [
+        "right-side offcanvas Sidebar and Rail",
+        "Table of Contents group",
+        "five documentation sections and all twenty-six child pages",
+        "Data Fetching initially active",
+        "section and current-page breadcrumb header with trailing trigger"
+      ],
+      "swiftSymbols": [
+        "SCSidebar14Block",
+        "SCSidebar14Data",
+        "SCSidebar14Section",
+        "SCSidebar14Page",
+        "SCSidebar14Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "sidebar",
+        "theme"
+      ],
+      "behaviors": [
+        "all section headings and child pages are real selectable destinations",
+        "selection is caller-controlled or internally owned",
+        "the breadcrumb derives its section and page from current selection",
+        "parent breadcrumb segments emit the selected section identifier",
+        "the trailing trigger controls the right sidebar and open state persists",
+        "required caller detail receives current selection"
+      ],
+      "intentionalAdaptations": [
+        "native trailing-edge sidebar state replaces the rotated web trigger",
+        "typed section and page models replace placeholder anchor URLs",
+        "the three empty cards and empty main panel are replaced by mandatory caller-owned detail"
+      ]
+    },
+    {
+      "name": "sidebar-15",
+      "source": "Sources/Swiftcn/Blocks/Sidebar15Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-15",
+      "upstreamParts": [
+        "borderless left workspace sidebar from sidebar-10",
+        "non-collapsible right calendar sidebar from sidebar-12",
+        "left team switcher, main navigation, ten favorites, five workspaces, and secondary navigation",
+        "right user menu, date picker, three calendar groups, and New Calendar action",
+        "center breadcrumb header and document content"
+      ],
+      "swiftSymbols": [
+        "SCSidebar15Block",
+        "SCSidebar15Data",
+        "SCSidebar15Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar10-block",
+        "sidebar12-block"
+      ],
+      "behaviors": [
+        "the complete sidebar-10 and sidebar-12 interaction systems run together without duplicate engines",
+        "team, navigation, workspace, date, month, calendar membership, and calendar disclosure can all be caller-owned",
+        "every left action is forwarded as a typed left action and every right action as a typed right action",
+        "workspace and calendar disclosures remain independent",
+        "the left sidebar collapses while the regular-width right sidebar remains visible",
+        "required center detail receives navigation selection, selected date, and enabled-calendar identifiers"
+      ],
+      "intentionalAdaptations": [
+        "sidebar-10 gained external workspace disclosure and replaceable header composition",
+        "sidebar-12 gained edge, collapse, and detail-chrome composition controls",
+        "nested shared sidebar layouts preserve independent left and right state",
+        "the empty center document rectangles are replaced by mandatory caller-owned detail",
+        "compact presentation follows the upstream behavior by omitting the desktop-only right sidebar"
+      ]
+    },
+    {
+      "name": "sidebar-16",
+      "source": "Sources/Swiftcn/Blocks/Sidebar16Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/sidebar-16",
+      "upstreamParts": [
+        "sticky full-width site header above the application sidebar",
+        "shared sidebar trigger, breadcrumb, and search form in the site header",
+        "organization header, four independently disclosed Platform rows, Projects, and bottom secondary navigation",
+        "complete user account menu footer",
+        "application content beneath the persistent header"
+      ],
+      "swiftSymbols": [
+        "SCSidebar16Block",
+        "SCSidebar16Data",
+        "SCSidebar16Action"
+      ],
+      "requiredRegistryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "theme"
+      ],
+      "behaviors": [
+        "the site header and sidebar share one observable state so header trigger, keyboard shortcut, and compact sheet stay synchronized",
+        "search text is caller-controlled or internally owned, emits edits, and emits explicit submission",
+        "navigation selection and every disclosure can be caller-owned",
+        "all organization, navigation, project, secondary navigation, and user menu actions remain typed",
+        "the site breadcrumb derives its current page from selection and its parent emits a real root action",
+        "required caller detail receives current selection below the persistent header"
+      ],
+      "intentionalAdaptations": [
+        "SCSidebarBlock gained shared-state, standard-variant, optional-detail-header, and controlled-disclosure composition seams",
+        "SCSidebarInput gained a real submit callback",
+        "native persistent VStack geometry replaces CSS sticky positioning",
+        "ViewThatFits replaces the sm breadcrumb breakpoint",
+        "empty content rectangles are replaced by mandatory caller-owned detail",
+        "SF Symbols replace lucide icons"
+      ]
+    },
+    {
+      "name": "login-01",
+      "source": "Sources/Swiftcn/Blocks/LoginBlock.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/login-01",
+      "upstreamParts": [
+        "centered page",
+        "login card",
+        "email and password fields",
+        "forgot-password, submit, Google, and signup actions"
+      ],
+      "swiftSymbols": [
+        "SCLoginBlock"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input",
+        "label",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "internal email and password editing state submitted through a required callback",
+        "required email and password semantics with guarded button and Return-key submission",
+        "real forgot-password, Google login, and signup callbacks",
+        "email keyboard intent and secure password entry",
+        "centered responsive card composition"
+      ],
+      "intentionalAdaptations": [
+        "native email and secure inputs replace HTML input types",
+        "required callbacks replace placeholder hash links and an unhandled form submit",
+        "SF Symbols replace provider SVG artwork"
+      ]
+    },
+    {
+      "name": "login-02",
+      "source": "Sources/Swiftcn/Blocks/Login02Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/login-02",
+      "upstreamParts": [
+        "two-column page and brand row",
+        "card-less login form",
+        "responsive media panel",
+        "GitHub and signup actions"
+      ],
+      "swiftSymbols": [
+        "SCLogin02Block",
+        "SCLoginPasswordRow",
+        "SCLoginSignUpPrompt"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "input",
+        "label",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "two-column layout collapses to the form column when space is constrained",
+        "caller-supplied media builder with a default placeholder",
+        "required credential validation and Return-key submission",
+        "real login, forgot-password, GitHub, and signup callbacks",
+        "shared password and signup-prompt composition"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the lg CSS breakpoint",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace lucide and GitHub SVG artwork"
+      ]
+    },
+    {
+      "name": "login-03",
+      "source": "Sources/Swiftcn/Blocks/Login03Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/login-03",
+      "upstreamParts": [
+        "muted page and brand row",
+        "centered login card",
+        "Apple and Google providers",
+        "credential form, signup prompt, and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCLogin03Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "card",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "theme"
+      ],
+      "behaviors": [
+        "provider actions precede separated credential entry",
+        "required credential validation and Return-key submission",
+        "real Apple, Google, login, forgot-password, signup, terms, and privacy callbacks",
+        "centered card and external terms composition"
+      ],
+      "intentionalAdaptations": [
+        "required callbacks replace placeholder links and form submission",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace provider SVG artwork"
+      ]
+    },
+    {
+      "name": "login-04",
+      "source": "Sources/Swiftcn/Blocks/Login04Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/login-04",
+      "upstreamParts": [
+        "muted page and split card",
+        "credential form",
+        "Apple, Google, and Meta providers",
+        "responsive media panel, signup prompt, and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCLogin04Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "split card collapses to the form when space is constrained",
+        "caller-supplied media builder with a default placeholder",
+        "required credential validation and Return-key submission",
+        "real login, forgot-password, provider, signup, terms, and privacy callbacks"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the md CSS breakpoint",
+        "direct theme-token card chrome preserves the upstream flush media edge",
+        "SF Symbols replace provider SVG artwork"
+      ]
+    },
+    {
+      "name": "login-05",
+      "source": "Sources/Swiftcn/Blocks/Login05Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/login-05",
+      "upstreamParts": [
+        "minimal card-less page",
+        "brand header and signup prompt",
+        "email-only login form",
+        "Apple and Google providers and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCLogin05Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "required email validation with button and Return-key submission",
+        "provider buttons shift from horizontal to vertical when constrained",
+        "real login, Apple, Google, signup, terms, and privacy callbacks",
+        "accessible static brand identity"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the sm provider-grid breakpoint",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace provider and brand artwork"
+      ]
+    },
+    {
+      "name": "signup-01",
+      "source": "Sources/Swiftcn/Blocks/Signup01Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/signup-01",
+      "upstreamParts": [
+        "centered page and signup card",
+        "name, email, password, and confirmation fields",
+        "create-account, Google, and signin actions"
+      ],
+      "swiftSymbols": [
+        "SCSignup01Block",
+        "SCSignupDetails",
+        "SCAuthEmailInput",
+        "SCSignupSignInPrompt",
+        "SCAuthTermsFootnote"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "typed internal signup details submitted through a required callback",
+        "required field and email validation with button and Return-key submission",
+        "real create-account, Google, and signin callbacks",
+        "secure password and confirmation entry",
+        "centered responsive card composition"
+      ],
+      "intentionalAdaptations": [
+        "SCSignupDetails replaces browser FormData",
+        "required callbacks replace placeholder hash links and form submission",
+        "SF Symbols replace provider artwork"
+      ]
+    },
+    {
+      "name": "signup-02",
+      "source": "Sources/Swiftcn/Blocks/Signup02Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/signup-02",
+      "upstreamParts": [
+        "two-column page and brand row",
+        "card-less four-field signup form",
+        "responsive media panel",
+        "GitHub and signin actions"
+      ],
+      "swiftSymbols": [
+        "SCSignup02Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "input",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "two-column layout collapses to the form column when constrained",
+        "caller-supplied media builder with a default placeholder",
+        "required signup validation and Return-key submission",
+        "real create-account, GitHub, and signin callbacks"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the lg CSS breakpoint",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace lucide and GitHub SVG artwork"
+      ]
+    },
+    {
+      "name": "signup-03",
+      "source": "Sources/Swiftcn/Blocks/Signup03Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/signup-03",
+      "upstreamParts": [
+        "muted page and brand row",
+        "centered signup card",
+        "two-column password fields",
+        "signin prompt and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCSignup03Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input",
+        "signup01-block",
+        "theme"
+      ],
+      "behaviors": [
+        "required four-field validation and Return-key submission",
+        "real create-account, signin, terms, and privacy callbacks",
+        "password and confirmation fields share the documented two-column row",
+        "centered card and external terms composition"
+      ],
+      "intentionalAdaptations": [
+        "required callbacks replace placeholder hash links and form submission",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace brand artwork"
+      ]
+    },
+    {
+      "name": "signup-04",
+      "source": "Sources/Swiftcn/Blocks/Signup04Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/signup-04",
+      "upstreamParts": [
+        "muted page and split card",
+        "email and two-column password form",
+        "Apple, Google, and Meta providers",
+        "responsive media panel, signin prompt, and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCSignup04Block",
+        "SCAuthMediaPlaceholder"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "input",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "split card collapses to the form when constrained",
+        "caller-supplied media builder with a default placeholder",
+        "required credential validation and Return-key submission",
+        "real create-account, provider, signin, terms, and privacy callbacks"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the md CSS breakpoint",
+        "direct theme-token card chrome preserves the upstream flush media edge",
+        "SF Symbols replace provider SVG artwork"
+      ]
+    },
+    {
+      "name": "signup-05",
+      "source": "Sources/Swiftcn/Blocks/Signup05Block.swift",
+      "upstreamDocs": "https://ui.shadcn.com/view/new-york-v4/signup-05",
+      "upstreamParts": [
+        "minimal card-less page",
+        "brand header and signin prompt",
+        "email-only signup form",
+        "Apple and Google providers and terms footnote"
+      ],
+      "swiftSymbols": [
+        "SCSignup05Block"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "field",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "behaviors": [
+        "required email validation with button and Return-key submission",
+        "provider buttons shift from horizontal to vertical when constrained",
+        "real create-account, Apple, Google, signin, terms, and privacy callbacks",
+        "accessible static brand identity"
+      ],
+      "intentionalAdaptations": [
+        "ViewThatFits replaces the sm provider-grid breakpoint",
+        "the upstream hash brand link remains documented static identity",
+        "SF Symbols replace provider and brand artwork"
+      ]
+    }
+  ]
+}

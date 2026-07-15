@@ -6,10 +6,11 @@ import SwiftUI
 
 // MARK: - Component
 
-/// A 1pt rule that visually divides content, in the theme's border color.
+/// A 1pt rule that visually or semantically divides content, in the theme's border color.
 /// Horizontal separators fill the available width; vertical ones fill the
-/// available height. The labeled form renders a centered caption between
-/// two rules — the classic "or continue with" divider.
+/// available height. Separators are exposed to accessibility by default; use
+/// `isDecorative: true` only for a purely visual line. The labeled form accepts
+/// arbitrary centered content between two rules.
 ///
 ///     SCSeparator()
 ///     SCSeparator(.vertical)
@@ -17,33 +18,60 @@ import SwiftUI
 public struct SCSeparator: View {
     @Environment(\.theme) private var theme
 
-    var axis: Axis
-    var label: String?
+    private let axis: Axis
+    private let isDecorative: Bool
+    private let semanticLabel: String?
+    private let label: AnyView?
 
-    public init(_ axis: Axis = .horizontal) {
+    public init(
+        _ axis: Axis = .horizontal,
+        isDecorative: Bool = false,
+        accessibilityLabel: String = "Separator"
+    ) {
         self.axis = axis
+        self.isDecorative = isDecorative
+        self.semanticLabel = accessibilityLabel
         self.label = nil
     }
 
     /// A horizontal separator with a centered label.
-    public init(label: String) {
+    public init(
+        label: String,
+        isDecorative: Bool = false
+    ) {
         self.axis = .horizontal
-        self.label = label
+        self.isDecorative = isDecorative
+        self.semanticLabel = label
+        self.label = AnyView(Text(label))
+    }
+
+    /// A horizontal separator with arbitrary centered content.
+    public init<Label: View>(
+        isDecorative: Bool = false,
+        accessibilityLabel: String? = nil,
+        @ViewBuilder label: () -> Label
+    ) {
+        self.axis = .horizontal
+        self.isDecorative = isDecorative
+        self.semanticLabel = accessibilityLabel
+        self.label = AnyView(label())
     }
 
     public var body: some View {
         if let label {
             HStack(spacing: 16) {
                 line
-                Text(label)
+                label
                     .font(.caption)
                     .foregroundStyle(theme.mutedForeground)
                     .lineLimit(1)
                     .fixedSize()
                 line
             }
+            .modifier(accessibilityModifier)
         } else {
             line
+                .modifier(accessibilityModifier)
         }
     }
 
@@ -54,12 +82,40 @@ public struct SCSeparator: View {
             theme.border
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
-                .accessibilityHidden(true)
         case .vertical:
             theme.border
                 .frame(width: 1)
                 .frame(maxHeight: .infinity)
-                .accessibilityHidden(true)
+        }
+    }
+
+    private var accessibilityModifier: SCSeparatorAccessibilityModifier {
+        SCSeparatorAccessibilityModifier(
+            isDecorative: isDecorative,
+            label: semanticLabel,
+            orientation: axis == .horizontal ? "Horizontal" : "Vertical"
+        )
+    }
+}
+
+private struct SCSeparatorAccessibilityModifier: ViewModifier {
+    let isDecorative: Bool
+    let label: String?
+    let orientation: String
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if isDecorative {
+            content.accessibilityHidden(true)
+        } else if let label {
+            content
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(label)
+                .accessibilityValue(orientation)
+        } else {
+            content
+                .accessibilityElement(children: .combine)
+                .accessibilityValue(orientation)
         }
     }
 }
@@ -86,6 +142,11 @@ public struct SCSeparator: View {
 
 #Preview("Separator · label") {
     SCPreview {
-        SCSeparator(label: "or continue with")
+        VStack(spacing: 16) {
+            SCSeparator(label: "or continue with")
+            SCSeparator(accessibilityLabel: "Alternative sign-in methods") {
+                Label("or use passkey", systemImage: "person.badge.key")
+            }
+        }
     }
 }

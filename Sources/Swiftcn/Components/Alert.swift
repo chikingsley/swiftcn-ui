@@ -6,51 +6,40 @@ import SwiftUI
 
 // MARK: - Variants
 
-public enum SCAlertVariant: CaseIterable, Sendable {
+public enum SCAlertVariant: CaseIterable, Equatable, Sendable {
     case `default`, destructive
 }
 
-// MARK: - Component
+// MARK: - Root
 
-/// Displays an inline callout for user attention — shadcn's `Alert`.
-/// This is a banner embedded in the layout, not a modal dialog.
+/// An inline callout for information that requires the user's attention.
 ///
-///     SCAlert(icon: "terminal", title: "Heads up!",
-///             description: "You can add components to your app using the CLI.")
-///
-///     SCAlert(variant: .destructive, icon: "exclamationmark.triangle") {
-///         SCAlertTitle("Error")
-///         SCAlertDescription("Your session has expired. Please log in again.")
-///     }
-public struct SCAlert<Content: View>: View {
+/// Compose the content with `SCAlertTitle`, `SCAlertDescription`, and an
+/// optional `SCAlertAction`. The optional leading slot accepts any SwiftUI
+/// view, not only an SF Symbol.
+public struct SCAlert<Leading: View, Content: View>: View {
     @Environment(\.theme) private var theme
 
-    var variant: SCAlertVariant
-    var icon: String?
-    @ViewBuilder var content: Content
+    private let variant: SCAlertVariant
+    private let leading: Leading
+    private let content: Content
 
-    /// Slot-based initializer — compose `SCAlertTitle`, `SCAlertDescription`,
-    /// or any custom views.
-    /// - Parameters:
-    ///   - variant: `.default` (neutral) or `.destructive` (error-tinted).
-    ///   - icon: SF Symbol name shown leading the text, or `nil` for none.
+    /// Creates an alert with arbitrary content and an arbitrary leading view.
     public init(
         variant: SCAlertVariant = .default,
-        icon: String? = nil,
-        @ViewBuilder content: () -> Content
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder leading: () -> Leading
     ) {
         self.variant = variant
-        self.icon = icon
+        self.leading = leading()
         self.content = content()
     }
 
     public var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            if let icon {
-                Image(systemName: icon)
-                    .font(.system(size: 17, weight: .medium))
-                    .foregroundStyle(variant == .destructive ? theme.destructive : theme.foreground)
-            }
+            leading
+                .foregroundStyle(foregroundColor)
+
             VStack(alignment: .leading, spacing: 4) {
                 content
             }
@@ -60,33 +49,143 @@ public struct SCAlert<Content: View>: View {
         .background(background, in: shape)
         .overlay(shape.strokeBorder(strokeColor))
         .environment(\.scAlertVariant, variant)
+        .accessibilityElement(children: .contain)
     }
 
     private var shape: RoundedRectangle {
         RoundedRectangle(cornerRadius: theme.radius, style: .continuous)
     }
 
+    private var foregroundColor: Color {
+        variant == .destructive ? theme.destructive : theme.foreground
+    }
+
     private var background: Color {
         switch variant {
-        case .default:     theme.background
+        case .default: theme.background
         case .destructive: theme.destructive.opacity(0.08)
         }
     }
 
     private var strokeColor: Color {
         switch variant {
-        case .default:     theme.border
+        case .default: theme.border
         case .destructive: theme.destructive.opacity(0.5)
         }
     }
 }
 
-public extension SCAlert where Content == TupleView<(SCAlertTitle, SCAlertDescription?)> {
-    /// Convenience for the common icon + title + description anatomy.
-    ///
-    ///     SCAlert(icon: "terminal", title: "Heads up!",
-    ///             description: "You can add components using the CLI.")
-    init(
+extension SCAlert where Leading == EmptyView {
+    /// Creates an alert without a leading view.
+    public init(
+        variant: SCAlertVariant = .default,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.init(variant: variant, content: content) { EmptyView() }
+    }
+}
+
+// MARK: - Title
+
+/// The alert's heading slot.
+public struct SCAlertTitle<Content: View>: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.scAlertVariant) private var variant
+
+    private let content: Content
+
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    public var body: some View {
+        content
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(
+                variant == .destructive ? theme.destructive : theme.foreground
+            )
+    }
+}
+
+extension SCAlertTitle where Content == Text {
+    public init(_ text: String) {
+        self.init { Text(text) }
+    }
+}
+
+// MARK: - Description
+
+/// The alert's supporting-content slot.
+public struct SCAlertDescription<Content: View>: View {
+    @Environment(\.theme) private var theme
+    @Environment(\.scAlertVariant) private var variant
+
+    private let content: Content
+
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    public var body: some View {
+        content
+            .font(.footnote)
+            .foregroundStyle(
+                variant == .destructive
+                    ? theme.destructive.opacity(0.9)
+                    : theme.mutedForeground
+            )
+    }
+}
+
+extension SCAlertDescription where Content == Text {
+    public init(_ text: String) {
+        self.init { Text(text) }
+    }
+}
+
+// MARK: - Action
+
+/// A trailing action region inside an `SCAlert`.
+public struct SCAlertAction<Content: View>: View {
+    private let content: Content
+
+    public init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    public var body: some View {
+        content
+            .frame(maxWidth: .infinity, alignment: .trailing)
+            .padding(.top, 4)
+    }
+}
+
+// MARK: - Convenience compositions
+
+extension SCAlert where Leading == AnyView, Content == AnyView {
+    /// Convenience for an SF Symbol plus arbitrary alert content.
+    public init<Body: View>(
+        variant: SCAlertVariant = .default,
+        icon: String?,
+        @ViewBuilder content: () -> Body
+    ) {
+        self.init(variant: variant) {
+            AnyView(content())
+        } leading: {
+            AnyView(
+                Group {
+                    if let icon {
+                        Image(systemName: icon)
+                            .font(.system(size: 17, weight: .medium))
+                            .accessibilityHidden(true)
+                    }
+                }
+            )
+        }
+    }
+
+    /// Convenience for the common icon, title, and description composition.
+    public init(
         icon: String? = nil,
         title: String,
         description: String? = nil,
@@ -101,59 +200,14 @@ public extension SCAlert where Content == TupleView<(SCAlertTitle, SCAlertDescri
     }
 }
 
-// MARK: - Subcomponents
-
-/// The alert's heading line. Renders in the destructive color inside a
-/// `.destructive` alert.
-public struct SCAlertTitle: View {
-    @Environment(\.theme) private var theme
-    @Environment(\.scAlertVariant) private var variant
-
-    var text: String
-
-    public init(_ text: String) {
-        self.text = text
-    }
-
-    public var body: some View {
-        Text(text)
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(variant == .destructive ? theme.destructive : theme.foreground)
-    }
-}
-
-/// The alert's supporting copy, in a muted tone.
-public struct SCAlertDescription: View {
-    @Environment(\.theme) private var theme
-    @Environment(\.scAlertVariant) private var variant
-
-    var text: String
-
-    public init(_ text: String) {
-        self.text = text
-    }
-
-    public var body: some View {
-        Text(text)
-            .font(.footnote)
-            .foregroundStyle(
-                variant == .destructive
-                    ? theme.destructive.opacity(0.9)
-                    : theme.mutedForeground
-            )
-    }
-}
-
 // MARK: - Environment plumbing
 
-/// Lets `SCAlertTitle`/`SCAlertDescription` pick up the enclosing alert's
-/// variant without explicit wiring — the environment is the cascade.
 private struct SCAlertVariantKey: EnvironmentKey {
     static let defaultValue: SCAlertVariant = .default
 }
 
-private extension EnvironmentValues {
-    var scAlertVariant: SCAlertVariant {
+extension EnvironmentValues {
+    fileprivate var scAlertVariant: SCAlertVariant {
         get { self[SCAlertVariantKey.self] }
         set { self[SCAlertVariantKey.self] = newValue }
     }
@@ -161,33 +215,29 @@ private extension EnvironmentValues {
 
 // MARK: - Previews
 
-#Preview("Alert") {
+#Preview("Alert · composed") {
+    SCPreview {
+        SCAlert(variant: .destructive) {
+            SCAlertTitle { Label("Payment failed", systemImage: "creditcard") }
+            SCAlertDescription {
+                Text("Choose another payment method and try again.")
+            }
+            SCAlertAction {
+                Button("Try again") {}
+                    .buttonStyle(.sc(.outline, size: .sm))
+            }
+        } leading: {
+            Image(systemName: "exclamationmark.triangle")
+        }
+    }
+}
+
+#Preview("Alert · convenience") {
     SCPreview {
         SCAlert(
             icon: "terminal",
             title: "Heads up!",
             description: "You can add components to your app using the CLI."
         )
-    }
-}
-
-#Preview("Alert · destructive") {
-    SCPreview {
-        SCAlert(
-            icon: "exclamationmark.triangle",
-            title: "Error",
-            description: "Your session has expired. Please log in again.",
-            variant: .destructive
-        )
-    }
-}
-
-#Preview("Alert · slots") {
-    SCPreview {
-        SCAlert(icon: "checkmark.circle") {
-            SCAlertTitle("Payment received")
-            SCAlertDescription("A receipt was sent to your inbox.")
-            SCBadge("Order #1024", variant: .secondary)
-        }
     }
 }

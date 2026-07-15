@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "upstream": {
+    "project": "elevenlabs/ui",
+    "style": "elevenlabs-ui",
+    "checkedAt": "2026-07-14",
+    "repository": "https://github.com/elevenlabs/ui",
+    "componentCatalog": "https://ui.elevenlabs.io/docs/components",
+    "sourceRoot": "https://github.com/elevenlabs/ui/tree/main/apps/www/registry/elevenlabs-ui"
+  },
+  "scope": "Adopted items only. This ledger tracks the elevenlabs-ui components swiftcn has chosen to port; it is not an inventory of the full upstream catalog.",
+  "catalog": {
+    "components": [
+      "live-waveform",
+      "bar-visualizer",
+      "speech-input",
+      "response",
+      "waveform",
+      "scrub-bar",
+      "transcript-viewer"
+    ],
+    "supportingItems": [
+      "audio-level-provider"
+    ]
+  },
+  "coverage": {
+    "componentAliases": {},
+    "missingComponents": []
+  },
+  "structuralMaps": [
+    {
+      "name": "live-waveform",
+      "source": "Sources/Swiftcn/Audio/LiveWaveform.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/live-waveform",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/live-waveform.tsx",
+      "upstreamParts": [
+        "LiveWaveform"
+      ],
+      "swiftSymbols": [
+        "SCLiveWaveform",
+        "SCLiveWaveformMode"
+      ],
+      "requiredRegistryDependencies": [
+        "audio-level-provider",
+        "theme"
+      ],
+      "behaviors": [
+        "live bars from sampled levels while active, throttled to the update rate",
+        "static mode mirrors low-to-high bands symmetrically around the center",
+        "scrolling mode pushes an averaged level into a capped history anchored at the trailing edge",
+        "processing plays a three-wave synthesized animation that blends out of the last live frame",
+        "fade-to-idle shrinks remaining bars away after activity ends",
+        "dotted resting baseline while neither active nor processing",
+        "bar width, minimum height, gap, radius, color, and sensitivity configuration",
+        "edge fading with configurable fade width capped at 30 percent per side",
+        "bar opacity scales 0.4-1.0 with level; bar height is 80 percent of the container times level",
+        "accessibility label switches between live, processing, and idle descriptions"
+      ],
+      "intentionalAdaptations": [
+        "SCAudioLevelProvider polling replaces the embedded getUserMedia/AnalyserNode capture; deviceId, fftSize, smoothingTimeConstant, onError, onStreamReady, and onStreamEnd are engine concerns and move to the provider",
+        "TimelineView(.animation) plus Canvas replace the requestAnimationFrame canvas loop; upstream's per-frame step constants are integrated per second so motion is refresh-rate independent",
+        "theme.foreground replaces the CSS currentColor default for barColor",
+        "height is a fixed point value with nil filling the proposal, replacing CSS string heights",
+        "the destination-out edge gradient is reproduced with GraphicsContext blend modes"
+      ]
+    },
+    {
+      "name": "bar-visualizer",
+      "source": "Sources/Swiftcn/Audio/BarVisualizer.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/bar-visualizer",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/bar-visualizer.tsx",
+      "upstreamParts": [
+        "BarVisualizer",
+        "AgentState",
+        "useAudioVolume",
+        "useMultibandVolume",
+        "useBarAnimator"
+      ],
+      "swiftSymbols": [
+        "SCBarVisualizer",
+        "SCAgentState"
+      ],
+      "requiredRegistryDependencies": [
+        "audio-level-provider",
+        "theme"
+      ],
+      "behaviors": [
+        "connecting, initializing, listening, speaking, and thinking agent states",
+        "connecting sweeps a mirrored highlight pair across all bars in two seconds; initializing steps the same sweep at one second per frame",
+        "listening blinks the center bar at 500 ms; thinking blinks it at 150 ms with a 300 ms pulse",
+        "speaking and stateless render all bars in the primary color",
+        "demo mode generates sine-plus-noise bands at 50 ms while speaking or listening and rests at 0.2 otherwise",
+        "bar height clamps between minHeight and maxHeight percent with the +5 offset",
+        "bars are flexible 8-12 pt capsules with 6 pt gaps and 150 ms transitions",
+        "bottom alignment by default with an opt-in center alignment",
+        "muted rounded container with 16 pt padding",
+        "level changes below 0.01 are ignored to avoid churn"
+      ],
+      "intentionalAdaptations": [
+        "SCAudioLevelProvider polling replaces the mediaStream prop and the Web Audio useAudioVolume/useMultibandVolume hooks; loPass/hiPass band splitting and analyser configuration are engine concerns",
+        "the useBarAnimator requestAnimationFrame sequencer becomes a pure function of elapsed TimelineView time with the same sequences and intervals",
+        "deterministic hash noise replaces Math.random in demo mode so frames are reproducible",
+        "a height parameter replaces upstream's h-32 class and className height overrides",
+        "Capsule shapes and theme tokens replace Tailwind utilities; animate-pulse at 300 ms becomes a time-driven opacity cycle"
+      ]
+    },
+    {
+      "name": "speech-input",
+      "source": "Sources/Swiftcn/Audio/SpeechInput.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/speech-input",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/speech-input.tsx",
+      "upstreamParts": [
+        "SpeechInput",
+        "SpeechInputRecordButton",
+        "SpeechInputPreview",
+        "SpeechInputCancelButton",
+        "useSpeechInput",
+        "SpeechInputData",
+        "useScribe"
+      ],
+      "swiftSymbols": [
+        "SCSpeechInput",
+        "SCSpeechInputRecordButton",
+        "SCSpeechInputPreview",
+        "SCSpeechInputCancelButton",
+        "SCSpeechInputContext",
+        "SCSpeechInputData",
+        "SCSpeechInputSession",
+        "SCSpeechInputStatus",
+        "SCSpeechInputSize",
+        "scSpeechInput"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "skeleton",
+        "theme"
+      ],
+      "behaviors": [
+        "idle microphone button expands into a recording bar with cancel, preview, and stop controls",
+        "connecting shows a pulsing primary dot and disables the record button; recording shows a destructive stop square at 80 percent scale",
+        "the preview strip reveals to 112 pt with trailing-pinned text, 10 pt edge fades, an italic placeholder, and a tooltip of the full text",
+        "cancel collapses to zero width and is inert until connected",
+        "transcript building joins committed segments and the partial transcript exactly as buildTranscript",
+        "onChange fires on transcript changes; onStart, onStop, onCancel, and onError fire with transcript snapshots",
+        "start resets transcripts and guards against superseded starts, disconnecting a stale connection",
+        "cancel hands the discarded snapshot to onCancel after clearing",
+        "the session disconnects when the component disappears",
+        "default, sm, and lg size variants map to 36/32/40 pt square controls",
+        "recording chrome (background, 1 pt inset border, hairline shadow) appears only while connected",
+        "accessibility labels for start/stop and cancel; the hidden preview and cancel are removed from accessibility"
+      ],
+      "intentionalAdaptations": [
+        "the SCSpeechInputSession protocol replaces useScribe plus getToken: it mirrors the hook surface the component consumes (status, partialTranscript, committedTranscripts, error, connect/disconnect/clearTranscripts) while token acquisition, model/VAD/microphone configuration, and the Scribe error taxonomy (onAuthError, onQuotaExceededError, ...) live in the conforming engine; no ElevenLabs SDK is required",
+        "committedTranscripts surfaces the segment texts the component consumes, not upstream's TranscriptSegment records",
+        "SCSpeechInputContext in the SwiftUI environment replaces the React context and the useSpeechInput hook",
+        "SCSkeleton renders the upstream circular Skeleton connecting indicator with the shared reduced-motion-aware pulse engine",
+        "SF Symbols replace the lucide MicIcon/SquareIcon/XIcon; animation modifiers replace framer-motion and the CSS width/opacity transitions",
+        "the recording chrome uses one theme.background fill where upstream additionally swaps to bg-muted in dark mode",
+        "onChange is suppressed for the reset performed by start/cancel, matching upstream's event-driven onChange"
+      ]
+    },
+    {
+      "name": "response",
+      "source": "Sources/Swiftcn/Components/Response.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/response",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/response.tsx",
+      "upstreamParts": [
+        "Response"
+      ],
+      "swiftSymbols": [
+        "SCResponse"
+      ],
+      "requiredRegistryDependencies": [
+        "theme"
+      ],
+      "behaviors": [
+        "renders a markdown string: headings, paragraphs, lists, blockquotes, fenced code, tables, links, inline code, and thematic breaks",
+        "no top margin above the first block and no bottom margin below the last, upstream's first/last-child margin trimming",
+        "the body is skipped when an equal markdown string is re-created, upstream's memo children comparator",
+        "fills the available width with leading alignment"
+      ],
+      "intentionalAdaptations": [
+        "MarkdownUI (gonzalezreal/swift-markdown-ui, 2.4.1) replaces Streamdown as the wrapped engine because Streamdown is JS-only; the registry item declares it in its dependencies field exactly as upstream declares the streamdown npm package, the library's first and only SPM dependency",
+        "markdown styles map to theme tokens through MarkdownUI's theming API: text and headings on theme.foreground, inline code and code-block surfaces on theme.muted, table lines, the blockquote rule, code-block borders, and horizontal rules on theme.border, links on theme.primary, h6 on theme.mutedForeground; font sizes are relative so the response inherits the caller's font",
+        "Equatable conformance keyed on the markdown string replaces React.memo",
+        "upstream's size-full becomes a leading full-width frame with natural height so the view composes inside ScrollView and chat rows",
+        "known gap, watched: MarkdownUI has no streaming-specific rendering of incomplete markdown — an unterminated code fence or emphasis renders literally until its closing delimiter streams in, where Streamdown renders it as already complete"
+      ]
+    },
+    {
+      "name": "scrub-bar",
+      "source": "Sources/Swiftcn/Audio/ScrubBar.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/scrub-bar",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/scrub-bar.tsx",
+      "upstreamParts": [
+        "ScrubBarContainer",
+        "ScrubBarTrack",
+        "ScrubBarProgress",
+        "ScrubBarThumb",
+        "ScrubBarTimeLabel",
+        "useScrubBarContext"
+      ],
+      "swiftSymbols": [
+        "SCScrubBarContainer",
+        "SCScrubBarTrack",
+        "SCScrubBarProgress",
+        "SCScrubBarThumb",
+        "SCScrubBarTimeLabel",
+        "SCScrubBarContext",
+        "scScrubBar"
+      ],
+      "requiredRegistryDependencies": [
+        "progress",
+        "theme"
+      ],
+      "behaviors": [
+        "compound container publishes duration, value, progress, and scrub lifecycle callbacks to every part",
+        "track converts press and drag position into a duration-scaled time clamped to the track bounds",
+        "scrub start fires once on press, scrub fires throughout movement, and scrub end fires on release",
+        "8 point secondary track contains an immediate primary progress fill and a 16 point primary thumb centered on progress",
+        "progress and thumb clamp out-of-range values visually to 0-100 percent",
+        "time labels use tabular m:ss formatting and coerce invalid or negative values to 0:00",
+        "track exposes slider value and bounds to assistive technology"
+      ],
+      "intentionalAdaptations": [
+        "SCScrubBarContext in the SwiftUI environment replaces React context and useScrubBarContext; parts render nothing outside a container instead of throwing",
+        "DragGesture(minimumDistance: 0) replaces pointer capture on the browser window",
+        "progress is represented as a 0-1 fraction rather than a CSS percentage",
+        "SCScrubBarProgress composes SCProgressTrack and SCProgressIndicator; a zero animation duration reproduces upstream's transition-none scrub override",
+        "a native accessibility adjustable action seeks in five-percent increments"
+      ]
+    },
+    {
+      "name": "transcript-viewer",
+      "source": "Sources/Swiftcn/Audio/TranscriptViewer.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/transcript-viewer",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/transcript-viewer.tsx",
+      "upstreamParts": [
+        "TranscriptViewerContainer",
+        "TranscriptViewerProvider",
+        "TranscriptViewerWords",
+        "TranscriptViewerWord",
+        "TranscriptViewerAudio",
+        "TranscriptViewerPlayPauseButton",
+        "TranscriptViewerScrubBar",
+        "useTranscriptViewerContext",
+        "useTranscriptViewer",
+        "CharacterAlignmentResponseModel"
+      ],
+      "swiftSymbols": [
+        "SCTranscriptViewerContainer",
+        "SCTranscriptViewerProvider",
+        "SCTranscriptViewerWords",
+        "SCTranscriptViewerWord",
+        "SCTranscriptViewerPlayPauseButton",
+        "SCTranscriptViewerScrubBar",
+        "SCTranscriptViewerContext",
+        "SCTranscriptViewerPlayer",
+        "SCTranscriptAlignment",
+        "SCTranscriptComposition",
+        "SCTranscriptSegment",
+        "SCTranscriptWord",
+        "SCTranscriptGap",
+        "SCTranscriptViewerWordStatus",
+        "scTranscriptViewer"
+      ],
+      "requiredRegistryDependencies": [
+        "button",
+        "scrub-bar",
+        "theme"
+      ],
+      "behaviors": [
+        "character alignment composes into timed words and whitespace gaps while optionally removing bracketed audio tags",
+        "current word follows the playback clock with binary-search lookup, initial first-word highlighting, and timing-gap snapping",
+        "context exposes original alignment, all segments and words, spoken/current/unspoken projections, playback state, time, duration, seeking, and scrubbing commands",
+        "context exposes seek-to-word by value and index for custom renderers; the default word remains noninteractive like upstream's span",
+        "words flow inline with spoken foreground, muted unspoken, and primary current-word styling; the complete transcript becomes spoken at the end",
+        "custom word and gap renderers receive the same segment status as the default renderer",
+        "play-pause control supports a custom label and announces its current action",
+        "context-aware scrub bar binds the shared clock and shows elapsed and remaining time",
+        "play, pause, time-update, ended, and duration-change callbacks follow player state changes",
+        "player duration wins when known, otherwise the final alignment or word end time supplies a best-effort duration"
+      ],
+      "intentionalAdaptations": [
+        "SCTranscriptViewerPlayer replaces the HTMLAudioElement and TranscriptViewerAudio mount point; the engine owns source loading, media type, volume, and playback",
+        "Observation of the injected player replaces requestAnimationFrame and DOM media event listeners",
+        "SCTranscriptViewerContext in the SwiftUI environment plus SCTranscriptViewerProvider replace React context/provider and useTranscriptViewerContext",
+        "an additional composition initializer accepts normalized word timing directly when an ASR provider does not expose ElevenLabs character alignment; alignment is nil in that context",
+        "a custom SwiftUI Layout replaces inline spans while preserving word wrapping and hanging whitespace gaps",
+        "SwiftUI view-builder slots replace renderWord/renderGap and class-name hooks; SF Symbols replace lucide icons",
+        "parts render nothing outside a provider instead of throwing"
+      ]
+    },
+    {
+      "name": "waveform",
+      "source": "Sources/Swiftcn/Audio/Waveform.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/waveform",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/waveform.tsx",
+      "upstreamParts": [
+        "Waveform",
+        "ScrollingWaveform",
+        "AudioScrubber",
+        "MicrophoneWaveform",
+        "StaticWaveform",
+        "LiveMicrophoneWaveform",
+        "RecordingWaveform"
+      ],
+      "swiftSymbols": [
+        "SCWaveform",
+        "SCScrollingWaveform",
+        "SCAudioScrubber",
+        "SCMicrophoneWaveform",
+        "SCStaticWaveform",
+        "SCLiveMicrophoneWaveform",
+        "SCRecordingWaveform",
+        "SCWaveformRecordingPlayback"
+      ],
+      "requiredRegistryDependencies": [
+        "audio-level-provider",
+        "scrub-bar",
+        "theme"
+      ],
+      "behaviors": [
+        "static waveform resamples normalized amplitude data into the bars that fit and maps bar clicks back to source indices",
+        "all renderers share minimum-height centered bars, 0.3-1.0 level opacity, configurable geometry and color, and a two-sided edge fade capped at 20 percent",
+        "static placeholder waveform generates 0.2-0.8 amplitudes while the scrolling waveform continuously spawns and advances bars",
+        "audio scrubber overlays progress tint, a two-point playhead, and an optional 16 point handle, and converts press/drag position into seek time",
+        "microphone waveform mirrors sampled low bands while active, blends into a three-wave processing animation, and fades to idle",
+        "live microphone waveform captures a capped trailing history, becomes pannable after capture, optionally plays scrub snippets, and follows resumed playback",
+        "recording waveform grows at the trailing edge, snapshots the completed take, and exposes a draggable position indicator",
+        "scrubbable variants expose slider state and native adjustable actions to assistive technology"
+      ],
+      "intentionalAdaptations": [
+        "TimelineView plus Canvas replace requestAnimationFrame canvas loops and make animation rates refresh-rate independent",
+        "deterministic seeded noise replaces Math.random so placeholder and generated frames are reproducible",
+        "an empty scrolling data collection selects synthesized heights, replacing the upstream optional collection boundary",
+        "SCAudioLevelProvider replaces getUserMedia and AnalyserNode capture; microphone selection, FFT sizing, smoothing, and errors live in the engine",
+        "SCWaveformRecordingPlayback replaces MediaRecorder, AudioBuffer decoding, playback rate, and low-pass scrub-audio glue",
+        "DragGesture replaces document mouse capture; SwiftUI Bindings replace saved history and drag-offset refs",
+        "the playback-follow calculation pans from recording start to live edge, correcting the upstream path's mixed drag sign convention",
+        "theme foreground and point-valued height replace CSS variables and CSS string heights",
+        "native accessibility adjustable actions augment upstream slider semantics"
+      ]
+    },
+    {
+      "name": "audio-level-provider",
+      "source": "Sources/Swiftcn/Audio/AudioLevelProvider.swift",
+      "upstreamDocs": "https://ui.elevenlabs.io/docs/components/bar-visualizer",
+      "upstreamSource": "https://github.com/elevenlabs/ui/blob/main/apps/www/registry/elevenlabs-ui/ui/bar-visualizer.tsx",
+      "upstreamParts": [
+        "createAudioAnalyser",
+        "AnalyserNode binding embedded in live-waveform and bar-visualizer"
+      ],
+      "swiftSymbols": [
+        "SCAudioLevelProvider"
+      ],
+      "requiredRegistryDependencies": [],
+      "behaviors": [
+        "vends the current spectrum resampled to a requested band count, low to high, normalized 0-1",
+        "polled on the main actor by the visualizer views at the upstream update rates"
+      ],
+      "intentionalAdaptations": [
+        "a shared protocol seam replaces the Web Audio glue duplicated inside both upstream files, following upstream's own hooks-as-registry-items distribution model (use-scribe)"
+      ]
+    }
+  ]
+}

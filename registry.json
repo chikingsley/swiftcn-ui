@@ -1,7 +1,7 @@
 {
-  "$schema": "https://swiftcn.dev/schema/registry.json",
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "swiftcn",
-  "homepage": "https://github.com/Mobilecn-UI/swiftcn-ui",
+  "homepage": "https://github.com/chikingsley/swiftcn-ui",
   "items": [
     {
       "name": "theme",
@@ -11,49 +11,30 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Theme/Theme.swift",
+          "type": "registry:theme",
           "target": "Swiftcn/Theme/Theme.swift"
         },
         {
-          "path": "Sources/Swiftcn/Theme/Theme+Default.swift",
-          "target": "Swiftcn/Theme/Theme+Default.swift"
-        },
-        {
           "path": "Sources/Swiftcn/Theme/Palette.swift",
+          "type": "registry:theme",
           "target": "Swiftcn/Theme/Palette.swift"
         },
         {
           "path": "Sources/Swiftcn/Theme/Color+Adaptive.swift",
+          "type": "registry:theme",
           "target": "Swiftcn/Theme/Color+Adaptive.swift"
         },
         {
           "path": "Sources/Swiftcn/Theme/SCPreview.swift",
+          "type": "registry:theme",
           "target": "Swiftcn/Theme/SCPreview.swift"
         }
       ],
       "registryDependencies": [],
-      "platforms": {
-        "iOS": "17.0",
-        "macOS": "14.0"
-      }
-    },
-    {
-      "name": "chat-block",
-      "type": "registry:block",
-      "title": "Chat Block",
-      "description": "shadcn/ui's `chat-01` block as a ready-made screen: a contact header (avatar, name, email, new-conversation button) over a bottom-anchored `SCMessageScroller` and an `SCChatInputBar`.",
-      "files": [
-        {
-          "path": "Sources/Swiftcn/Blocks/ChatBlock.swift",
-          "target": "Swiftcn/ChatBlock.swift"
-        }
-      ],
-      "registryDependencies": [
-        "avatar",
-        "button",
-        "chat",
-        "separator",
-        "theme"
-      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -63,10 +44,11 @@
       "name": "dashboard-block",
       "type": "registry:block",
       "title": "Dashboard Block",
-      "description": "shadcn/ui's `dashboard-01` block as a ready-made screen: an `SCSidebarLayout(collapsible: .icon)` with a compact navigation sidebar and a scrolling detail pane of stat cards (adaptive grid: four across on regular widths, 2\u00d72 on compact), an \"Overview\" bar chart card, and a \"Recent Sales\" card.",
+      "description": "A Swiftcn-native analytics block as a ready-made screen: an `SCSidebarLayout(collapsible: .icon)` with a compact navigation sidebar and a scrolling detail pane of stat cards (adaptive grid: four across on regular widths, 2\u00d72 on compact), an \"Overview\" bar chart card, and a \"Recent Sales\" card.",
       "files": [
         {
           "path": "Sources/Swiftcn/Blocks/DashboardBlock.swift",
+          "type": "registry:block",
           "target": "Swiftcn/DashboardBlock.swift"
         }
       ],
@@ -80,6 +62,82 @@
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "avatar",
+          "button",
+          "card",
+          "chart",
+          "item",
+          "sidebar",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "dashboard01-block",
+      "type": "registry:block",
+      "title": "Dashboard01 Block",
+      "description": "A functional SwiftUI port of shadcn's `dashboard-01` application shell.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Dashboard01Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Dashboard01Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "avatar",
+        "badge",
+        "button",
+        "card",
+        "chart",
+        "data-table",
+        "drawer",
+        "field",
+        "input",
+        "select",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "table",
+        "tabs",
+        "theme",
+        "toast",
+        "toggle-group",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "avatar",
+          "badge",
+          "button",
+          "card",
+          "chart",
+          "data-table",
+          "drawer",
+          "field",
+          "input",
+          "select",
+          "separator",
+          "sidebar",
+          "sidebar-block",
+          "table",
+          "tabs",
+          "theme",
+          "toast",
+          "toggle-group"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -93,6 +151,7 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Blocks/LoginBlock.swift",
+          "type": "registry:block",
           "target": "Swiftcn/LoginBlock.swift"
         }
       ],
@@ -102,10 +161,176 @@
         "field",
         "input",
         "label",
-        "separator",
+        "signup01-block",
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "card",
+          "field",
+          "input",
+          "label",
+          "signup01-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "login02-block",
+      "type": "registry:block",
+      "title": "Login02 Block",
+      "description": "The swiftcn port of shadcn/ui's `login-02` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Login02Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Login02Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "input",
+        "label",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "input",
+          "label",
+          "signup01-block",
+          "signup04-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "login03-block",
+      "type": "registry:block",
+      "title": "Login03 Block",
+      "description": "The swiftcn port of shadcn/ui's `login-03` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Login03Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Login03Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "card",
+          "field",
+          "login02-block",
+          "signup01-block",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "login04-block",
+      "type": "registry:block",
+      "title": "Login04 Block",
+      "description": "The swiftcn port of shadcn/ui's `login-04` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Login04Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Login04Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "login02-block",
+          "signup01-block",
+          "signup04-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "login05-block",
+      "type": "registry:block",
+      "title": "Login05 Block",
+      "description": "The swiftcn port of shadcn/ui's `login-05` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Login05Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Login05Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "login02-block",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "login02-block",
+          "signup01-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -119,6 +344,7 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Blocks/SettingsBlock.swift",
+          "type": "registry:block",
           "target": "Swiftcn/SettingsBlock.swift"
         }
       ],
@@ -135,6 +361,22 @@
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "alert",
+          "avatar",
+          "button",
+          "card",
+          "field",
+          "item",
+          "select",
+          "separator",
+          "switch",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -144,10 +386,11 @@
       "name": "sidebar-block",
       "type": "registry:block",
       "title": "Sidebar Block",
-      "description": "shadcn/ui's `sidebar-07` block as a ready-made screen: an `SCSidebarLayout(collapsible: .icon)` with an app-identity header, \"Platform\" and \"Projects\" navigation groups (including a nested sub-menu), and a user footer.",
+      "description": "A functional SwiftUI adaptation of shadcn's `sidebar-07` application shell.",
       "files": [
         {
           "path": "Sources/Swiftcn/Blocks/SidebarBlock.swift",
+          "type": "registry:block",
           "target": "Swiftcn/SidebarBlock.swift"
         }
       ],
@@ -159,6 +402,693 @@
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "avatar",
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar01-block",
+      "type": "registry:block",
+      "title": "Sidebar01 Block",
+      "description": "A documentation navigation destination used by the functional sidebar-01 block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar01Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar01Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar02-block",
+      "type": "registry:block",
+      "title": "Sidebar02 Block",
+      "description": "Sidebar-02 is a thin composition over sidebar-01's documentation engine; its defining behavior is independently collapsible, initially open groups.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar02Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar02Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "sidebar01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "sidebar01-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar03-block",
+      "type": "registry:block",
+      "title": "Sidebar03 Block",
+      "description": "Sidebar-03 is the submenu configuration of the shared documentation sidebar engine.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar03Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar03Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "sidebar01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "sidebar01-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar04-block",
+      "type": "registry:block",
+      "title": "Sidebar04 Block",
+      "description": "Sidebar-04 configures the shared documentation engine as a wider floating sidebar with compact, guide-less submenus.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar04Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar04Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "sidebar01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "sidebar01-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar05-block",
+      "type": "registry:block",
+      "title": "Sidebar05 Block",
+      "description": "Sidebar-05 configures the shared documentation engine with real search and independently collapsible nested navigation groups.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar05Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar05Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "sidebar01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "sidebar01-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar08-block",
+      "type": "registry:block",
+      "title": "Sidebar08 Block",
+      "description": "Sidebar-08 configures the shared application engine with a static organization header, separately selectable/disclosable primary rows, and secondary navigation pinned below Projects.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar08Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar08Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "sidebar-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "sidebar-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar09-block",
+      "type": "registry:block",
+      "title": "Sidebar09 Block",
+      "description": "A functional two-pane mail sidebar.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar09Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar09Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "switch",
+        "theme",
+        "tooltip",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "sidebar-block",
+          "switch",
+          "theme",
+          "tooltip"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar10-block",
+      "type": "registry:block",
+      "title": "Sidebar10 Block",
+      "description": "A functional Notion-style sidebar and page-actions popover.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar10Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar10Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "popover",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "popover",
+          "separator",
+          "sidebar",
+          "sidebar-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar11-block",
+      "type": "registry:block",
+      "title": "Sidebar11 Block",
+      "description": "A functional source-control changes and file-tree sidebar with arbitrary caller data, controlled selection/expansion, and caller-owned detail.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar11Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar11Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar12-block",
+      "type": "registry:block",
+      "title": "Sidebar12 Block",
+      "description": "A functional calendar workspace matching shadcn's `sidebar-12` composition.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar12Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar12Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "calendar",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "calendar",
+          "separator",
+          "sidebar",
+          "sidebar-block",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar13-block",
+      "type": "registry:block",
+      "title": "Sidebar13 Block",
+      "description": "A settings dialog with a real selectable sidebar and caller-owned content.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar13Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar13Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "button",
+        "card",
+        "dialog",
+        "sidebar",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "button",
+          "dialog",
+          "sidebar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "card",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar14-block",
+      "type": "registry:block",
+      "title": "Sidebar14 Block",
+      "description": "A right-side table-of-contents sidebar with real selection and routing.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar14Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar14Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "sidebar",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "sidebar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar15-block",
+      "type": "registry:block",
+      "title": "Sidebar15 Block",
+      "description": "A dual-sidebar workspace composed from the complete sidebar-10 navigation system and sidebar-12 calendar system.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar15Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar15Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar10-block",
+        "sidebar12-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "sidebar10-block",
+          "sidebar12-block"
+        ],
+        "swiftcnPreviewDependencies": [
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sidebar16-block",
+      "type": "registry:block",
+      "title": "Sidebar16 Block",
+      "description": "An application sidebar beneath a persistent site header.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Sidebar16Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Sidebar16Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "breadcrumb",
+        "separator",
+        "sidebar",
+        "sidebar-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "breadcrumb",
+          "separator",
+          "sidebar",
+          "sidebar-block",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "signup01-block",
+      "type": "registry:block",
+      "title": "Signup01 Block",
+      "description": "The swiftcn port of shadcn/ui's `signup-01` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Signup01Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Signup01Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "card",
+          "field",
+          "input",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "signup02-block",
+      "type": "registry:block",
+      "title": "Signup02 Block",
+      "description": "The swiftcn port of shadcn/ui's `signup-02` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Signup02Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Signup02Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "input",
+        "signup01-block",
+        "signup04-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "input",
+          "signup01-block",
+          "signup04-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "signup03-block",
+      "type": "registry:block",
+      "title": "Signup03 Block",
+      "description": "The swiftcn port of shadcn/ui's `signup-03` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Signup03Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Signup03Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "card",
+        "field",
+        "input",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "card",
+          "field",
+          "input",
+          "signup01-block",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "signup04-block",
+      "type": "registry:block",
+      "title": "Signup04 Block",
+      "description": "The swiftcn port of shadcn/ui's `signup-04` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Signup04Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Signup04Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "input",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "input",
+          "signup01-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "signup05-block",
+      "type": "registry:block",
+      "title": "Signup05 Block",
+      "description": "The swiftcn port of shadcn/ui's `signup-05` block.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Blocks/Signup05Block.swift",
+          "type": "registry:block",
+          "target": "Swiftcn/Signup05Block.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "signup01-block",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "signup01-block",
+          "theme",
+          "typography"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -168,16 +1098,23 @@
       "name": "accordion",
       "type": "registry:component",
       "title": "Accordion",
-      "description": "A vertically stacked set of interactive headings that each reveal a section of content.",
+      "description": "A vertically stacked set of headings that reveal sections of content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Accordion.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Accordion.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -187,17 +1124,26 @@
       "name": "alert",
       "type": "registry:component",
       "title": "Alert",
-      "description": "Displays an inline callout for user attention \u2014 shadcn's `Alert`.",
+      "description": "An inline callout for information that requires the user's attention.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Alert.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Alert.swift"
         }
       ],
       "registryDependencies": [
-        "badge",
+        "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -207,17 +1153,110 @@
       "name": "alert-dialog",
       "type": "registry:component",
       "title": "Alert Dialog",
-      "description": "Presents a modal confirmation dialog \u2014 swiftcn's `AlertDialog`.",
+      "description": "A modal decision that requires an explicit action or cancellation.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/AlertDialog.swift",
+          "type": "registry:component",
           "target": "Swiftcn/AlertDialog.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/AlertDialogModifier.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/AlertDialogModifier.swift"
         }
       ],
       "registryDependencies": [
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "aspect-ratio",
+      "type": "registry:component",
+      "title": "Aspect Ratio",
+      "description": "Constrains arbitrary content to a width-to-height ratio.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/AspectRatio.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/AspectRatio.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "theme"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "attachment",
+      "type": "registry:component",
+      "title": "Attachment",
+      "description": "A composable file or media attachment.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Attachment.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Attachment.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "scroll-fade",
+        "shimmer",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "scroll-fade",
+          "shimmer",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "audio-level-provider",
+      "type": "registry:component",
+      "title": "Audio Level Provider",
+      "description": "A source of normalized audio levels for `SCLiveWaveform` and `SCBarVisualizer` \u2014 the Swift seam that replaces upstream's embedded Web Audio `AnalyserNode` binding.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/AudioLevelProvider.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/AudioLevelProvider.swift"
+        }
+      ],
+      "registryDependencies": [],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -227,10 +1266,11 @@
       "name": "aurora",
       "type": "registry:component",
       "title": "Aurora",
-      "description": "A soft, slowly drifting color wash \u2014 large blurred circles moving on sinusoidal paths over `theme.background`, the magicui aurora look.",
+      "description": "A soft, slowly drifting color wash \u2014 large blurred circles moving on sinusoidal paths over a caller-selected background.",
       "files": [
         {
           "path": "Sources/Swiftcn/Effects/Aurora.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Aurora.swift"
         }
       ],
@@ -239,6 +1279,15 @@
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "card",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -248,16 +1297,23 @@
       "name": "avatar",
       "type": "registry:component",
       "title": "Avatar",
-      "description": "An image element with a fallback for representing the user.",
+      "description": "A composable avatar root that coordinates image and fallback loading state.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Avatar.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Avatar.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -267,16 +1323,54 @@
       "name": "badge",
       "type": "registry:component",
       "title": "Badge",
-      "description": "Displays a small status pill.",
+      "description": "Displays arbitrary content as a compact status badge.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Badge.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Badge.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "bar-visualizer",
+      "type": "registry:component",
+      "title": "Bar Visualizer",
+      "description": "A real-time frequency-band visualizer for voice agents \u2014 elevenlabs-ui's `BarVisualizer`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/BarVisualizer.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/BarVisualizer.swift"
+        }
+      ],
+      "registryDependencies": [
+        "audio-level-provider",
+        "button",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "audio-level-provider",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -286,16 +1380,49 @@
       "name": "breadcrumb",
       "type": "registry:component",
       "title": "Breadcrumb",
-      "description": "Displays the path to the current resource using a hierarchy of links.",
+      "description": "A semantic container for a composable breadcrumb trail.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Breadcrumb.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Breadcrumb.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "bubble",
+      "type": "registry:component",
+      "title": "Bubble",
+      "description": "The message surface of the chat suite \u2014 shadcn's `Bubble`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Bubble.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Bubble.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -309,12 +1436,22 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Button.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Button.swift"
         }
       ],
       "registryDependencies": [
-        "theme"
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -324,16 +1461,30 @@
       "name": "button-group",
       "type": "registry:component",
       "title": "Button Group",
-      "description": "A row of attached buttons sharing one container \u2014 shadcn's Button Group.",
+      "description": "An attached group of arbitrary controls, text, separators, or nested groups.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/ButtonGroup.swift",
+          "type": "registry:component",
           "target": "Swiftcn/ButtonGroup.swift"
         }
       ],
       "registryDependencies": [
-        "theme"
+        "button",
+        "separator",
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "separator",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -343,16 +1494,25 @@
       "name": "calendar",
       "type": "registry:component",
       "title": "Calendar",
-      "description": "A month-view date grid \u2014 shadcn's Calendar (react-day-picker look) rebuilt on Foundation's `Calendar`, so the week start, weekday symbols, and numerals all follow the user's locale rather than assuming a Sunday-first English calendar.",
+      "description": "A localized, composable month calendar with single, multiple, and range selection.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Calendar.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Calendar.swift"
         }
       ],
       "registryDependencies": [
+        "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -362,18 +1522,28 @@
       "name": "card",
       "type": "registry:component",
       "title": "Card",
-      "description": "A themed surface for grouping related content \u2014 the swiftcn port of shadcn/ui's compound Card.",
+      "description": "A themed surface composed from Header, Content, and Footer regions.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Card.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Card.swift"
         }
       ],
       "registryDependencies": [
-        "badge",
         "button",
-        "theme"
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -383,10 +1553,11 @@
       "name": "carousel",
       "type": "registry:component",
       "title": "Carousel",
-      "description": "A horizontally paging carousel with dot indicators and optional previous/next controls \u2014 the swiftcn port of shadcn/ui's Carousel.",
+      "description": "A composable carousel root that provides a shared external-control state.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Carousel.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Carousel.swift"
         }
       ],
@@ -394,6 +1565,13 @@
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -403,36 +1581,23 @@
       "name": "chart",
       "type": "registry:component",
       "title": "Chart",
-      "description": "Applies swiftcn's chart theming to Swift Charts content: the theme's series palette, muted axis labels, and hairline grid lines.",
+      "description": "Defines one series in a reusable native Swift Charts composition.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Chart.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Chart.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
-      "platforms": {
-        "iOS": "17.0",
-        "macOS": "14.0"
-      }
-    },
-    {
-      "name": "chat",
-      "type": "registry:component",
-      "title": "Chat",
-      "description": "A single chat bubble \u2014 the smallest unit of the chat suite.",
-      "files": [
-        {
-          "path": "Sources/Swiftcn/Components/Chat.swift",
-          "target": "Swiftcn/Chat.swift"
-        }
-      ],
-      "registryDependencies": [
-        "avatar",
-        "theme"
-      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -442,16 +1607,23 @@
       "name": "checkbox",
       "type": "registry:component",
       "title": "Checkbox",
-      "description": "Checkbox appearance for native SwiftUI `Toggle`s \u2014 a square check control in place of the platform switch.",
+      "description": "A controlled, composable checkbox with checked, unchecked, and mixed states.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Checkbox.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Checkbox.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -461,16 +1633,23 @@
       "name": "collapsible",
       "type": "registry:component",
       "title": "Collapsible",
-      "description": "An interactive panel that expands and collapses.",
+      "description": "An interactive panel convenience that composes Root, Trigger, and Content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Collapsible.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Collapsible.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -480,16 +1659,55 @@
       "name": "combobox",
       "type": "registry:component",
       "title": "Combobox",
-      "description": "A searchable select \u2014 the swiftcn port of shadcn/ui's Combobox (Popover + Command).",
+      "description": "A searchable select convenience composed from the same primitives as `SCComboboxRoot`.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Combobox.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Combobox.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxCollection.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxCollection.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxControls.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxControls.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxConvenience.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxConvenience.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxFlowLayout.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxFlowLayout.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxPicker.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxPicker.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ComboboxRowAction.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ComboboxRowAction.swift"
         }
       ],
       "registryDependencies": [
+        "overlay-portal",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "overlay-portal",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -503,14 +1721,82 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Command.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Command.swift"
         }
       ],
       "registryDependencies": [
         "button",
+        "dialog",
         "kbd",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "dialog",
+          "kbd",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "context-menu",
+      "type": "registry:component",
+      "title": "Context Menu",
+      "description": "Attaches native context-menu content to an arbitrary trigger view.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/ContextMenu.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ContextMenu.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "theme"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "data-table",
+      "type": "registry:component",
+      "title": "Data Table",
+      "description": "A reusable typed data table assembled from `SCTable` and headless controller state.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/DataTable.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/DataTable.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "table",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "table",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -520,17 +1806,33 @@
       "name": "date-picker",
       "type": "registry:component",
       "title": "Date Picker",
-      "description": "An input-look trigger that opens an `SCCalendar` in a popover \u2014 shadcn's Date Picker composition.",
+      "description": "A preassembled Popover + Calendar date picker.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/DatePicker.swift",
+          "type": "registry:component",
           "target": "Swiftcn/DatePicker.swift"
         }
       ],
       "registryDependencies": [
+        "button",
         "calendar",
+        "field",
+        "input",
+        "popover",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "calendar",
+          "field",
+          "input",
+          "popover",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -540,10 +1842,11 @@
       "name": "dialog",
       "type": "registry:component",
       "title": "Dialog",
-      "description": "The styled panel of a dialog: themed surface, border, shadow, and an automatic close button wired to `\\.scDismissDialog`.",
+      "description": "A composable modal dialog with caller-owned or internal presentation.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Dialog.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Dialog.swift"
         }
       ],
@@ -551,6 +1854,39 @@
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "direction",
+      "type": "registry:component",
+      "title": "Direction",
+      "description": "Sets text, semantic-edge, control, and layout direction for arbitrary descendant content.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Direction.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Direction.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "theme"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -564,6 +1900,7 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Effects/DotPattern.swift",
+          "type": "registry:component",
           "target": "Swiftcn/DotPattern.swift"
         }
       ],
@@ -571,6 +1908,14 @@
         "badge",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "badge"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -580,17 +1925,66 @@
       "name": "drawer",
       "type": "registry:component",
       "title": "Drawer",
-      "description": "The drawer panel: a centered grabber above your content, on the themed background with rounded top corners.",
+      "description": "A controlled or internally managed drawer composed from a trigger, overlay, and content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Drawer.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Drawer.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/DrawerParts.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/DrawerParts.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/DrawerPresentation.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/DrawerPresentation.swift"
         }
       ],
       "registryDependencies": [
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "registry:component",
+      "title": "Dropdown Menu",
+      "description": "A native dropdown menu with independently composable trigger and content.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/DropdownMenu.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/DropdownMenu.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "theme",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -600,17 +1994,28 @@
       "name": "empty",
       "type": "registry:component",
       "title": "Empty",
-      "description": "A centered empty state \u2014 the swiftcn port of shadcn/ui's Empty and the themed cousin of `ContentUnavailableView`.",
+      "description": "A centered empty-state container with caller-composed content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Empty.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Empty.swift"
         }
       ],
       "registryDependencies": [
         "button",
-        "theme"
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -620,19 +2025,38 @@
       "name": "field",
       "type": "registry:component",
       "title": "Field",
-      "description": "A form field \u2014 shadcn's Field (the 2025 replacement for Form).",
+      "description": "A caller-composed form field that propagates invalid and disabled state to its controls and lays its parts out vertically, horizontally, or responsively.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Field.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Field.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/FieldFeedback.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/FieldFeedback.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/FieldInvalidState.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/FieldInvalidState.swift"
         }
       ],
       "registryDependencies": [
+        "button",
         "input",
-        "label",
-        "textarea",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "input"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -642,16 +2066,30 @@
       "name": "hover-card",
       "type": "registry:component",
       "title": "Hover Card",
-      "description": "Presents a rich preview card when the pointer hovers the view \u2014 the swiftcn port of shadcn/ui's HoverCard, for sighted users previewing content behind a link.",
+      "description": "A controlled or internally managed preview card with independently composable trigger and content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/HoverCard.swift",
+          "type": "registry:component",
           "target": "Swiftcn/HoverCard.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/HoverCardState.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/HoverCardState.swift"
         }
       ],
       "registryDependencies": [
+        "overlay-portal",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "overlay-portal",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -665,13 +2103,89 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Input.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Input.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/InputTyped.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/InputTyped.swift"
         }
       ],
       "registryDependencies": [
         "field",
+        "input-group-context",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "input-group-context",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "input-group",
+      "type": "registry:component",
+      "title": "Input Group",
+      "description": "A compound input surface that owns one border, focus ring, invalid state, and disabled treatment for its typed input or textarea plus arbitrary addons.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/InputGroup.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/InputGroup.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "field",
+        "input",
+        "input-group-context",
+        "textarea",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "field",
+          "input",
+          "input-group-context",
+          "textarea",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "input-group-context",
+      "type": "registry:component",
+      "title": "Input Group Context",
+      "description": "Internal focus and validation coordination shared by Input, Textarea, and Input Group.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/InputGroupContext.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/InputGroupContext.swift"
+        }
+      ],
+      "registryDependencies": [],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -681,16 +2195,28 @@
       "name": "input-otp",
       "type": "registry:component",
       "title": "Input OTP",
-      "description": "One-time-code entry \u2014 shadcn's InputOTP.",
+      "description": "A controlled one-time-code input with caller-composed groups, slots, and separators.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/InputOTP.swift",
+          "type": "registry:component",
           "target": "Swiftcn/InputOTP.swift"
         }
       ],
       "registryDependencies": [
-        "theme"
+        "field",
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -700,17 +2226,42 @@
       "name": "item",
       "type": "registry:component",
       "title": "Item",
-      "description": "A generic list row \u2014 the swiftcn port of shadcn/ui's Item.",
+      "description": "A caller-composed item surface.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Item.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Item.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ItemContentParts.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ItemContentParts.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ItemParts.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ItemParts.swift"
         }
       ],
       "registryDependencies": [
         "badge",
-        "theme"
+        "button",
+        "separator",
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "separator",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "badge",
+          "button",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -720,16 +2271,23 @@
       "name": "kbd",
       "type": "registry:component",
       "title": "Kbd",
-      "description": "A tiny keycap chip for displaying keyboard shortcuts \u2014 the swiftcn port of shadcn/ui's Kbd.",
+      "description": "A presentational keyboard keycap with arbitrary content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Kbd.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Kbd.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -739,16 +2297,89 @@
       "name": "label",
       "type": "registry:component",
       "title": "Label",
-      "description": "A form label \u2014 shadcn's Label.",
+      "description": "A form label with arbitrary content.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Label.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Label.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "live-waveform",
+      "type": "registry:component",
+      "title": "Live Waveform",
+      "description": "A real-time audio waveform \u2014 elevenlabs-ui's `LiveWaveform`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/LiveWaveform.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/LiveWaveform.swift"
+        }
+      ],
+      "registryDependencies": [
+        "audio-level-provider",
+        "button",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "audio-level-provider",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "marker",
+      "type": "registry:component",
+      "title": "Marker",
+      "description": "A conversation marker \u2014 shadcn's `Marker`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Marker.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Marker.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "shimmer",
+        "spinner",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "shimmer",
+          "spinner",
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -758,10 +2389,11 @@
       "name": "marquee",
       "type": "registry:component",
       "title": "Marquee",
-      "description": "Scrolls its content in an endless horizontal loop \u2014 the magicui `Marquee` port.",
+      "description": "Scrolls its content in an endless horizontal or vertical loop \u2014 the Magic UI `Marquee` port.",
       "files": [
         {
           "path": "Sources/Swiftcn/Effects/Marquee.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Marquee.swift"
         }
       ],
@@ -769,6 +2401,167 @@
         "badge",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "badge",
+          "theme"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "menubar",
+      "type": "registry:component",
+      "title": "Menubar",
+      "description": "A native menu collection.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Menubar.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Menubar.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "message",
+      "type": "registry:component",
+      "title": "Message",
+      "description": "A row in the conversation \u2014 shadcn's `Message`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Message.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Message.swift"
+        }
+      ],
+      "registryDependencies": [
+        "avatar",
+        "bubble",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "avatar",
+          "bubble"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "message-scroller",
+      "type": "registry:component",
+      "title": "Message Scroller",
+      "description": "The conversation frame \u2014 shadcn's `MessageScroller` root (and, when no external state is passed, its `MessageScrollerProvider`).",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/MessageScroller.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/MessageScroller.swift"
+        }
+      ],
+      "registryDependencies": [
+        "bubble",
+        "button",
+        "message",
+        "scroll-fade",
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "scroll-fade"
+        ],
+        "swiftcnPreviewDependencies": [
+          "bubble",
+          "message",
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "native-select",
+      "type": "registry:component",
+      "title": "Native Select",
+      "description": "A typed native single-selection control.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/NativeSelect.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/NativeSelect.swift"
+        }
+      ],
+      "registryDependencies": [
+        "field",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:component",
+      "title": "Navigation Menu",
+      "description": "A controlled or internally managed collection of navigation links and rich popup menus.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/NavigationMenu.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/NavigationMenu.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme",
+        "typography"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -782,6 +2575,7 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Effects/NumberTicker.swift",
+          "type": "registry:component",
           "target": "Swiftcn/NumberTicker.swift"
         }
       ],
@@ -790,6 +2584,36 @@
         "theme",
         "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "theme",
+          "typography"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "overlay-portal",
+      "type": "registry:component",
+      "title": "Overlay Portal",
+      "description": "Presents content outside the caller's SwiftUI layout hierarchy.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/OverlayPortal.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/OverlayPortal.swift"
+        }
+      ],
+      "registryDependencies": [],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -799,17 +2623,28 @@
       "name": "pagination",
       "type": "registry:component",
       "title": "Pagination",
-      "description": "Page navigation with previous/next links and a windowed row of page numbers \u2014 the swiftcn port of shadcn/ui's Pagination.",
+      "description": "A navigation landmark for caller-composed page controls.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Pagination.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Pagination.swift"
         }
       ],
       "registryDependencies": [
         "button",
+        "direction",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "direction"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -819,17 +2654,32 @@
       "name": "popover",
       "type": "registry:component",
       "title": "Popover",
-      "description": "Presents a themed, anchored popover \u2014 shadcn's Popover built on the native `.popover`, which supplies anchoring, the arrow, and tap-outside dismissal.",
+      "description": "A controlled or internally managed native popover with independent Trigger and Content slots.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Popover.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Popover.swift"
         }
       ],
       "registryDependencies": [
         "button",
+        "direction",
+        "field",
+        "input",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "direction",
+          "field",
+          "input"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -839,17 +2689,28 @@
       "name": "progress",
       "type": "registry:component",
       "title": "Progress",
-      "description": "swiftcn's linear progress bar for native `ProgressView`s \u2014 behavior and accessibility stay native; this supplies the style layer only.",
+      "description": "Groups composable progress parts and supplies native progress accessibility.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Progress.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Progress.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ProgressStyle.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ProgressStyle.swift"
         }
       ],
       "registryDependencies": [
-        "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -859,16 +2720,25 @@
       "name": "radio-group",
       "type": "registry:component",
       "title": "Radio Group",
-      "description": "A set of mutually exclusive options.",
+      "description": "Provides shared typed selection to a composed set of radio items.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/RadioGroup.swift",
+          "type": "registry:component",
           "target": "Swiftcn/RadioGroup.swift"
         }
       ],
       "registryDependencies": [
+        "field",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -878,16 +2748,135 @@
       "name": "resizable",
       "type": "registry:component",
       "title": "Resizable",
-      "description": "A two-pane split view with a draggable divider \u2014 the swiftcn port of shadcn/ui's Resizable.",
+      "description": "Panel sizes keyed by stable panel IDs.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Resizable.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Resizable.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "response",
+      "type": "registry:component",
+      "title": "Response",
+      "description": "Renders a markdown string with theme-token styling \u2014 the swiftcn port of elevenlabs-ui's Response, wrapping MarkdownUI the way upstream wraps Streamdown.",
+      "dependencies": [
+        "swift-markdown-ui@2.4.1"
+      ],
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Response.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Response.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "scroll-area",
+      "type": "registry:component",
+      "title": "Scroll Area",
+      "description": "A focusable native ScrollView with composable content and scrollbar axes.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/ScrollArea.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ScrollArea.swift"
+        }
+      ],
+      "registryDependencies": [
+        "separator",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "separator"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "scroll-fade",
+      "type": "registry:component",
+      "title": "Scroll Fade",
+      "description": "Which container edges fade \u2014 the Swift analog of upstream's `scroll-fade`, `scroll-fade-x`, and per-edge `-t/-b/-s/-e` classes.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Effects/ScrollFade.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ScrollFade.swift"
+        }
+      ],
+      "registryDependencies": [
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "theme"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "scrub-bar",
+      "type": "registry:component",
+      "title": "Scrub Bar",
+      "description": "A compound playback scrubber with a draggable track, progress fill, thumb, and time labels.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/ScrubBar.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ScrubBar.swift"
+        }
+      ],
+      "registryDependencies": [
+        "progress",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "progress",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -897,16 +2886,40 @@
       "name": "select",
       "type": "registry:component",
       "title": "Select",
-      "description": "A dropdown for choosing one value from a list, triggered from a control styled like an input field.",
+      "description": "A typed, composable Select backed by the platform Menu primitive.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Select.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Select.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SelectConvenience.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SelectConvenience.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SelectParts.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SelectParts.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SelectRendering.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SelectRendering.swift"
         }
       ],
       "registryDependencies": [
+        "field",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -916,16 +2929,23 @@
       "name": "separator",
       "type": "registry:component",
       "title": "Separator",
-      "description": "A 1pt rule that visually divides content, in the theme's border color.",
+      "description": "A 1pt rule that visually or semantically divides content, in the theme's border color.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Separator.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Separator.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -935,17 +2955,42 @@
       "name": "sheet",
       "type": "registry:component",
       "title": "Sheet",
-      "description": "The styled panel of a sheet: themed surface, a separator line on the side facing the content, and an automatic close button wired to `\\.scDismissSheet`.",
+      "description": "A controlled or internally managed composable Sheet.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Sheet.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Sheet.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SheetParts.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SheetParts.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SheetPresentation.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SheetPresentation.swift"
         }
       ],
       "registryDependencies": [
         "button",
+        "drawer",
+        "field",
+        "input",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "drawer",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "field",
+          "input"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -959,13 +3004,24 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Effects/Shimmer.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Shimmer.swift"
         }
       ],
       "registryDependencies": [
         "button",
-        "theme"
+        "theme",
+        "typography"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "typography"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -975,16 +3031,60 @@
       "name": "sidebar",
       "type": "registry:component",
       "title": "Sidebar",
-      "description": "Shared sidebar state \u2014 the SwiftUI analog of shadcn's `SidebarProvider` + `useSidebar` hook.",
+      "description": "The sidebar shell: a sidebar pane plus your main content, with collapse animation, \u2318B toggling, `@AppStorage` persistence, and an automatic sheet fallback on compact widths (iPhone).",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Sidebar.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Sidebar.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SidebarControls.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SidebarControls.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SidebarMenu.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SidebarMenu.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SidebarMenuExtras.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SidebarMenuExtras.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SidebarSections.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SidebarSections.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/SidebarState.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SidebarState.swift"
         }
       ],
       "registryDependencies": [
-        "theme"
+        "button",
+        "input",
+        "separator",
+        "sheet",
+        "skeleton",
+        "theme",
+        "tooltip"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "input",
+          "separator",
+          "sheet",
+          "skeleton",
+          "theme",
+          "tooltip"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -994,10 +3094,11 @@
       "name": "skeleton",
       "type": "registry:component",
       "title": "Skeleton",
-      "description": "A placeholder block shown while content is loading, with a subtle shimmer sweep \u2014 shadcn's `Skeleton`.",
+      "description": "A shape-composable placeholder block shown while content is loading \u2014 shadcn's `Skeleton`.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Skeleton.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Skeleton.swift"
         }
       ],
@@ -1005,6 +3106,14 @@
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1014,16 +3123,83 @@
       "name": "slider",
       "type": "registry:component",
       "title": "Slider",
-      "description": "A themed range input \u2014 the swiftcn take on shadcn's Slider.",
+      "description": "A controlled or internally managed, single- or multi-thumb Slider.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Slider.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Slider.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "sonner",
+      "type": "registry:component",
+      "title": "Sonner",
+      "description": "A promise handle returned by `SCSonner.promise`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Components/Sonner.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Sonner.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "theme",
+        "toast"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "theme",
+          "toast"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "speech-input",
+      "type": "registry:component",
+      "title": "Speech Input",
+      "description": "A compact speech-to-text control \u2014 elevenlabs-ui's `SpeechInput`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/SpeechInput.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/SpeechInput.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "skeleton",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "skeleton",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1033,10 +3209,11 @@
       "name": "spinner",
       "type": "registry:component",
       "title": "Spinner",
-      "description": "An indeterminate loading indicator: a rotating arc that fades from `mutedForeground` into `primary`.",
+      "description": "A compact indeterminate loading indicator that inherits the caller's foreground style.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Spinner.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Spinner.swift"
         }
       ],
@@ -1044,6 +3221,13 @@
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [],
+        "swiftcnPreviewDependencies": [
+          "button",
+          "theme"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1053,16 +3237,25 @@
       "name": "switch",
       "type": "registry:component",
       "title": "Switch",
-      "description": "shadcn's switch appearance for native SwiftUI `Toggle`s: a compact themed capsule track with a sliding thumb, label leading and control trailing \u2014 the same layout as the platform toggle.",
+      "description": "A caller-controlled switch matching shadcn/ui's standalone Switch root.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Switch.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Switch.swift"
         }
       ],
       "registryDependencies": [
+        "field",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1076,12 +3269,19 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Table.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Table.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1091,16 +3291,23 @@
       "name": "tabs",
       "type": "registry:component",
       "title": "Tabs",
-      "description": "A set of layered sections of content \u2014 the swiftcn Tabs.",
+      "description": "Groups a composed tab list and its matching content panels.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Tabs.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Tabs.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1114,13 +3321,23 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Textarea.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Textarea.swift"
         }
       ],
       "registryDependencies": [
         "field",
+        "input-group-context",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "field",
+          "input-group-context",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1130,17 +3347,27 @@
       "name": "toast",
       "type": "registry:component",
       "title": "Toast",
-      "description": "A single toast notification \u2014 swiftcn's port of a Sonner toast.",
+      "description": "A single notification in the shared Toast/Sonner queue.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Toast.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Toast.swift"
         }
       ],
       "registryDependencies": [
         "button",
+        "spinner",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "spinner",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1154,12 +3381,19 @@
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Toggle.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Toggle.swift"
         }
       ],
       "registryDependencies": [
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1169,16 +3403,35 @@
       "name": "toggle-group",
       "type": "registry:component",
       "title": "Toggle Group",
-      "description": "A horizontal set of toggle buttons sharing one bordered container \u2014 shadcn's ToggleGroup (outline look).",
+      "description": "Provides shared single- or multiple-selection state to composed toggle items.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/ToggleGroup.swift",
+          "type": "registry:component",
           "target": "Swiftcn/ToggleGroup.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ToggleGroupConvenience.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ToggleGroupConvenience.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Components/ToggleGroupItem.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/ToggleGroupItem.swift"
         }
       ],
       "registryDependencies": [
-        "theme"
+        "theme",
+        "toggle"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme",
+          "toggle"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1188,10 +3441,11 @@
       "name": "tooltip",
       "type": "registry:component",
       "title": "Tooltip",
-      "description": "Shows a small text bubble beside the view \u2014 the swiftcn port of shadcn/ui's Tooltip.",
+      "description": "A tooltip root whose closure is the trigger, mirroring shadcn/ui's `Tooltip` plus `TooltipTrigger` composition in a SwiftUI-native shape.",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Tooltip.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Tooltip.swift"
         }
       ],
@@ -1199,6 +3453,59 @@
         "button",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "transcript-viewer",
+      "type": "registry:component",
+      "title": "Transcript Viewer",
+      "description": "A time-synced transcript viewer with word highlighting, playback controls, and scrubbing.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/TranscriptViewer.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/TranscriptViewer.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/TranscriptViewerControls.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/TranscriptViewerControls.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/TranscriptViewerModels.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/TranscriptViewerModels.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/TranscriptViewerWords.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/TranscriptViewerWords.swift"
+        }
+      ],
+      "registryDependencies": [
+        "button",
+        "scrub-bar",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "button",
+          "scrub-bar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"
@@ -1208,16 +3515,83 @@
       "name": "typography",
       "type": "registry:component",
       "title": "Typography",
-      "description": "shadcn `h1` \u2014 large title, bold, tight tracking.",
+      "description": "shadcn typography `list` \u2014 a bulleted prose list (`list-disc`, spaced rows).",
       "files": [
         {
           "path": "Sources/Swiftcn/Components/Typography.swift",
+          "type": "registry:component",
           "target": "Swiftcn/Typography.swift"
         }
       ],
       "registryDependencies": [
+        "table",
         "theme"
       ],
+      "meta": {
+        "swiftcnDependencies": [
+          "table",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": []
+      },
+      "platforms": {
+        "iOS": "17.0",
+        "macOS": "14.0"
+      }
+    },
+    {
+      "name": "waveform",
+      "type": "registry:component",
+      "title": "Waveform",
+      "description": "A static amplitude waveform for prerecorded audio \u2014 elevenlabs-ui's `Waveform`.",
+      "files": [
+        {
+          "path": "Sources/Swiftcn/Audio/Waveform.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/Waveform.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/WaveformLiveRecording.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/WaveformLiveRecording.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/WaveformMicrophone.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/WaveformMicrophone.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/WaveformRecording.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/WaveformRecording.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/WaveformScrolling.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/WaveformScrolling.swift"
+        },
+        {
+          "path": "Sources/Swiftcn/Audio/WaveformScrubber.swift",
+          "type": "registry:component",
+          "target": "Swiftcn/WaveformScrubber.swift"
+        }
+      ],
+      "registryDependencies": [
+        "audio-level-provider",
+        "button",
+        "scrub-bar",
+        "theme"
+      ],
+      "meta": {
+        "swiftcnDependencies": [
+          "audio-level-provider",
+          "scrub-bar",
+          "theme"
+        ],
+        "swiftcnPreviewDependencies": [
+          "button"
+        ]
+      },
       "platforms": {
         "iOS": "17.0",
         "macOS": "14.0"

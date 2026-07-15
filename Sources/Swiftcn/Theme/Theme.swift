@@ -7,7 +7,7 @@ import SwiftUI
 /// Tokens follow shadcn's background/foreground convention: `x` is a surface
 /// color, `xForeground` is the color of content placed on that surface.
 /// Dark mode needs no second theme — token colors are adaptive
-/// (see `Color(light:dark:)`).
+/// (see `Color.adaptive(light:dark:)`).
 public struct Theme: Sendable {
     // MARK: Base
     public var background: Color
@@ -131,24 +131,123 @@ public struct Theme: Sendable {
     }
 }
 
+// MARK: - Built-in preset
+
+private struct SCDefaultPresetColors {
+    let background: Color = .adaptive(light: .white, dark: .zinc950)
+    let foreground: Color = .adaptive(light: .zinc950, dark: .zinc50)
+    let card: Color = .adaptive(light: .white, dark: .zinc900)
+    let cardForeground: Color = .adaptive(light: .zinc950, dark: .zinc50)
+    let popover: Color = .adaptive(light: .white, dark: .zinc900)
+    let popoverForeground: Color = .adaptive(light: .zinc950, dark: .zinc50)
+    let primary: Color = .adaptive(light: .zinc900, dark: .zinc50)
+    let primaryForeground: Color = .adaptive(light: .zinc50, dark: .zinc900)
+    let secondary: Color = .adaptive(light: .zinc100, dark: .zinc800)
+    let secondaryForeground: Color = .adaptive(light: .zinc900, dark: .zinc50)
+    let muted: Color = .adaptive(light: .zinc100, dark: .zinc800)
+    let mutedForeground: Color = .adaptive(light: .zinc500, dark: .zinc400)
+    let accent: Color = .adaptive(light: .zinc100, dark: .zinc800)
+    let accentForeground: Color = .adaptive(light: .zinc900, dark: .zinc50)
+    let destructive: Color = .adaptive(light: .red600, dark: .red700)
+    let destructiveForeground: Color = .adaptive(light: .white, dark: .white)
+    let border: Color = .adaptive(light: .zinc200, dark: .zinc800)
+    let input: Color = .adaptive(light: .zinc200, dark: .zinc800)
+    let ring: Color = .adaptive(light: .zinc400, dark: .zinc500)
+    let chart1: Color = .adaptive(light: Color(hex: 0xE8734A), dark: Color(hex: 0x2662D9))
+    let chart2: Color = .adaptive(light: Color(hex: 0x2A9D90), dark: Color(hex: 0x2EB88A))
+    let chart3: Color = .adaptive(light: Color(hex: 0x274754), dark: Color(hex: 0xE88C30))
+    let chart4: Color = .adaptive(light: Color(hex: 0xE8C468), dark: Color(hex: 0xAF57DB))
+    let chart5: Color = .adaptive(light: Color(hex: 0xF4A462), dark: Color(hex: 0xE23670))
+    let sidebar: Color = .adaptive(light: .zinc50, dark: .zinc900)
+    let sidebarForeground: Color = .adaptive(light: .zinc950, dark: .zinc50)
+    let sidebarPrimary: Color = .adaptive(light: .zinc900, dark: .zinc50)
+    let sidebarPrimaryForeground: Color = .adaptive(light: .zinc50, dark: .zinc900)
+    let sidebarAccent: Color = .adaptive(light: .zinc200, dark: .zinc800)
+    let sidebarAccentForeground: Color = .adaptive(light: .zinc900, dark: .zinc50)
+    let sidebarBorder: Color = .adaptive(light: .zinc200, dark: .zinc800)
+    let sidebarRing: Color = .adaptive(light: .zinc400, dark: .zinc500)
+}
+
+extension Theme {
+    /// The built-in zinc preset. Other presets can be added as `Theme`
+    /// extensions without changing component APIs.
+    ///
+    /// Built from typed locals rather than one 43-argument expression so
+    /// consumer projects with stricter type-checker budgets (e.g. Xcode
+    /// app targets under default MainActor isolation) compile it reliably.
+    public static let `default` = makeDefaultPreset()
+
+    private static func makeDefaultPreset() -> Theme {
+        let colors = SCDefaultPresetColors()
+        return Theme(
+            background: colors.background,
+            foreground: colors.foreground,
+            card: colors.card,
+            cardForeground: colors.cardForeground,
+            popover: colors.popover,
+            popoverForeground: colors.popoverForeground,
+            primary: colors.primary,
+            primaryForeground: colors.primaryForeground,
+            secondary: colors.secondary,
+            secondaryForeground: colors.secondaryForeground,
+            muted: colors.muted,
+            mutedForeground: colors.mutedForeground,
+            accent: colors.accent,
+            accentForeground: colors.accentForeground,
+            destructive: colors.destructive,
+            destructiveForeground: colors.destructiveForeground,
+            border: colors.border,
+            input: colors.input,
+            ring: colors.ring,
+            chart1: colors.chart1,
+            chart2: colors.chart2,
+            chart3: colors.chart3,
+            chart4: colors.chart4,
+            chart5: colors.chart5,
+            sidebar: colors.sidebar,
+            sidebarForeground: colors.sidebarForeground,
+            sidebarPrimary: colors.sidebarPrimary,
+            sidebarPrimaryForeground: colors.sidebarPrimaryForeground,
+            sidebarAccent: colors.sidebarAccent,
+            sidebarAccentForeground: colors.sidebarAccentForeground,
+            sidebarBorder: colors.sidebarBorder,
+            sidebarRing: colors.sidebarRing
+        )
+    }
+}
+
 // MARK: - Environment
 
 private struct ThemeKey: EnvironmentKey {
     static let defaultValue = Theme.default
 }
 
-public extension EnvironmentValues {
-    var theme: Theme {
+/// Internal cross-component context for controls attached by ButtonGroup.
+enum SCGroupedControlOrientation {
+    case horizontal, vertical
+}
+
+private struct SCGroupedControlOrientationKey: EnvironmentKey {
+    static let defaultValue: SCGroupedControlOrientation? = nil
+}
+
+extension EnvironmentValues {
+    public var theme: Theme {
         get { self[ThemeKey.self] }
         set { self[ThemeKey.self] = newValue }
     }
+
+    var scGroupedControlOrientation: SCGroupedControlOrientation? {
+        get { self[SCGroupedControlOrientationKey.self] }
+        set { self[SCGroupedControlOrientationKey.self] = newValue }
+    }
 }
 
-public extension View {
+extension View {
     /// Applies a swiftcn theme to this view hierarchy — the equivalent of
     /// setting shadcn's CSS variables on a root element. Because the
     /// environment cascades, themes can be overridden per subtree.
-    func theme(_ theme: Theme) -> some View {
+    public func theme(_ theme: Theme) -> some View {
         environment(\.theme, theme)
             .fontDesign(theme.fontDesign)
     }
