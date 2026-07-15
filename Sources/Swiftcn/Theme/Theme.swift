@@ -151,7 +151,10 @@ private struct SCDefaultPresetColors {
     let mutedForeground: Color = .adaptive(light: .zinc500, dark: .zinc400)
     let accent: Color = .adaptive(light: .zinc100, dark: .zinc800)
     let accentForeground: Color = .adaptive(light: .zinc900, dark: .zinc50)
-    let destructive: Color = .adaptive(light: .red600, dark: .red400)
+    // Intentional deviation from upstream zinc, which uses red-400 in dark:
+    // white destructive content on red-400 measures 2.89:1, below WCAG AA
+    // (4.5:1). red-600 keeps white content at 4.77:1 in both modes.
+    let destructive: Color = .red600
     let border: Color = .adaptive(light: .zinc200, dark: .white.opacity(0.10))
     let input: Color = .adaptive(light: .zinc200, dark: .white.opacity(0.15))
     let ring: Color = .adaptive(light: .zinc400, dark: .zinc500)

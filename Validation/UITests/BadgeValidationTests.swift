@@ -52,10 +52,9 @@ final class BadgeValidationTests: ValidationCase {
     func testAccessibilityAuditDark() throws {
         let app = launchHost(scene: "badge", appearance: "dark")
         XCTAssertTrue(app.staticTexts["badge-variant-default"].waitForExistence(timeout: 5))
-        // badge-variant-destructive is a real inherited finding: upstream's
-        // zinc dark theme renders destructive badges as white on red-400
-        // (2.89:1, below WCAG AA 4.5:1). Kept 1:1 with upstream and tracked
-        // in TODO.md rather than deviating from upstream colors.
+        // The theme deviates from upstream's dark red-400 destructive
+        // (2.89:1) to red-600 (4.77:1) for WCAG AA, so the destructive badge
+        // must pass this audit with no toleration.
         // badge-invalid is a false positive: the destructive shadow glow
         // confuses sampling; computed ratio is zinc-900 on zinc-200 =
         // 13.96:1.
@@ -64,12 +63,8 @@ final class BadgeValidationTests: ValidationCase {
             tolerating: [
                 KnownAuditFinding(
                     descriptionContains: "Contrast",
-                    identifier: "badge-variant-destructive"
-                ),
-                KnownAuditFinding(
-                    descriptionContains: "Contrast",
                     identifier: "badge-invalid"
-                ),
+                )
             ]
         )
     }

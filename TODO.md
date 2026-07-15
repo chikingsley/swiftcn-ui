@@ -103,6 +103,13 @@ third completion gate and they do not pass either checkbox.
         `--radius-md`) — exists with no missing entries. The zinc preset
         matches the canonical block value-for-value, including translucent
         white dark borders/inputs and the monochrome zinc chart series.
+        Documented deviation 2026-07-15: dark `destructive` is red-600 rather
+        than upstream's red-400 — white destructive content on red-400
+        measures 2.89:1, below WCAG AA 4.5:1, and compliance was chosen over
+        byte parity for this one value (4.77:1 in both modes). Known marginal
+        kept as upstream ships it: light `mutedForeground` on `muted`
+        (zinc-500 on zinc-100) measures 4.39:1; on `background`/`card` it
+        measures 4.83:1.
         Cascade: an EnvironmentKey plus `.theme(_:)` reproduces CSS-variable
         cascade — the nearest write wins, so per-subtree overrides restyle
         exactly that subtree; every component reads `@Environment(\.theme)`
@@ -197,10 +204,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         suite, all passing): all six variants and the invalid state render,
         a badge-styled native Button owns real activation, light and dark
         render with screenshots attached, and Apple's accessibility audit
-        passes in both appearances with one genuine inherited finding:
-        upstream's zinc dark theme renders destructive badges as white on
-        red-400 at 2.89:1, below WCAG AA 4.5:1 (kept 1:1 with upstream;
-        tolerated and documented in the audit test). Keyboard activation,
+        passes in both appearances. The audit surfaced one genuine inherited
+        finding — upstream's zinc dark theme renders destructive badges as
+        white on red-400 at 2.89:1, below WCAG AA 4.5:1 — resolved 2026-07-15
+        by the documented theme deviation to red-600; the destructive badge
+        now passes the dark audit with no toleration. Keyboard activation,
         focus ring, Dynamic Type, VoiceOver walkthrough, and iPadOS not
         validated.
 - **Breadcrumb**
