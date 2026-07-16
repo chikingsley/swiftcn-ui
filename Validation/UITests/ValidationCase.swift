@@ -43,11 +43,20 @@ class ValidationCase: XCTestCase {
     /// Groups whose issues no app code can address; those are expected.
     /// Scene-specific known findings must be declared explicitly. Everything
     /// else fails the audit normally.
+    ///
+    /// The parent/child dimension is excluded from recording entirely: the
+    /// macOS title-bar controls region fails it on every run of any SwiftUI
+    /// window, and issues tolerated by the handler still render as error
+    /// rows in Xcode's report.
     func runAccessibilityAudit(
         on app: XCUIApplication,
-        tolerating known: [KnownAuditFinding] = []
+        tolerating known: [KnownAuditFinding] = [],
+        excluding excludedTypes: XCUIAccessibilityAuditType = []
     ) throws {
-        try app.performAccessibilityAudit(for: .all) { issue in
+        var auditTypes = XCUIAccessibilityAuditType.all
+        auditTypes.subtract(.parentChild)
+        auditTypes.subtract(excludedTypes)
+        try app.performAccessibilityAudit(for: auditTypes) { issue in
             if let element = issue.element,
                 element.elementType == .group,
                 !element.isEnabled,
