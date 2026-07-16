@@ -184,12 +184,14 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         bg-card, because the tint put the destructive title below WCAG AA
         (4.14:1 light / 4.05:1 dark); the destructive description dropped
         upstream's /90 opacity for the same reason.
-        Open layout drift (found visually 2026-07-15): upstream's
-        `cn-alert-action` is `absolute top-2.5 right-3` — pinned to the
-        alert's top-trailing corner beside the title — while `SCAlertAction`
-        renders as a separate trailing full-width row below the content.
-        Fix should mirror Card's action treatment (a Layout recognizing the
-        Action through a layout value).
+        Layout drift fixed 2026-07-16: upstream's `cn-alert-action` is
+        `absolute top-2.5 right-3` — pinned to the alert's top-trailing corner
+        beside the title — but `SCAlertAction` had rendered as a separate
+        full-width row below the content (the visible "two rows" regression).
+        `SCAlertAction` now tags itself through a `LayoutValueKey` and a native
+        `SCAlertContentLayout` places it top-trailing on the title's row,
+        reserving its width so it never overlaps wrapped text — the same
+        accepted native adaptation `SCCardHeader` uses for its action.
   - [ ] `VALIDATION` — variants, arbitrary slots, Dynamic Type, and accessibility not validated.
         macOS host evidence 2026-07-15 (Validation/ suite, all passing):
         both variants render their slots, SCAlertAction routes real
@@ -829,6 +831,18 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         Portal, Positioner, and Popup; logical placement follows layout
         direction; and unsupported DOM animation and pixel-offset controls are
         omitted instead of exposed as decorative API.
+        KNOWN DIVERGENCE (documented 2026-07-16, deferred by owner): the
+        implementation uses SwiftUI's native `.popover()`, which draws a
+        system arrow/beak on every platform. Upstream's popover is arrowless
+        and exposes no arrow, and SwiftUI provides no API to remove it. A
+        macOS fix is fully scoped and low-risk — route `SCPopover` through the
+        existing `SCOverlayPortal` (the arrowless AppKit panel already used in
+        production by HoverCard) with `acceptsKey: true`; that engine already
+        provides anchoring, side/alignment, screen-edge collision (flip +
+        clamp), outside/Escape dismissal, and clip-proof separate-window
+        presentation, losing only the arrow. iPad would need a separate
+        UIWindow-based overlay to also drop the arrow. Not a native-adaptation
+        we chose; revisit when prioritized.
   - [ ] `VALIDATION` — press opening, bottom/start placement, Escape dismissal, themed opaque content, and accessibility labels were verified in the launched TimberVox macOS consumer at its 1000-by-620 minimum size on 2026-07-15. Outside dismissal, focus return, compact adaptation, full keyboard coverage, VoiceOver, and iPadOS remain.
 - **Progress**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Progress source,
