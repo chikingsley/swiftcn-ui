@@ -19,6 +19,7 @@ public enum SCAlertVariant: CaseIterable, Equatable, Sendable {
 /// view, not only an SF Symbol.
 public struct SCAlert<Leading: View, Content: View>: View {
     @Environment(\.theme) private var theme
+    @Environment(\.layoutDirection) private var layoutDirection
 
     private let variant: SCAlertVariant
     private let leading: Leading
@@ -40,10 +41,10 @@ public struct SCAlert<Leading: View, Content: View>: View {
             leading
                 .foregroundStyle(foregroundColor)
 
-            VStack(alignment: .leading, spacing: 4) {
+            SCAlertContentLayout(layoutDirection: layoutDirection) {
                 content
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity)
         }
         .padding(16)
         .background(background, in: shape)
@@ -147,7 +148,18 @@ extension SCAlertDescription where Content == Text {
 
 // MARK: - Action
 
-/// A trailing action region inside an `SCAlert`.
+private enum SCAlertContentRole {
+    case content, action
+}
+
+private struct SCAlertContentRoleKey: LayoutValueKey {
+    static let defaultValue = SCAlertContentRole.content
+}
+
+/// A top-trailing action recognized automatically by the alert, mirroring
+/// upstream's `absolute top-2.5 right-3` placement. Following the accepted
+/// `SCCardHeader` pattern, a native `Layout` reserves the action's width so
+/// it shares the title's row instead of overlapping wrapped text.
 public struct SCAlertAction<Content: View>: View {
     private let content: Content
 
@@ -157,8 +169,60 @@ public struct SCAlertAction<Content: View>: View {
 
     public var body: some View {
         content
-            .frame(maxWidth: .infinity, alignment: .trailing)
-            .padding(.top, 4)
+            .layoutValue(key: SCAlertContentRoleKey.self, value: .action)
+    }
+}
+
+private struct SCAlertContentLayout: Layout {
+    var rowSpacing: CGFloat = 4
+    var columnSpacing: CGFloat = 12
+    var layoutDirection: LayoutDirection
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) -> CGSize {
+        let action = subviews.first { $0[SCAlertContentRoleKey.self] == .action }
+        let actionSize = action?.sizeThatFits(.unspecified) ?? .zero
+        let reserved = action == nil ? 0 : actionSize.width + columnSpacing
+        let contentSubviews = subviews.filter { $0[SCAlertContentRoleKey.self] != .action }
+        let contentWidth = proposal.width.map { max($0 - reserved, 0) }
+        let sizes = contentSubviews.map {
+            $0.sizeThatFits(ProposedViewSize(width: contentWidth, height: nil))
+        }
+        let contentHeight = sizes.enumerated().reduce(CGFloat.zero) { partial, entry in
+            partial + entry.element.height + (entry.offset == 0 ? 0 : rowSpacing)
+        }
+        let intrinsicWidth = (sizes.map(\.width).max() ?? 0) + reserved
+        return CGSize(
+            width: proposal.width ?? intrinsicWidth,
+            height: max(contentHeight, actionSize.height)
+        )
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout Void) {
+        let action = subviews.first { $0[SCAlertContentRoleKey.self] == .action }
+        let actionSize = action?.sizeThatFits(.unspecified) ?? .zero
+        let reserved = action == nil ? 0 : actionSize.width + columnSpacing
+        let contentWidth = max(bounds.width - reserved, 0)
+        let contentX = layoutDirection == .leftToRight ? bounds.minX : bounds.maxX - contentWidth
+        var y = bounds.minY
+
+        for subview in subviews where subview[SCAlertContentRoleKey.self] != .action {
+            let size = subview.sizeThatFits(ProposedViewSize(width: contentWidth, height: nil))
+            subview.place(
+                at: CGPoint(x: contentX, y: y),
+                anchor: .topLeading,
+                proposal: ProposedViewSize(width: contentWidth, height: size.height)
+            )
+            y += size.height + rowSpacing
+        }
+
+        if let action {
+            let actionX = layoutDirection == .leftToRight ? bounds.maxX - actionSize.width : bounds.minX
+            action.place(
+                at: CGPoint(x: actionX, y: bounds.minY),
+                anchor: .topLeading,
+                proposal: ProposedViewSize(actionSize)
+            )
+        }
     }
 }
 
