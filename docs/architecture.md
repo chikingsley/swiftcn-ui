@@ -70,11 +70,15 @@ Palette values -> Theme preset -> SwiftUI environment -> component token
 - the SwiftUI environment key and `.theme(_:)` modifier;
 - the built-in zinc/default preset.
 
-The default preset mirrors the canonical upstream zinc theme with one
-documented deviation: dark `destructive` is red-600 rather than upstream's
-red-400, because white destructive content on red-400 measures 2.89:1 —
-below WCAG AA's 4.5:1 — and accessibility compliance was chosen over
-byte-level parity for that one value (ledger note under Theme in TODO.md).
+The default preset mirrors the canonical upstream zinc theme with three
+documented WCAG deviations — `destructiveForeground` (white in light,
+black in dark, replacing upstream's fixed `text-white`, so destructive
+fills pass AA in both modes), light `mutedForeground` (zinc-600, not
+zinc-500), and the light focus `ring`/`sidebarRing` (zinc-500, not
+zinc-400) — chosen where upstream's values measure below AA text contrast
+(4.5:1) or the non-text minimum (3:1). The `destructive` token itself
+matches upstream exactly. The measurements and scope line live in the
+Theme ledger note in TODO.md.
 
 Components read semantic theme tokens such as `theme.card` or
 `theme.mutedForeground`. They do not select raw palette colors and they do not

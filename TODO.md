@@ -37,6 +37,12 @@ XCUITest, screenshot, latency, and performance checks.
 There are no unit-test targets in this project. Validation means host-app,
 XCUITest, accessibility, snapshot, and performance evidence.
 
+Validation evidence is recorded per platform. Decision 2026-07-15: macOS
+validation proceeds first through the `Validation/` host; iPadOS is deferred
+and picked up later as its own pass. An item's `VALIDATION` box is checked
+only when both platforms have evidence — until then, per-platform evidence
+lines under the item record what is actually proven.
+
 Usage examples and previews are useful ways to inspect code, but they are not a
 third completion gate and they do not pass either checkbox.
 
@@ -103,13 +109,25 @@ third completion gate and they do not pass either checkbox.
         `--radius-md`) — exists with no missing entries. The zinc preset
         matches the canonical block value-for-value, including translucent
         white dark borders/inputs and the monochrome zinc chart series.
-        Documented deviation 2026-07-15: dark `destructive` is red-600 rather
-        than upstream's red-400 — white destructive content on red-400
-        measures 2.89:1, below WCAG AA 4.5:1, and compliance was chosen over
-        byte parity for this one value (4.77:1 in both modes). Known marginal
-        kept as upstream ships it: light `mutedForeground` on `muted`
-        (zinc-500 on zinc-100) measures 4.39:1; on `background`/`card` it
-        measures 4.83:1.
+        Documented WCAG deviations 2026-07-15 (compliance chosen over byte
+        parity; the standard is AA text contrast 4.5:1 and non-text 3:1):
+        the `destructive` token itself matches upstream (red-600 light /
+        red-400 dark — no dark color can be AA against both white content
+        and near-black surfaces, and upstream's red-400 keeps
+        destructive-as-text readable at 6.55:1 on dark backgrounds); the
+        deviation is `destructiveForeground`, reintroduced as white (light) /
+        black (dark) fill content in place of upstream's fixed `text-white`,
+        because white on red-400 measures 2.89:1 while black measures 7.28:1
+        — destructive fills and destructive text are now both AA in both
+        modes. Light `mutedForeground` is zinc-600 rather than zinc-500
+        (4.39:1 on the muted surface; now ≥6.08:1 on every light surface);
+        light `ring` and `sidebarRing` are zinc-500 rather than zinc-400
+        (2.62:1 on white, under the 3:1 non-text minimum; now 4.83:1,
+        matching upstream's own dark ring). Out of scope by design: upstream's hairline borders
+        (zinc-200 on white ≈ 1.3:1) fail a strict non-text reading, but
+        darkening borders is a wholesale visual redesign shared by upstream
+        and most modern kits; borders are not the sole component indicator
+        here.
         Cascade: an EnvironmentKey plus `.theme(_:)` reproduces CSS-variable
         cascade — the nearest write wins, so per-subtree overrides restyle
         exactly that subtree; every component reads `@Environment(\.theme)`
@@ -156,7 +174,23 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         default/destructive variants are implemented. Native adaptation:
         SwiftUI accessibility containment replaces the web alert element;
         live-announcement behavior remains a `VALIDATION` concern.
+        Fixes 2026-07-15 (validation findings): the 8% destructive background
+        tint was removed — both variants stay untinted, matching upstream's
+        bg-card, because the tint put the destructive title below WCAG AA
+        (4.14:1 light / 4.05:1 dark); the destructive description dropped
+        upstream's /90 opacity for the same reason.
+        Open layout drift (found visually 2026-07-15): upstream's
+        `cn-alert-action` is `absolute top-2.5 right-3` — pinned to the
+        alert's top-trailing corner beside the title — while `SCAlertAction`
+        renders as a separate trailing full-width row below the content.
+        Fix should mirror Card's action treatment (a Layout recognizing the
+        Action through a layout value).
   - [ ] `VALIDATION` — variants, arbitrary slots, Dynamic Type, and accessibility not validated.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        both variants render their slots, SCAlertAction routes real
+        activations, light/dark screenshots, and both audits pass with no
+        tolerations after the tint fix (destructive title 4.77:1 light /
+        6.55:1 dark).
 - **Alert Dialog**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Alert Dialog:
         Root/Trigger/Overlay/Content/Header/Footer/Media/Title/Description/Action/Cancel,
@@ -191,8 +225,19 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         the original URL/initials convenience API are implemented. Native
         adaptation: `AsyncImage` and a root-scoped SwiftUI environment binding
         replace the web image element and Base UI loading context.
+        Fixes 2026-07-15 (validation findings): the fallback's delay task was
+        attached to a childless `Group`, so fallback content (initials) never
+        rendered — replaced with `ZStack` so the task actually runs; the
+        labeled image element gained the `.isImage` trait so it exposes a
+        valid accessibility role (WCAG 4.1.2).
   - [ ] `VALIDATION` — loading, failure, fallback delay, grouping, badge layout,
         macOS, iPadOS, and accessibility not validated.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        preset sizes verified at 32/40/56 with fallback initials rendering
+        (regression test for the delay-task fix), the badge is exposed as
+        an image, groups cap with live overflow re-rendering, and both
+        audits pass (fallback text sampling false positives pinned with
+        7.03:1 light / 5.68:1 dark math).
 - **Badge**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Badge source and examples:
         all six variants, arbitrary inline content, invalid styling, custom color
@@ -315,6 +360,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         SwiftUI environment state and accessibility representation replace DOM
         disabled/form semantics.
   - [ ] `VALIDATION` — native semantics, keyboard, touch target, and accessibility not validated.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        mixed-to-checked-to-unchecked resolution, the boolean convenience,
+        the Toggle style, unlabeled and invalid forms, disabled semantics,
+        light/dark screenshots, and both audits pass with no tolerations.
 - **Collapsible**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Collapsible:
         independently composable Root/Trigger/Content, controlled and
@@ -826,9 +875,22 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         a String or arbitrary centered SwiftUI content as one combined semantic
         element. Button Group's internal join rules explicitly declare
         themselves decorative rather than inheriting semantic separator noise.
+        Fix 2026-07-15 (validation finding): bare and string-labeled
+        semantic separators combined into role-less accessibility elements
+        (WCAG 4.1.2); they are now represented as real text carrying the
+        label and orientation value, while ViewBuilder-labeled separators
+        keep their visible content's own combined semantics.
   - [ ] `VALIDATION` — horizontal, vertical, labeled, and accessibility behavior not validated.
         macOS consumer evidence 2026-07-14: TimberVox exercised horizontal Card,
         header, and metadata rules plus vertical Home-statistic separators.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        orientation geometry (1pt rules), plain and string-labeled
+        separators expose a real text role with label and orientation
+        value, ViewBuilder labels keep their own combined semantics,
+        decorative forms are hidden from accessibility, and both audits
+        pass with the contrast dimension excluded for this scene only
+        (Apple's sampler hangs on degenerate 1pt text frames — a tooling
+        limitation documented in the test).
 - **Sheet**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Sheet source,
         Dialog API, and complete form, no-close-button, and four-side examples:
@@ -880,6 +942,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         device-free iOS 17 compile, registry generation, and structural mapping
         pass.
   - [ ] `VALIDATION` — shapes, reduced motion, and accessibility hiding not validated.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        pulse/shimmer/static/custom-shape skeletons render while
+        contributing zero accessibility elements, scSkeleton(when:) hides
+        and re-exposes real content in both directions, and both audits
+        pass clean.
 - **Slider**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Slider source,
         examples, and API. One controlled-or-internal engine supplies scalar,
@@ -936,7 +1003,16 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         place of the web id/for association. Strict format/lint, macOS 14
         compile, device-free iOS 17 compile, registry generation, and structural
         mapping pass.
+        Fix 2026-07-15 (validation finding): the accessibility representation
+        Toggle now carries the control's 44-point minimum frame so the
+        exposed element covers the real hit target.
   - [ ] `VALIDATION` — native semantics, keyboard, touch target, and accessibility not validated.
+        macOS host evidence 2026-07-15 (Validation/ suite, all passing):
+        both sizes and the Toggle style route real clicks into caller-owned
+        bindings, a constant binding stays inert, disabled exposes
+        isEnabled == false, the accessibility value flips 0 to 1, light and
+        dark render with screenshots, and both appearance audits pass (one
+        pinned sampling false positive documented in the test).
 - **Table**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Table source,
         composition guide, Footer, Actions, Data Table, and RTL examples. Public
