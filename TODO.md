@@ -168,6 +168,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         callback, and reduced motion are implemented. Native adaptation:
         SwiftUI environment state and `Button` replace Base UI context/primitives.
   - [ ] `VALIDATION` — single/multiple state, keyboard, accessibility, macOS, and iPadOS not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): single
+        collapsible/non-collapsible and multiple modes expand and collapse with
+        content and echo, disabled items, and callbacks — validation caught and
+        fixed a spurious onExpandedChange fired for no-op re-presses in
+        non-collapsible single mode
 - **Alert**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Alert:
         Root/Title/Description/Action, arbitrary content and leading slots, and
@@ -207,6 +212,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         overlay content, clipping, and no unnecessary production dependencies.
   - [ ] `VALIDATION` — sizing under different parent proposals, clipping,
         resizing, macOS, and iPadOS not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): 16:9,
+        1:1, and 4:3 ratios asserted geometrically, alignment, clipping, and
+        disabled semantics
 - **Attachment**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Attachment source:
         Root/Group/Media/Content/Title/Description/Actions/Action/Trigger,
@@ -265,6 +273,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         implemented. Native adaptation: a SwiftUI `Layout` replaces flex wrapping.
   - [ ] `VALIDATION` — action/URL/navigation activation, wrapping, collapsed items,
         RTL, Dynamic Type, macOS, iPadOS, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): all
+        composed parts render with current-page semantics and ellipsis, action
+        links route to caller state, custom and default separators, and the
+        collapsing convenience
 - **Bubble**
   - [x] `CODE` — accepted 2026-07-14 against the current official Bubble source:
         Group/Root/Content/Reactions are public and composable; all seven
@@ -326,6 +338,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         Home statistics, Today, collapsed/expanded History records, and the
         recording-information panels. The History Card Footer remained the last
         region below playback, mode, and action content after expansion.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): regions
+        render, the header action lands at the top-trailing corner (asserted
+        geometrically), footer and compatibility actions route, small size and
+        string conveniences
 - **Carousel**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Carousel source:
         Root/Content/Item/Previous/Next, horizontal/vertical orientation,
@@ -375,6 +391,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         replace React context, data attributes, and render props; browser
         hidden-until-found has no native app equivalent.
   - [ ] `VALIDATION` — keyboard, animation, reduced motion, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing):
+        controlled and uncontrolled expansion route real clicks into content
+        visibility and the callback echo, default-open, keep-mounted, and disabled
+        states
 - **Combobox**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Combobox source:
         typed caller-owned single/multiple selection, controlled or uncontrolled
@@ -515,6 +535,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
   - [ ] `VALIDATION` — arbitrary content, actions, layout, and accessibility not validated.
         macOS consumer evidence 2026-07-14: TimberVox displayed its searchable
         History `No matches` empty state and exposed the title and description.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): arbitrary
+        and compact composition, all regions, both media variants with decorative
+        hiding, action routing, and disabled action
 - **Field**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Field source and
         complete form examples: arbitrary FieldSet/Legend/Group/Field/Content,
@@ -564,6 +587,12 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
   - [ ] `VALIDATION` — entry, focus, validation, selection, keyboards, and accessibility not validated.
         macOS consumer evidence 2026-07-14: TimberVox History accepted a query,
         updated results, exposed a trailing clear action, and restored the list.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): typed
+        String/Int/Double bindings and their initial values, every intent and
+        size, invalid state (now announced via an accessibility hint), secure
+        reveal, and the trailing accessory button route real actions — the latter
+        two proved a real defect: a decorative border overlay was hit-testing in
+        front of the field's controls and swallowing every button click, now fixed
 - **Input Group**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Input Group
         source and complete examples: a typed builder accepts only Input,
@@ -596,6 +625,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         replaces CSS child selectors, and the visual slots are hidden from
         accessibility in favor of the single real editable field.
   - [ ] `VALIDATION` — typing, paste, deletion, focus movement, autofill, keyboard, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing):
+        digit/alphanumeric/custom filters, convenience and explicit groups,
+        separators, invalid (now announced via an accessibility hint) and disabled
+        states, full-code typing, and the completion callback
 - **Item**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Item source and
         complete examples: caller-composed Root, Group, Separator, Media,
@@ -616,6 +649,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
   - [ ] `VALIDATION` — selection, actions, long content, and accessibility not validated.
         macOS consumer evidence 2026-07-14: TimberVox exercised Items in Home
         activity rows, playback controls, and recording metadata rows.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): all
+        variants, sizes, media treatments and regions, the compact convenience,
+        two-line clamping, and native Button/Link item activation
 - **Kbd**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Kbd source and
         complete examples: Kbd and KbdGroup now accept arbitrary view-builder
@@ -630,6 +666,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         the owning Button, Toggle, menu command, or command group, matching the
         upstream component's presentational role.
   - [ ] `VALIDATION` — key rendering, grouping, and accessibility labels not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): every
+        typed key and convenience, coherent group announcements, and icon-only
+        groups now carrying a valid text role (a fixed WCAG 4.1.2 finding); action
+        routing and disabled state
 - **Label**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Label source,
         complete examples, and native platform constraints: Label accepts
@@ -643,6 +683,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         replaces HTML for/id, and an explicit action or FocusState replaces
         browser label-click forwarding instead of exposing a fake string ID.
   - [ ] `VALIDATION` — activation, Dynamic Type, and accessibility relationships not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): content
+        and required states, every orientation and placement, disabled-following,
+        and the labelled-pair relationship forwarding focus to the real control
+        (proved by typing without clicking the field)
 - **Marker**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Marker source
         and every complete example: Root, Icon, and Content accept arbitrary
@@ -764,6 +808,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         flipped SVGs; ViewThatFits replaces the CSS text breakpoint.
   - [ ] `VALIDATION` — boundaries, URL and in-app activation, keyboard, compact
         labels, RTL, Dynamic Type, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): composed
+        parts and the controlled windowed pager route previous/next/page selection
+        into the page echo and clamp at both boundaries without extra callbacks
 - **Popover**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Popover source,
         complete examples, and Base UI API: controlled or internally managed
@@ -803,6 +850,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         environment state replaces React context and data attributes; and
         TimelineView replaces CSS indeterminate animation.
   - [ ] `VALIDATION` — value announcements, reduced motion, appearance, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing):
+        empty/progressing/complete/indeterminate states, label and value slots,
+        custom composition, and native progress accessibility value tracking
+        caller updates
 - **Radio Group**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Radio Group and
         Radio sources plus every complete shadcn example: typed Root and Item
@@ -820,6 +871,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         native app state replaces hidden form inputs and name/form fields; and
         a shared focus coordinator replaces browser radio traversal.
   - [ ] `VALIDATION` — arrow keys, touch targets, disabled state, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): typed
+        selection routing, vertical/horizontal/grid layouts, item and root
+        disabled/read-only/invalid states
 - **Resizable**
   - [x] `CODE` — accepted 2026-07-14 against the current Resizable source and
         every complete horizontal, vertical, handle, nested, and controlled
@@ -964,6 +1018,12 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         macOS consumer evidence 2026-07-14: TimberVox playback started from the
         Slider control, published progress through accessibility, and returned to
         zero after the real eight-second recording completed.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): scalar
+        and range values render, one adjustable control per thumb, disabled state,
+        and a real pointer drag routes into the caller-owned scalar binding
+        (XCUITest's adjust() no-ops because macOS publishes no AXOrientation for a
+        SwiftUI accessibility representation — VoiceOver increment/decrement
+        remains a manual item)
 - **Sonner**
   - [x] `CODE` — accepted 2026-07-14 against the current shadcn Sonner wrapper,
         examples, and upstream Sonner API. `SCSonner` is a typed façade over the
@@ -990,6 +1050,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         device-free iOS 17 compile, registry generation, and structural mapping
         pass.
   - [ ] `VALIDATION` — sizes, reduced motion, labels, and appearance not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): every
+        size, stroke, label, and inherited appearance render at stable geometry
+        with the ProgressView accessibility representation, caller-driven
+        appearance state, and disabled semantics
 - **Switch**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Switch source and
         Description, Choice Card, Disabled, Invalid, Size, and RTL examples.
@@ -1042,6 +1106,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         the DOM Indicator. Strict format/lint, macOS and device-free iOS compiles,
         registry generation, and parity mapping pass.
   - [ ] `VALIDATION` — keyboard navigation, arbitrary labels/content, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): typed
+        required/optional selection routes by click into panel content and the
+        selection echo, default/line variants, horizontal/vertical, disabled
+        triggers, and keep-mounted panels
 - **Textarea**
   - [x] `CODE` — accepted 2026-07-14 against the current Textarea source and
         complete examples: caller-owned multiline binding, optional placeholder,
@@ -1055,6 +1123,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         composition. Strict format/lint, macOS and device-free iOS compiles,
         registry generation, and parity mapping pass.
   - [ ] `VALIDATION` — focus, scrolling, selection, Dynamic Type, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): multiline
+        typing routes into the caller binding, placeholder, minimum heights,
+        invalid (now announced via an accessibility hint) and disabled states
 - **Toast**
   - [x] `CODE` — accepted 2026-07-14 against the current official Toast page,
         which now publishes only a deprecation notice directing callers to
@@ -1079,6 +1150,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         semantics. Strict format/lint, macOS and device-free iOS compiles,
         registry generation, and parity mapping pass.
   - [ ] `VALIDATION` — pressed state, keyboard, focus, disabled state, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): both
+        variants and all three sizes render, pressed state flows through the
+        accessibility value and the binding echo, and disabled state
 - **Toggle Group**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Toggle Group and
         complete shadcn examples: public Root and Item views support arbitrary
@@ -1096,6 +1170,9 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         macOS consumer evidence 2026-07-14: TimberVox exposed Original as selected
         and Segmented as individually disabled with explanatory help when the
         recording contained no timestamp segments.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing):
+        controlled and internal single and multiple selection route into the echo
+        across variants, sizes, and orientations, with disabled root and items
 - **Tooltip**
   - [x] `CODE` — audited against the current official docs and registry source.
         `SCTooltipProvider` owns delayed/immediate presentation and unclipped
@@ -1120,6 +1197,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         CSS text-balance equivalent. Strict format/lint, macOS and device-free
         iOS compiles, registry generation, and parity mapping pass.
   - [ ] `VALIDATION` — Dynamic Type, selection, layout, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): every
+        prose style, both list paths, and distinct heading elements with exact
+        content (macOS XCUITest exposes neither AXHeading nor heading level, so
+        header traits set by the library are a manual item; the strongest
+        observable contract is asserted)
 
 ## Effects
 
