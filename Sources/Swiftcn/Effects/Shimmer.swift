@@ -259,7 +259,7 @@ public struct SCShimmerButton: View {
         case .default:
             return theme.primaryForeground.opacity(0.9)
         case .destructive:
-            return Color.white.opacity(0.9)
+            return theme.destructiveForeground.opacity(0.9)
         case .secondary:
             return theme.secondaryForeground.opacity(0.9)
         case .outline, .ghost, .link:

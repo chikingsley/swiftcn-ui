@@ -61,10 +61,10 @@ public struct SCAlert<Leading: View, Content: View>: View {
     }
 
     private var background: Color {
-        switch variant {
-        case .default: theme.background
-        case .destructive: theme.destructive.opacity(0.08)
-        }
+        // Both variants stay untinted, matching upstream's bg-card: the
+        // former 8% destructive tint dropped the destructive title below
+        // WCAG AA (4.14:1 light / 4.05:1 dark).
+        theme.background
     }
 
     private var strokeColor: Color {
@@ -130,8 +130,10 @@ public struct SCAlertDescription<Content: View>: View {
         content
             .font(.footnote)
             .foregroundStyle(
+                // Full-strength destructive, deviating from upstream's /90
+                // opacity, which measures below WCAG AA for footnote text.
                 variant == .destructive
-                    ? theme.destructive.opacity(0.9)
+                    ? theme.destructive
                     : theme.mutedForeground
             )
     }

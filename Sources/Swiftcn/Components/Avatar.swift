@@ -149,6 +149,7 @@ public struct SCAvatarImage: View {
         }
         .clipShape(Circle())
         .accessibilityLabel(Text(accessibilityLabel ?? ""))
+        .accessibilityAddTraits(.isImage)
         .accessibilityHidden(accessibilityLabel == nil)
     }
 
@@ -203,7 +204,10 @@ public struct SCAvatarFallback<Content: View>: View {
     }
 
     public var body: some View {
-        Group {
+        // ZStack, not Group: Group applies modifiers per child, so with the
+        // fallback still hidden it has no children and the delay task below
+        // would never start.
+        ZStack {
             if loadingStatus?.wrappedValue != .loaded, delayElapsed {
                 content
                     .font(fallbackFont)
