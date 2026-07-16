@@ -168,6 +168,9 @@ public struct SCInputOTP<Content: View>: View {
             .opacity(0.01)
             .accessibilityLabel(Text(accessibilityLabel))
             .accessibilityValue(Text(accessibilityValue))
+            // The web input announces invalidity through aria-invalid; a hint
+            // is the native equivalent, matching SCSwitch.
+            .accessibilityHint(resolvedIsInvalid ? "Invalid entry" : "")
             .modifier(SCInputOTPTextEntryModifier(inputMode: resolvedInputMode))
     }
 

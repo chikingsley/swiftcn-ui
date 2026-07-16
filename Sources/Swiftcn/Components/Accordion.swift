@@ -149,6 +149,10 @@ public struct SCAccordion<Content: View>: View {
             }
         }
 
+        // A non-collapsible single accordion re-pressing its open item is a
+        // no-op: upstream notifies only on real changes.
+        guard next != expanded else { return }
+
         let update = {
             if let controlledExpanded {
                 controlledExpanded.wrappedValue = next
