@@ -485,6 +485,12 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         container overlay instead of a DOM portal, native Buttons replace render
         props, and SwiftUI ScrollView/focus/key handling replace browser APIs.
   - [ ] `VALIDATION` — focus entry/return, Escape, outside dismissal, stacking, and VoiceOver not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): three
+        sizes present with semantic title/description, footer actions route to a
+        counter, close button and Escape dismiss (presented content queried in its
+        own window), and both presented-content audits pass. Focus entry and
+        restoration are documented manual VoiceOver items (macOS XCUITest cannot
+        query keyboard focus).
 - **Direction**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Direction source
         and guide: explicit LTR/RTL values, arbitrary descendant provider,
@@ -509,6 +515,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         events, GeometryReader replaces viewport CSS variables, and native
         ScrollView/safe-area behavior provides keyboard-aware layout.
   - [ ] `VALIDATION` — detents, dragging, dismissal, focus, compact adaptation, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): four
+        swipe directions, three modal behaviors, scrollable body, actions route,
+        close and Escape, disabled trigger, and a real upward drag between
+        controlled snap points.
 - **Dropdown Menu**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Dropdown Menu
         source, API, and complete example set: arbitrary Trigger/Content,
@@ -572,6 +582,12 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         essential information must also remain available at the trigger
         destination.
   - [ ] `VALIDATION` — pointer timing, focus alternative, dismissal, placement, and accessibility not validated.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): six sides
+        present in the AppKit panel (queried as a sibling AXDialog) and dismiss,
+        an action inside the panel routes to caller state, focus-open and Escape
+        dismissal, disabled semantics, and both presented audits pass. The non-key
+        panel (acceptsKey:false) is intentional so hover content does not steal
+        focus; hover timing/transfer is manual.
 - **Input**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Input source and
         complete type/composition examples: controlled String/Int/Double values,
@@ -844,6 +860,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         UIWindow-based overlay to also drop the arrow. Not a native-adaptation
         we chose; revisit when prioritized.
   - [ ] `VALIDATION` — press opening, bottom/start placement, Escape dismissal, themed opaque content, and accessibility labels were verified in the launched TimberVox macOS consumer at its 1000-by-620 minimum size on 2026-07-15. Outside dismissal, focus return, compact adaptation, full keyboard coverage, VoiceOver, and iPadOS remain.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): presents
+        in its native window and dismisses across positions, compact adaptations
+        render, rich content and actions route, disabled trigger and close, and
+        outside/Escape dismissal. Note the separate documented arrow divergence.
 - **Progress**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Progress source,
         all complete examples, and the full Base UI API: Root, Track,
@@ -976,6 +996,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         macOS consumer evidence 2026-07-14: TimberVox opened its trailing
         recording-information Sheet, exposed the modal content, and dismissed it
         through the caller-provided back action without invoking Finder.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): all four
+        edges present and dismiss, header/footer, composed and automatic close,
+        actions route, Escape dismissal, disabled trigger, and both presented
+        audits pass (the one dark description finding is a pinned sampler false
+        positive: mutedForeground on background = 7.59:1).
 - **Sidebar**
   - [x] `CODE` — accepted 2026-07-14 against the current Base sidebar source and
         documentation. One `SCSidebarLayout`/`SCSidebarState` engine now owns
@@ -1199,6 +1224,11 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         exposes accessibility help. Stationary hover screenshots, keyboard
         focus traversal, dismissal/timing, disabled triggers, iPadOS pointer and
         touch, VoiceOver, and automated host coverage remain incomplete.
+        macOS host evidence 2026-07-16 (Validation/ suite, all passing): provider
+        usage, every edge exposes its enabled interactive trigger and routes its
+        action, disabled semantics, and both audits pass. AXHelp text and pointer
+        hover-open/dismiss are documented manual VoiceOver items (omitted from
+        macOS XCTest snapshots; hover not synthesizable).
 - **Typography**
   - [x] `CODE` — accepted 2026-07-14 against the current typography guide, which
         intentionally ships examples rather than a component: all documented h1
