@@ -60,6 +60,12 @@ struct ValidationRootView: View {
             case "togglegroup": ToggleGroupValidationScene()
             case "breadcrumb": BreadcrumbValidationScene()
             case "pagination": PaginationValidationScene()
+            case "dialog": DialogValidationScene()
+            case "sheet": SheetValidationScene()
+            case "drawer": DrawerValidationScene()
+            case "popover": PopoverValidationScene()
+            case "tooltip": TooltipValidationScene()
+            case "hovercard": HoverCardValidationScene()
             default:
                 Text("Unknown scene: \(scene)")
                     .accessibilityIdentifier("sc-unknown-scene")
