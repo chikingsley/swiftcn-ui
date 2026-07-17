@@ -99,3 +99,6 @@ iOSInjectionProject/
 Validation/*.xcodeproj
 Validation/.derivedData/
 Validation/*.xcresult
+
+# Generated Swiftcn side-by-side comparison captures
+Showcase/.comparison-shots/

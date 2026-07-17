@@ -28,7 +28,7 @@ private struct OverlayStage<Content: View>: View {
 // MARK: - Dialog
 
 struct DialogDemo: View {
-    @State private var isPresented = false
+    @State private var isPresented = ShowcaseCaptureMode.isEnabled
 
     var body: some View {
         OverlayStage {
@@ -56,7 +56,7 @@ struct DialogDemo: View {
 // MARK: - Alert Dialog
 
 struct AlertDialogDemo: View {
-    @State private var isPresented = false
+    @State private var isPresented = ShowcaseCaptureMode.isEnabled
     @State private var lastChoice: String?
 
     var body: some View {
@@ -89,7 +89,7 @@ struct AlertDialogDemo: View {
 // MARK: - Sheet
 
 struct SheetDemo: View {
-    @State private var isPresented = false
+    @State private var isPresented = ShowcaseCaptureMode.isEnabled
     @State private var notifications = true
     @State private var autoSave = false
 
@@ -121,7 +121,7 @@ struct SheetDemo: View {
 // MARK: - Drawer
 
 struct DrawerDemo: View {
-    @State private var isOpen = false
+    @State private var isOpen = ShowcaseCaptureMode.isEnabled
 
     var body: some View {
         OverlayStage {
@@ -159,7 +159,7 @@ struct DrawerDemo: View {
 
 struct PopoverDemo: View {
     @Environment(\.theme) private var theme
-    @State private var isPresented = false
+    @State private var isPresented = ShowcaseCaptureMode.isEnabled
 
     var body: some View {
         OverlayStage {
@@ -227,6 +227,7 @@ struct TooltipDemo: View {
 
 struct HoverCardDemo: View {
     @Environment(\.theme) private var theme
+    @State private var isPresented = ShowcaseCaptureMode.isEnabled
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -243,7 +244,7 @@ struct HoverCardDemo: View {
             .font(.subheadline.weight(.medium))
             .foregroundStyle(theme.primary)
             .underline()
-            .scHoverCard {
+            .scHoverCard(isPresented: $isPresented) {
                 HStack(alignment: .top, spacing: 12) {
                     SCAvatar(url: nil, fallback: "SC", size: .custom(40))
                     VStack(alignment: .leading, spacing: 4) {

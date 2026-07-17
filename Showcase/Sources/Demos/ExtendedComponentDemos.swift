@@ -291,7 +291,7 @@ struct NativeSelectDemo: View {
 }
 
 struct NavigationMenuDemo: View {
-    @State private var openItem: String?
+    @State private var openItem: String? = ShowcaseCaptureMode.isEnabled ? "getting-started" : nil
     @State private var lastAction = "Choose a destination."
 
     var body: some View {
@@ -383,5 +383,12 @@ struct SonnerDemo: View {
         }
         .frame(maxWidth: .infinity, minHeight: 420)
         .scSonnerToaster()
+        .onAppear {
+            guard ShowcaseCaptureMode.isEnabled else { return }
+            SCSonner.show(
+                "Event has been created",
+                description: "Monday, January 3rd at 6:00pm"
+            )
+        }
     }
 }

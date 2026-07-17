@@ -37,7 +37,7 @@ struct BreadcrumbDemo: View {
 /// app), plus the same list inline in a bordered box.
 struct CommandDemo: View {
     @Environment(\.theme) private var theme
-    @State private var showPalette = false
+    @State private var showPalette = ShowcaseCaptureMode.isEnabled
 
     private static let groups = [
         SCCommandGroup(
