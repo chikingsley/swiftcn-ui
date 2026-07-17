@@ -1,6 +1,6 @@
 import AppKit
-import Swiftcn
 import SwiftUI
+import Swiftcn
 
 @main
 struct ValidationHostApp: App {
@@ -14,9 +14,14 @@ struct ValidationHostApp: App {
 
 /// Routes `--sc-scene <key>` to one deterministic component scene and applies
 /// `--sc-appearance light|dark` so UI tests control both axes per launch.
+/// `--sc-width`/`--sc-height` enlarge the fixed content frame for scenes whose
+/// stacked instances exceed the 780×560 default (macOS XCUITest cannot click
+/// content outside the window, so every element must fit the frame).
 struct ValidationRootView: View {
     private let scene: String
     private let appearance: ColorScheme?
+    private let width: CGFloat
+    private let height: CGFloat
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
@@ -26,6 +31,8 @@ struct ValidationRootView: View {
         case "light": appearance = .light
         default: appearance = nil
         }
+        width = Self.value(named: "--sc-width", in: arguments).flatMap { Double($0) } ?? 780
+        height = Self.value(named: "--sc-height", in: arguments).flatMap { Double($0) } ?? 560
     }
 
     var body: some View {
@@ -66,6 +73,41 @@ struct ValidationRootView: View {
             case "popover": PopoverValidationScene()
             case "tooltip": TooltipValidationScene()
             case "hovercard": HoverCardValidationScene()
+            case "alertdialog": AlertDialogValidationScene()
+            case "attachment": AttachmentValidationScene()
+            case "bubble": BubbleValidationScene()
+            case "buttongroup": ButtonGroupValidationScene()
+            case "calendar": CalendarValidationScene(part: .selection)
+            case "calendarrange": CalendarValidationScene(part: .range)
+            case "calendarextras": CalendarValidationScene(part: .extras)
+            case "calendarmisc": CalendarValidationScene(part: .misc)
+            case "carousel": CarouselValidationScene()
+            case "chart": ChartValidationScene()
+            case "combobox": ComboboxValidationScene()
+            case "command": CommandValidationScene()
+            case "contextmenu": ContextMenuValidationScene()
+            case "datatable": DataTableValidationScene()
+            case "datepicker": DatePickerValidationScene()
+            case "direction": DirectionValidationScene()
+            case "dropdownmenu": DropdownMenuValidationScene()
+            case "field": FieldValidationScene()
+            case "inputgroup": InputGroupValidationScene()
+            case "marker": MarkerValidationScene()
+            case "menubar": MenubarValidationScene()
+            case "message": MessageValidationScene()
+            case "messagescroller": MessageScrollerValidationScene()
+            case "nativeselect": NativeSelectValidationScene()
+            case "navigationmenu": NavigationMenuValidationScene()
+            case "resizable": ResizableValidationScene()
+            case "scrollarea": ScrollAreaValidationScene()
+            case "select": SelectValidationScene()
+            case "sidebar": SidebarValidationScene(part: .main)
+            case "sidebarpersisted": SidebarValidationScene(part: .persisted)
+            case "sonner": SonnerValidationScene()
+            case "table": TableValidationScene(part: .typed)
+            case "tablerowtap": TableValidationScene(part: .rowTap)
+            case "tableprimitive": TableValidationScene(part: .primitive)
+            case "toast": ToastValidationScene()
             default:
                 Text("Unknown scene: \(scene)")
                     .accessibilityIdentifier("sc-unknown-scene")
@@ -73,7 +115,7 @@ struct ValidationRootView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Swiftcn validation scene: \(scene)")
-        .frame(width: 780, height: 560, alignment: .topLeading)
+        .frame(width: width, height: height, alignment: .topLeading)
         .background(Theme.default.background)
         .theme(.default)
         .preferredColorScheme(appearance)

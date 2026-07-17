@@ -147,6 +147,7 @@ public struct SCNativeSelectOption<Value: Hashable, Content: View>: View {
         content
             .tag(value)
             .disabled(isDisabled)
+            .selectionDisabled(isDisabled)
     }
 }
 

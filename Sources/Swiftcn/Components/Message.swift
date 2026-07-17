@@ -171,28 +171,46 @@ public struct SCMessageAvatar<Content: View>: View {
     @Environment(\.scMessageHasFooter) private var hasFooter
 
     private let content: Content
+    private let reservesColumnOnly: Bool
 
     /// Creates the avatar slot.
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
+        self.reservesColumnOnly = false
+    }
+
+    fileprivate init(reservesColumnOnly: Bool, @ViewBuilder content: () -> Content) {
+        self.content = content()
+        self.reservesColumnOnly = reservesColumnOnly
     }
 
     public var body: some View {
         content
             .environment(\.layoutDirection, outerDirection ?? layoutDirection)
+            // A populated avatar grows to its content (min 32); an empty slot
+            // must reserve an exact 32pt column so grouped messages align —
+            // `EmptyView().frame(minWidth:)` reserves nothing, so pin it.
+            .frame(
+                width: reservesColumnOnly ? 32 : nil,
+                height: reservesColumnOnly ? 32 : nil
+            )
             .frame(minWidth: 32, minHeight: 32)
-            .background(theme.muted, in: Circle())
+            .background(reservesColumnOnly ? Color.clear : theme.muted, in: Circle())
             .clipShape(Circle())
+            // The reserved-only slot is decorative spacing — keep it out of the
+            // accessibility tree so it exposes no description-less element.
+            .accessibilityHidden(reservesColumnOnly)
             // Stay clear of the footer line — upstream's -translate-y-8.
             .offset(y: hasFooter ? -26 : 0)
     }
 }
 
-extension SCMessageAvatar where Content == EmptyView {
+extension SCMessageAvatar where Content == Color {
     /// Reserves the avatar column for a grouped message without repeating the
     /// sender image, matching the official empty MessageAvatar composition.
+    /// The reserved column is an exact 32pt invisible slot, not a muted dot.
     public init() {
-        self.init { EmptyView() }
+        self.init(reservesColumnOnly: true) { Color.clear }
     }
 }
 

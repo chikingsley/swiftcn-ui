@@ -459,6 +459,44 @@ private struct SCMessageScrollerContentFrameKey: PreferenceKey {
     }
 }
 
+/// Feeds real scroll movement into the state's geometry tracking where the
+/// scroll-geometry API exists; native scrolls do not run a SwiftUI layout
+/// pass, so the content-frame preference alone goes stale after any user or
+/// programmatic scroll.
+private struct SCMessageScrollerScrollObserver: ViewModifier {
+    struct Snapshot: Equatable {
+        var offsetY: CGFloat
+        var contentHeight: CGFloat
+        var viewportHeight: CGFloat
+    }
+
+    let state: SCMessageScrollerState
+
+    func body(content: Content) -> some View {
+        if #available(macOS 15.0, iOS 18.0, *) {
+            content.onScrollGeometryChange(for: Snapshot.self) { geometry in
+                Snapshot(
+                    offsetY: geometry.contentOffset.y,
+                    contentHeight: geometry.contentSize.height,
+                    viewportHeight: geometry.containerSize.height
+                )
+            } action: { _, snapshot in
+                state.updateGeometry(
+                    contentFrame: CGRect(
+                        x: 0,
+                        y: -snapshot.offsetY,
+                        width: 0,
+                        height: snapshot.contentHeight
+                    ),
+                    viewportHeight: snapshot.viewportHeight
+                )
+            }
+        } else {
+            content
+        }
+    }
+}
+
 private enum SCMessageScrollerLayout {
     static let coordinateSpace = "SCMessageScrollerViewport"
     static let startSentinel = "sc-message-scroller-start"
@@ -583,6 +621,13 @@ public struct SCMessageScrollerViewport<Content: View>: View {
                 .onPreferenceChange(SCMessageScrollerContentFrameKey.self) { frame in
                     state.updateGeometry(contentFrame: frame, viewportHeight: outer.size.height)
                 }
+                // The preference above only recomputes on layout passes; a
+                // native macOS scroll moves the document without relayout, so
+                // scroll-position-derived state (isAtEnd/canScrollToStart/
+                // canScrollToEnd) froze at its initial values. Where the
+                // scroll-geometry API exists, observe real scrolling too;
+                // older systems keep the layout-driven approximation.
+                .modifier(SCMessageScrollerScrollObserver(state: state))
                 .onPreferenceChange(SCMessageScrollerItemsKey.self) { items in
                     state.updateItems(items)
                 }

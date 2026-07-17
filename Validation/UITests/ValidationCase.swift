@@ -6,12 +6,19 @@ class ValidationCase: XCTestCase {
         continueAfterFailure = false
     }
 
-    func launchHost(scene: String, appearance: String? = nil) -> XCUIApplication {
+    func launchHost(
+        scene: String,
+        appearance: String? = nil,
+        width: Int? = nil,
+        height: Int? = nil
+    ) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["--sc-scene", scene]
         if let appearance {
             app.launchArguments += ["--sc-appearance", appearance]
         }
+        if let width { app.launchArguments += ["--sc-width", "\(width)"] }
+        if let height { app.launchArguments += ["--sc-height", "\(height)"] }
         app.launch()
         return app
     }
@@ -53,6 +60,24 @@ class ValidationCase: XCTestCase {
         tolerating known: [KnownAuditFinding] = [],
         excluding excludedTypes: XCUIAccessibilityAuditType = []
     ) throws {
+        do {
+            try performAudit(on: app, tolerating: known, excluding: excludedTypes)
+        } catch let error as NSError
+            where error.domain == "com.apple.xcode.xctest.accessibilityAudit" && error.code == -56
+        {
+            // "Audit failed to complete in time" is Apple's audit timing out
+            // under load, not a finding about the scene; one retry after the
+            // machine settles keeps real findings while dropping the flake.
+            Thread.sleep(forTimeInterval: 1)
+            try performAudit(on: app, tolerating: known, excluding: excludedTypes)
+        }
+    }
+
+    private func performAudit(
+        on app: XCUIApplication,
+        tolerating known: [KnownAuditFinding],
+        excluding excludedTypes: XCUIAccessibilityAuditType
+    ) throws {
         var auditTypes = XCUIAccessibilityAuditType.all
         auditTypes.subtract(.parentChild)
         auditTypes.subtract(excludedTypes)
@@ -67,8 +92,17 @@ class ValidationCase: XCTestCase {
             }
             if let element = issue.element,
                 known.contains(where: {
-                    issue.compactDescription.contains($0.descriptionContains)
-                        && element.identifier == $0.identifier
+                    guard issue.compactDescription.contains($0.descriptionContains) else { return false }
+                    // "*" matches any element; a trailing "*" is a prefix match;
+                    // otherwise the identifier must match exactly. This lets a
+                    // scene tolerate a whole class of sampler false-positive
+                    // (e.g. small-muted-text contrast on many row identifiers)
+                    // in one declaration instead of enumerating each element.
+                    if $0.identifier == "*" { return true }
+                    if $0.identifier.hasSuffix("*") {
+                        return element.identifier.hasPrefix(String($0.identifier.dropLast()))
+                    }
+                    return element.identifier == $0.identifier
                 })
             {
                 print("SC-AUDIT-KNOWN: \(issue.compactDescription) on '\(element.identifier)'")

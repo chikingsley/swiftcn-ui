@@ -105,7 +105,10 @@ public struct SCAttachment<Content: View>: View {
     }
 
     private var background: Color {
-        if state == .error { return theme.destructive.opacity(0.08) }
+        // The 8% destructive tint put the destructive status text below WCAG
+        // AA (4.14:1 in light mode) — the same finding Alert resolved by
+        // removing its tint; the destructive stroke keeps the error identity.
+        if state == .error { return theme.card }
         return isHovered ? theme.muted.opacity(0.5) : theme.card
     }
 
