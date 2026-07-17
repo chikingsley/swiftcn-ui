@@ -59,6 +59,8 @@
   .controls .v.sel-bad { background:var(--bad); color:#fff; border-color:var(--bad); }
   .controls input[type=text] { flex:1; padding:5px 10px; border:1px solid var(--border);
     border-radius:6px; background:var(--bg); color:var(--fg); }
+  .save-status { color:var(--muted); }
+  .save-status.error { color:var(--bad); font-weight:600; }
   footer { position:fixed; bottom:0; left:0; right:0; background:var(--bg);
     border-top:1px solid var(--border); padding:10px 20px; display:flex; gap:12px;
     align-items:center; }
@@ -84,24 +86,75 @@
 <footer>
   <span class="stats" id="foot-stats"></span>
   <span class="spacer" style="flex:1"></span>
-  <button id="export">export verdicts JSON</button>
-  <button id="reset">reset verdicts</button>
+  <span class="save-status" id="save-status">connecting to GMK…</span>
+  <button id="reset">reset server reviews</button>
 </footer>
 
 <script>
-const STORE = "swiftcn-shadcn-verdicts-v1";
-const verdicts = JSON.parse(localStorage.getItem(STORE) || "{}");
-function saveV(){ localStorage.setItem(STORE, JSON.stringify(verdicts)); renderStats(); }
+const API = "./api/review-state";
+const LEGACY_STORE = "swiftcn-shadcn-verdicts-v1";
+const verdicts = {};
+const saveQueues = new Map();
+const noteTimers = new Map();
+let MANIFEST;
+let pendingSaves = 0;
+let lastSavedAt = null;
+let saveError = null;
+
 function key(c,s){ return c+"::"+s; }
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#039;"
+  })[character]);
+}
+
+async function fetchJSON(url, options={}){
+  const response = await fetch(url, options);
+  if(!response.ok){
+    let message = `request failed (${response.status})`;
+    try { message = (await response.json()).error || message; } catch(_) {}
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+async function migrateLegacy(state){
+  let raw;
+  try { raw = localStorage.getItem(LEGACY_STORE); } catch(_) { return state; }
+  if(!raw) return state;
+
+  let legacy;
+  try { legacy = JSON.parse(raw); } catch(_) { return state; }
+  if(legacy && Object.keys(legacy).length){
+    state = await fetchJSON(`${API}/import`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({verdicts:legacy})
+    });
+  }
+  localStorage.removeItem(LEGACY_STORE);
+  return state;
+}
 
 async function load(){
-  let manifest;
-  try { manifest = await (await fetch("./comparisons.json")).json(); }
-  catch(e){ document.getElementById("main").textContent =
-    "comparisons.json not found — run the capture pipeline first."; return; }
-  document.getElementById("about").textContent =
-    `${manifest.note}. Still-image review does not replace keyboard, VoiceOver, or open-state behavior validation.`;
-  render(manifest);
+  try {
+    const [manifest, initialState] = await Promise.all([
+      fetchJSON("./comparisons.json"),
+      fetchJSON(API)
+    ]);
+    const state = await migrateLegacy(initialState);
+    Object.assign(verdicts, state.verdicts || {});
+    lastSavedAt = state.updatedAt;
+    document.getElementById("about").textContent =
+      `${manifest.note}. Review clicks and notes save directly on GMK. Still-image review does not replace keyboard, VoiceOver, or open-state behavior validation.`;
+    render(manifest);
+    renderSaveStatus();
+  } catch(error){
+    document.getElementById("main").textContent =
+      `The comparison gallery could not load its server-backed review state: ${error.message}`;
+    saveError = error;
+    renderSaveStatus();
+  }
 }
 
 function verdictOf(c){
@@ -112,7 +165,6 @@ function verdictOf(c){
   return "ok";
 }
 
-let MANIFEST;
 function render(manifest){
   MANIFEST = manifest;
   const main = document.getElementById("main");
@@ -138,9 +190,10 @@ function render(manifest){
 
 function stateRow(c, s){
   const row = document.createElement("div"); row.className = "state-row";
-  const cur = verdicts[key(c.id,s.id)] || {};
+  const stateKey = key(c.id,s.id);
+  const cur = verdicts[stateKey] || {};
   row.innerHTML = `
-    <div class="state-label">${s.label}${s.note?`<span class="state-note">${s.note}</span>`:""}</div>
+    <div class="state-label">${escapeHTML(s.label)}${s.note?`<span class="state-note">${escapeHTML(s.note)}</span>`:""}</div>
     <div class="pair">
       ${shotCell("shadcn", s.shadcn)}
       ${shotCell("swiftcn", s.swiftcn)}
@@ -148,18 +201,65 @@ function stateRow(c, s){
     <div class="controls">
       <button class="v ok ${cur.v==="ok"?"sel-ok":""}" data-v="ok">✓ matches</button>
       <button class="v bad ${cur.v==="bad"?"sel-bad":""}" data-v="bad">✗ off</button>
-      <input type="text" placeholder="note (optional)" value="${(cur.note||"").replace(/"/g,'&quot;')}">
+      <input type="text" placeholder="note (optional)" value="${escapeHTML(cur.note||"")}">
     </div>`;
   const [okB, badB] = row.querySelectorAll("button.v");
   const inp = row.querySelector("input");
-  function set(v){ const k=key(c.id,s.id); verdicts[k]=verdicts[k]||{}; verdicts[k].v=v;
+  function set(v){ verdicts[stateKey]=verdicts[stateKey]||{}; verdicts[stateKey].v=v;
     okB.classList.toggle("sel-ok", v==="ok"); badB.classList.toggle("sel-bad", v==="bad");
-    saveV(); updatePill(c); }
+    persistKey(stateKey); updatePill(c); renderStats(); }
   okB.onclick=()=>set(okB.classList.contains("sel-ok")?null:"ok");
   badB.onclick=()=>set(badB.classList.contains("sel-bad")?null:"bad");
-  inp.oninput=()=>{ const k=key(c.id,s.id); verdicts[k]=verdicts[k]||{}; verdicts[k].note=inp.value; saveV(); };
+  inp.oninput=()=>{ verdicts[stateKey]=verdicts[stateKey]||{}; verdicts[stateKey].note=inp.value; scheduleNoteSave(stateKey); };
+  inp.onchange=()=>flushNoteSave(stateKey);
+  inp.onblur=()=>flushNoteSave(stateKey);
   return row;
 }
+
+function persistKey(stateKey){
+  const value = {...(verdicts[stateKey] || {})};
+  const previous = saveQueues.get(stateKey) || Promise.resolve();
+  pendingSaves += 1;
+  saveError = null;
+  renderSaveStatus();
+
+  const operation = previous.then(async()=>{
+    try {
+      const state = await fetchJSON(API, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({key:stateKey, v:value.v ?? null, note:value.note || ""})
+      });
+      lastSavedAt = state.updatedAt;
+    } catch(error){
+      saveError = error;
+    } finally {
+      pendingSaves -= 1;
+      renderSaveStatus();
+    }
+  });
+  saveQueues.set(stateKey, operation);
+  return operation;
+}
+
+function scheduleNoteSave(stateKey){
+  const existing = noteTimers.get(stateKey);
+  if(existing) clearTimeout(existing);
+  noteTimers.set(stateKey, setTimeout(()=>{
+    noteTimers.delete(stateKey);
+    persistKey(stateKey);
+  }, 250));
+  renderSaveStatus();
+}
+
+function flushNoteSave(stateKey){
+  const timer = noteTimers.get(stateKey);
+  if(!timer) return;
+  clearTimeout(timer);
+  noteTimers.delete(stateKey);
+  persistKey(stateKey);
+}
+
 function shotCell(side, path){
   if (!path) return `<div class="shot missing">${side}: no image</div>`;
   return `<div class="shot"><div class="cap">${side}</div><img loading="lazy" src="${path}" alt="${side}"></div>`;
@@ -180,6 +280,17 @@ function renderStats(){
   document.getElementById("stats").textContent = `${t} components · ${ok} ✓ · ${bad} ✗ · ${pend} unreviewed`;
   document.getElementById("foot-stats").textContent = `${ok+bad}/${t} reviewed`;
 }
+function renderSaveStatus(){
+  const status = document.getElementById("save-status");
+  status.classList.toggle("error", Boolean(saveError));
+  if(saveError){ status.textContent = `save failed: ${saveError.message}`; return; }
+  if(pendingSaves || noteTimers.size){ status.textContent = "saving to GMK…"; return; }
+  if(lastSavedAt){
+    status.textContent = `saved on GMK · ${new Date(lastSavedAt).toLocaleTimeString()}`;
+    return;
+  }
+  status.textContent = "ready · clicks save on GMK";
+}
 function applyFilter(){
   const f = document.getElementById("filter").value;
   const q = document.getElementById("search").value.trim().toLowerCase();
@@ -194,12 +305,23 @@ document.getElementById("filter").onchange = applyFilter;
 document.getElementById("search").oninput = applyFilter;
 document.getElementById("expand").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=true);
 document.getElementById("collapse").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=false);
-document.getElementById("export").onclick = ()=>{
-  const blob = new Blob([JSON.stringify(verdicts,null,2)], {type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download="swiftcn-shadcn-verdicts.json"; a.click();
+document.getElementById("reset").onclick = async()=>{
+  if(!confirm("Clear all server-backed review decisions and notes?")) return;
+  for(const timer of noteTimers.values()) clearTimeout(timer);
+  noteTimers.clear();
+  await Promise.all(saveQueues.values());
+  try {
+    const state = await fetchJSON(API, {method:"DELETE"});
+    for(const stateKey in verdicts) delete verdicts[stateKey];
+    lastSavedAt = state.updatedAt;
+    saveError = null;
+    render(MANIFEST);
+    renderSaveStatus();
+  } catch(error){
+    saveError = error;
+    renderSaveStatus();
+  }
 };
-document.getElementById("reset").onclick = ()=>{ if(confirm("Clear all verdicts?")){ for(const k in verdicts) delete verdicts[k]; saveV(); render(MANIFEST);} };
 load();
 </script>
 </body>

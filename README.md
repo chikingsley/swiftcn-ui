@@ -85,8 +85,17 @@ are in `ops/README.md`. Once enabled, open:
 
 - `http://gmk-server:4174/`
 
-Verdicts and notes remain in browser local storage until exported. Use **export
-verdicts JSON** before clearing browser data or moving to another browser.
+Every match, mismatch, reversal, and note is saved directly to GMK. Reopening
+the page from another browser loads the same review state; no export step is
+required. The first load also migrates any decisions left by the older
+browser-local implementation without overwriting newer server decisions.
+
+When review is complete, the saved state is available through either:
+
+```bash
+curl -fsS http://localhost:4174/api/review-state | jq
+jq . gallery/review-state.json
+```
 
 ## How it's wired
 

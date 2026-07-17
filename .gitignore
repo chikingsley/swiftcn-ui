@@ -11,6 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+__pycache__/
+*.py[cod]
+
+# Live review decisions are server-owned runtime data.
+gallery/review-state.json
+gallery/.review-state.*.tmp
 
 # Editor directories and files
 .vscode/*

@@ -12,13 +12,23 @@ systemctl --user daemon-reload
 systemctl --user enable --now swiftcn-gallery.service
 ```
 
-Audit or restart it with:
+Audit, restart, or inspect saved review state with:
 
 ```bash
 systemctl --user status swiftcn-gallery.service
 systemctl --user restart swiftcn-gallery.service
 journalctl --user -u swiftcn-gallery.service --since today
+curl -fsS http://localhost:4174/api/review-state | jq
+jq . /home/simon/github/swiftcn-shadcn-ref/gallery/review-state.json
 ```
 
-The service exposes only the static `gallery/` directory on port `4174`; it
-does not run Vite, install packages, or write review data to the server.
+The service exposes the static `gallery/` directory and a narrow same-origin
+review API on port `4174`. It writes decisions atomically to the gitignored,
+plain-text `gallery/review-state.json` file. Per-state updates are serialized so
+concurrent clicks on different components do not overwrite one another.
+
+Run the persistence and concurrency tests with:
+
+```bash
+pnpm test:gallery-server
+```

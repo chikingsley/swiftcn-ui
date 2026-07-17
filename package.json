@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "check:gallery": "node scripts/check-gallery.mjs",
     "lint": "oxlint",
+    "test:gallery-server": "python3 ops/test_gallery_server.py",
     "preview": "vite preview",
     "capture": "node scripts/capture.mjs"
   },

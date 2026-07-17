@@ -11,6 +11,24 @@ if (scripts.length !== 1) {
   throw new Error(`Expected one inline gallery script, found ${scripts.length}`)
 }
 new Function(scripts[0][1])
+if (!html.includes('const API = "./api/review-state"')) {
+  throw new Error("Gallery is not connected to the server-backed review API")
+}
+if (!html.includes('method:"PATCH"')) {
+  throw new Error("Gallery does not persist per-state review updates")
+}
+if (html.includes('id="export"')) {
+  throw new Error("Gallery still exposes the retired JSON export workflow")
+}
+
+for (const requiredPath of [
+  resolve(repoRoot, "ops/gallery_server.py"),
+  resolve(repoRoot, "ops/test_gallery_server.py"),
+]) {
+  if (!existsSync(requiredPath)) {
+    throw new Error(`Missing gallery persistence file: ${requiredPath}`)
+  }
+}
 
 const manifest = JSON.parse(
   readFileSync(resolve(galleryRoot, "comparisons.json"), "utf8"),
