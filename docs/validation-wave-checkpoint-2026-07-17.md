@@ -71,8 +71,10 @@ deterministic automated contract or an explicit manual validation item.
 - The current set contains 51 components in light and dark at 1800 x 1600.
 - GMK serves the side-by-side gallery at `http://gmk-server:4174/` from the
   server-local Git repository `/home/simon/github/swiftcn-shadcn-ref`.
-- The gallery records per-state match/mismatch decisions and notes in browser
-  local storage and can export them as JSON.
+- Every match, mismatch, reversal, and note is saved directly on GMK in the
+  gitignored `gallery/review-state.json` file. The same state reloads across
+  browsers and is readable through `http://gmk-server:4174/api/review-state`;
+  no manual export is required.
 - Combobox, Dropdown Menu, Menubar, Select, and Tooltip currently show the
   Swiftcn rest state. Context Menu shows the rest state on both sides. Their
   open/hover behavior remains an interactive validation item and is labeled as
