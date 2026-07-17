@@ -1,15 +1,19 @@
 # swiftcn-shadcn-ref
 
-A throwaway **Vite + React + TypeScript + shadcn/ui** reference app. Its only job
-is to render each shadcn/ui component in a set of fixed visual **states** so that
-screenshots can be placed side-by-side against the SwiftUI port
-(`swiftcn-ui`) for visual comparison.
+A durable **Vite + React + TypeScript + shadcn/ui** reference and review
+workspace for `swiftcn-ui`. It renders fixed official-source states, stores both
+image sets, and provides a side-by-side gallery with per-state verdicts and
+notes.
 
 - Style: shadcn **new-york** (radix-based), the classic look the port mirrors.
 - Theme: **zinc** base color, CSS variables (matches the port's zinc theme).
 - Every route supports **dark mode** via `?theme=dark`.
 - Overlays (Dialog, Select, Popover, Dropdown, Sheet, Drawer, ...) are rendered
   **open by default** so the screenshot captures the open state.
+
+This gallery is review evidence, not an automated parity verdict. Build/tests,
+source-parity checks, and interactive macOS validation remain separate gates in
+the Swift package.
 
 ## Install
 
@@ -50,6 +54,39 @@ To re-run against an already-running server instead of spawning `vite preview`:
 ```bash
 BASE_URL=http://localhost:5173 node scripts/capture.mjs
 ```
+
+## Refresh the comparison gallery
+
+The two sides intentionally come from different machines:
+
+- GMK captures the official React/shadcn reference with `pnpm capture`.
+- A Mac captures the native SwiftUI Showcase with
+  `Showcase/Scripts/capture-comparison.sh` in the `swiftcn-ui` repo.
+
+After the Mac capture passes its count, filename, and dimension checks, sync it
+to this server:
+
+```bash
+rsync -av --delete \
+  Showcase/.comparison-shots/ \
+  gmk-server:/home/simon/github/swiftcn-shadcn-ref/gallery/swiftcn/
+```
+
+The gallery manifest is `gallery/comparisons.json`. Both sets are 1800px wide;
+Swiftcn uses a fixed 1600px-high canvas, while the shadcn reference keeps taller
+full-page captures where needed. Known rest-state-only captures are called out
+in the manifest so a still image is not mistaken for open-state or interaction
+proof.
+
+## Review gallery
+
+The persistent GMK service is versioned under `ops/`; setup and audit commands
+are in `ops/README.md`. Once enabled, open:
+
+- `http://gmk-server:4174/`
+
+Verdicts and notes remain in browser local storage until exported. Use **export
+verdicts JSON** before clearing browser data or moving to another browser.
 
 ## How it's wired
 

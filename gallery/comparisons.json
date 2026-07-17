@@ -259,12 +259,14 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/combobox-light.png",
           "swiftcn": "swiftcn/combobox-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/combobox-dark.png",
           "swiftcn": "swiftcn/combobox-dark.png"
         }
@@ -295,12 +297,14 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Both captures are rest state; opening the menu still needs interactive validation.",
           "shadcn": "shadcn/context-menu-light.png",
           "swiftcn": "swiftcn/context-menu-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Both captures are rest state; opening the menu still needs interactive validation.",
           "shadcn": "shadcn/context-menu-dark.png",
           "swiftcn": "swiftcn/context-menu-dark.png"
         }
@@ -349,12 +353,14 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/dropdown-menu-light.png",
           "swiftcn": "swiftcn/dropdown-menu-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/dropdown-menu-dark.png",
           "swiftcn": "swiftcn/dropdown-menu-dark.png"
         }
@@ -529,12 +535,14 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/menubar-light.png",
           "swiftcn": "swiftcn/menubar-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/menubar-dark.png",
           "swiftcn": "swiftcn/menubar-dark.png"
         }
@@ -673,12 +681,14 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/select-light.png",
           "swiftcn": "swiftcn/select-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
           "shadcn": "shadcn/select-dark.png",
           "swiftcn": "swiftcn/select-dark.png"
         }
@@ -907,18 +917,20 @@
         {
           "id": "light",
           "label": "Light",
+          "note": "Swiftcn is rest state; hover and long-press still need interactive validation.",
           "shadcn": "shadcn/tooltip-light.png",
           "swiftcn": "swiftcn/tooltip-light.png"
         },
         {
           "id": "dark",
           "label": "Dark",
+          "note": "Swiftcn is rest state; hover and long-press still need interactive validation.",
           "shadcn": "shadcn/tooltip-dark.png",
           "swiftcn": "swiftcn/tooltip-dark.png"
         }
       ]
     }
   ],
-  "generated": "2026-07-16",
-  "note": "shadcn = official new-york/zinc reference; swiftcn = SwiftUI port Showcase demo"
+  "generated": "2026-07-17",
+  "note": "shadcn = official new-york/zinc reference; swiftcn = deterministic SwiftUI Showcase capture; both are 1800px wide, while full-page shadcn captures may be taller"
 }

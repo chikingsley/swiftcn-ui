@@ -23,10 +23,12 @@
   header h1 { font-size:16px; margin:0; }
   header .stats { color:var(--muted); font-size:13px; }
   header .spacer { flex:1; }
-  button, select { font:inherit; color:var(--fg); background:var(--card);
+  button, select, input[type=search] { font:inherit; color:var(--fg); background:var(--card);
     border:1px solid var(--border); border-radius:6px; padding:5px 10px; cursor:pointer; }
   button:hover { border-color:var(--accent); }
   main { padding:16px 20px 120px; max-width:1400px; margin:0 auto; }
+  .about { max-width:1400px; margin:16px auto 0; padding:10px 16px;
+    border:1px solid var(--border); border-radius:8px; color:var(--muted); background:var(--card); }
   .component { border:1px solid var(--border); border-radius:10px; margin:14px 0;
                overflow:hidden; }
   .component > summary { list-style:none; cursor:pointer; padding:12px 16px;
@@ -67,6 +69,7 @@
   <h1>Swiftcn ↔ shadcn</h1>
   <span class="stats" id="stats">loading…</span>
   <span class="spacer"></span>
+  <label>Find: <input id="search" type="search" placeholder="component"></label>
   <label>Filter: <select id="filter">
     <option value="all">all</option>
     <option value="pending">unreviewed</option>
@@ -76,6 +79,7 @@
   <button id="expand">expand all</button>
   <button id="collapse">collapse all</button>
 </header>
+<aside class="about" id="about">loading capture provenance…</aside>
 <main id="main">loading manifest…</main>
 <footer>
   <span class="stats" id="foot-stats"></span>
@@ -95,6 +99,8 @@ async function load(){
   try { manifest = await (await fetch("./comparisons.json")).json(); }
   catch(e){ document.getElementById("main").textContent =
     "comparisons.json not found — run the capture pipeline first."; return; }
+  document.getElementById("about").textContent =
+    `${manifest.note}. Still-image review does not replace keyboard, VoiceOver, or open-state behavior validation.`;
   render(manifest);
 }
 
@@ -176,13 +182,16 @@ function renderStats(){
 }
 function applyFilter(){
   const f = document.getElementById("filter").value;
+  const q = document.getElementById("search").value.trim().toLowerCase();
   for(const det of document.querySelectorAll("details.component")){
     const c = MANIFEST.components.find(x=>x.id===det.dataset.id);
     const v = verdictOf(c);
-    det.style.display = (f==="all"||f===v) ? "" : "none";
+    const matchesQuery = !q || c.id.includes(q) || c.name.toLowerCase().includes(q);
+    det.style.display = (f==="all"||f===v) && matchesQuery ? "" : "none";
   }
 }
 document.getElementById("filter").onchange = applyFilter;
+document.getElementById("search").oninput = applyFilter;
 document.getElementById("expand").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=true);
 document.getElementById("collapse").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=false);
 document.getElementById("export").onclick = ()=>{
