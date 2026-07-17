@@ -63,3 +63,20 @@ deterministic automated contract or an explicit manual validation item.
 - Mac: Xcode project generation, SwiftUI builds, XCUITest, VoiceOver/manual
   validation, and Swiftcn comparison screenshots.
 
+## Comparison review surface
+
+- `Showcase/Scripts/capture-comparison.sh` builds the Showcase once, launches a
+  deterministic component/appearance mode, and captures only the launched
+  process via ScreenCaptureKit.
+- The current set contains 51 components in light and dark at 1800 x 1600.
+- GMK serves the side-by-side gallery at `http://gmk-server:4174/` from the
+  server-local Git repository `/home/simon/github/swiftcn-shadcn-ref`.
+- The gallery records per-state match/mismatch decisions and notes in browser
+  local storage and can export them as JSON.
+- Combobox, Dropdown Menu, Menubar, Select, and Tooltip currently show the
+  Swiftcn rest state. Context Menu shows the rest state on both sides. Their
+  open/hover behavior remains an interactive validation item and is labeled as
+  such in the gallery manifest.
+
+The gallery is a review aid. Its screenshots do not replace the merge blockers
+or runtime/assistive-technology gates above.
