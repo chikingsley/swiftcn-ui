@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Swiftcn ↔ shadcn — visual comparison</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #18181b; --muted: #71717b; --border: #e4e4e7;
+    --card: #fafafa; --ok: #16a34a; --bad: #dc2626; --pending: #a1a1aa;
+    --accent: #2563eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#09090b; --fg:#fafafa; --muted:#9f9fa9; --border:#27272a;
+            --card:#18181b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background:var(--bg); color:var(--fg); }
+  header { position:sticky; top:0; z-index:10; background:var(--bg);
+           border-bottom:1px solid var(--border); padding:12px 20px;
+           display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0; }
+  header .stats { color:var(--muted); font-size:13px; }
+  header .spacer { flex:1; }
+  button, select, input[type=search] { font:inherit; color:var(--fg); background:var(--card);
+    border:1px solid var(--border); border-radius:6px; padding:5px 10px; cursor:pointer; }
+  button:hover { border-color:var(--accent); }
+  main { padding:16px 20px 120px; max-width:1400px; margin:0 auto; }
+  .about { max-width:1400px; margin:16px auto 0; padding:10px 16px;
+    border:1px solid var(--border); border-radius:8px; color:var(--muted); background:var(--card); }
+  .component { border:1px solid var(--border); border-radius:10px; margin:14px 0;
+               overflow:hidden; }
+  .component > summary { list-style:none; cursor:pointer; padding:12px 16px;
+    display:flex; align-items:center; gap:12px; background:var(--card);
+    font-weight:600; font-size:15px; }
+  .component > summary::-webkit-details-marker { display:none; }
+  .verdict-pill { font-size:12px; font-weight:600; padding:2px 8px; border-radius:999px;
+    border:1px solid var(--border); }
+  .verdict-pill.ok { color:var(--ok); border-color:var(--ok); }
+  .verdict-pill.bad { color:var(--bad); border-color:var(--bad); }
+  .verdict-pill.pending { color:var(--pending); }
+  .states { padding:8px 16px 16px; }
+  .state-row { border-top:1px solid var(--border); padding:14px 0; }
+  .state-row:first-child { border-top:none; }
+  .state-label { font-weight:600; margin-bottom:8px; color:var(--fg); }
+  .state-note { color:var(--muted); font-size:12px; margin-left:8px; font-weight:400; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+  @media (max-width: 760px) { .pair { grid-template-columns:1fr; } }
+  .shot { border:1px solid var(--border); border-radius:8px; overflow:hidden;
+    background:var(--card); }
+  .shot .cap { font-size:11px; color:var(--muted); padding:4px 8px;
+    border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.04em; }
+  .shot img { display:block; width:100%; height:auto; background:#fff; }
+  .shot.missing { padding:24px; text-align:center; color:var(--muted); font-style:italic; }
+  .controls { display:flex; align-items:center; gap:8px; margin-top:10px; }
+  .controls .v { padding:4px 12px; }
+  .controls .v.sel-ok { background:var(--ok); color:#fff; border-color:var(--ok); }
+  .controls .v.sel-bad { background:var(--bad); color:#fff; border-color:var(--bad); }
+  .controls input[type=text] { flex:1; padding:5px 10px; border:1px solid var(--border);
+    border-radius:6px; background:var(--bg); color:var(--fg); }
+  .save-status { color:var(--muted); }
+  .save-status.error { color:var(--bad); font-weight:600; }
+  footer { position:fixed; bottom:0; left:0; right:0; background:var(--bg);
+    border-top:1px solid var(--border); padding:10px 20px; display:flex; gap:12px;
+    align-items:center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Swiftcn ↔ shadcn</h1>
+  <span class="stats" id="stats">loading…</span>
+  <span class="spacer"></span>
+  <label>Find: <input id="search" type="search" placeholder="component"></label>
+  <label>Filter: <select id="filter">
+    <option value="all">all</option>
+    <option value="pending">unreviewed</option>
+    <option value="ok">✓ matches</option>
+    <option value="bad">✗ mismatches</option>
+  </select></label>
+  <button id="expand">expand all</button>
+  <button id="collapse">collapse all</button>
+</header>
+<aside class="about" id="about">loading capture provenance…</aside>
+<main id="main">loading manifest…</main>
+<footer>
+  <span class="stats" id="foot-stats"></span>
+  <span class="spacer" style="flex:1"></span>
+  <span class="save-status" id="save-status">connecting to GMK…</span>
+  <button id="reset">reset server reviews</button>
+</footer>
+
+<script>
+const API = "./api/review-state";
+const LEGACY_STORE = "swiftcn-shadcn-verdicts-v1";
+const verdicts = {};
+const saveQueues = new Map();
+const noteTimers = new Map();
+let MANIFEST;
+let pendingSaves = 0;
+let lastSavedAt = null;
+let saveError = null;
+
+function key(c,s){ return c+"::"+s; }
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#039;"
+  })[character]);
+}
+
+async function fetchJSON(url, options={}){
+  const response = await fetch(url, options);
+  if(!response.ok){
+    let message = `request failed (${response.status})`;
+    try { message = (await response.json()).error || message; } catch(_) {}
+    throw new Error(message);
+  }
+  return response.json();
+}
+
+async function migrateLegacy(state){
+  let raw;
+  try { raw = localStorage.getItem(LEGACY_STORE); } catch(_) { return state; }
+  if(!raw) return state;
+
+  let legacy;
+  try { legacy = JSON.parse(raw); } catch(_) { return state; }
+  if(legacy && Object.keys(legacy).length){
+    state = await fetchJSON(`${API}/import`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({verdicts:legacy})
+    });
+  }
+  localStorage.removeItem(LEGACY_STORE);
+  return state;
+}
+
+async function load(){
+  try {
+    const [manifest, initialState] = await Promise.all([
+      fetchJSON("./comparisons.json"),
+      fetchJSON(API)
+    ]);
+    const state = await migrateLegacy(initialState);
+    Object.assign(verdicts, state.verdicts || {});
+    lastSavedAt = state.updatedAt;
+    document.getElementById("about").textContent =
+      `${manifest.note}. Review clicks and notes save directly on GMK. Still-image review does not replace keyboard, VoiceOver, or open-state behavior validation.`;
+    render(manifest);
+    renderSaveStatus();
+  } catch(error){
+    document.getElementById("main").textContent =
+      `The comparison gallery could not load its server-backed review state: ${error.message}`;
+    saveError = error;
+    renderSaveStatus();
+  }
+}
+
+function verdictOf(c){
+  // component verdict = worst of its states (bad > pending > ok)
+  const states = c.states.map(s => (verdicts[key(c.id,s.id)]||{}).v);
+  if (states.includes("bad")) return "bad";
+  if (states.some(v => !v)) return "pending";
+  return "ok";
+}
+
+function render(manifest){
+  MANIFEST = manifest;
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  for (const c of manifest.components){
+    const det = document.createElement("details");
+    det.className = "component"; det.dataset.id = c.id; det.open = false;
+    const v = verdictOf(c);
+    det.innerHTML = `<summary>
+        <span>${c.name}</span>
+        <span class="verdict-pill ${v}" data-role="pill">${v==="ok"?"✓ all match":v==="bad"?"✗ mismatch":"unreviewed"}</span>
+        <span class="state-note">${c.states.length} states</span>
+      </summary>`;
+    const wrap = document.createElement("div"); wrap.className = "states";
+    for (const s of c.states){
+      wrap.appendChild(stateRow(c, s));
+    }
+    det.appendChild(wrap);
+    main.appendChild(det);
+  }
+  applyFilter(); renderStats();
+}
+
+function stateRow(c, s){
+  const row = document.createElement("div"); row.className = "state-row";
+  const stateKey = key(c.id,s.id);
+  const cur = verdicts[stateKey] || {};
+  row.innerHTML = `
+    <div class="state-label">${escapeHTML(s.label)}${s.note?`<span class="state-note">${escapeHTML(s.note)}</span>`:""}</div>
+    <div class="pair">
+      ${shotCell("shadcn", s.shadcn)}
+      ${shotCell("swiftcn", s.swiftcn)}
+    </div>
+    <div class="controls">
+      <button class="v ok ${cur.v==="ok"?"sel-ok":""}" data-v="ok">✓ matches</button>
+      <button class="v bad ${cur.v==="bad"?"sel-bad":""}" data-v="bad">✗ off</button>
+      <input type="text" placeholder="note (optional)" value="${escapeHTML(cur.note||"")}">
+    </div>`;
+  const [okB, badB] = row.querySelectorAll("button.v");
+  const inp = row.querySelector("input");
+  function set(v){ verdicts[stateKey]=verdicts[stateKey]||{}; verdicts[stateKey].v=v;
+    okB.classList.toggle("sel-ok", v==="ok"); badB.classList.toggle("sel-bad", v==="bad");
+    persistKey(stateKey); updatePill(c); renderStats(); }
+  okB.onclick=()=>set(okB.classList.contains("sel-ok")?null:"ok");
+  badB.onclick=()=>set(badB.classList.contains("sel-bad")?null:"bad");
+  inp.oninput=()=>{ verdicts[stateKey]=verdicts[stateKey]||{}; verdicts[stateKey].note=inp.value; scheduleNoteSave(stateKey); };
+  inp.onchange=()=>flushNoteSave(stateKey);
+  inp.onblur=()=>flushNoteSave(stateKey);
+  return row;
+}
+
+function persistKey(stateKey){
+  const value = {...(verdicts[stateKey] || {})};
+  const previous = saveQueues.get(stateKey) || Promise.resolve();
+  pendingSaves += 1;
+  saveError = null;
+  renderSaveStatus();
+
+  const operation = previous.then(async()=>{
+    try {
+      const state = await fetchJSON(API, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({key:stateKey, v:value.v ?? null, note:value.note || ""})
+      });
+      lastSavedAt = state.updatedAt;
+    } catch(error){
+      saveError = error;
+    } finally {
+      pendingSaves -= 1;
+      renderSaveStatus();
+    }
+  });
+  saveQueues.set(stateKey, operation);
+  return operation;
+}
+
+function scheduleNoteSave(stateKey){
+  const existing = noteTimers.get(stateKey);
+  if(existing) clearTimeout(existing);
+  noteTimers.set(stateKey, setTimeout(()=>{
+    noteTimers.delete(stateKey);
+    persistKey(stateKey);
+  }, 250));
+  renderSaveStatus();
+}
+
+function flushNoteSave(stateKey){
+  const timer = noteTimers.get(stateKey);
+  if(!timer) return;
+  clearTimeout(timer);
+  noteTimers.delete(stateKey);
+  persistKey(stateKey);
+}
+
+function shotCell(side, path){
+  if (!path) return `<div class="shot missing">${side}: no image</div>`;
+  return `<div class="shot"><div class="cap">${side}</div><img loading="lazy" src="${path}" alt="${side}"></div>`;
+}
+function updatePill(c){
+  const det = document.querySelector(`details[data-id="${c.id}"]`);
+  if(!det) return; const v = verdictOf(c);
+  const pill = det.querySelector('[data-role="pill"]');
+  pill.className = `verdict-pill ${v}`;
+  pill.textContent = v==="ok"?"✓ all match":v==="bad"?"✗ mismatch":"unreviewed";
+  applyFilter();
+}
+function renderStats(){
+  if(!MANIFEST) return;
+  let ok=0,bad=0,pend=0;
+  for(const c of MANIFEST.components){ const v=verdictOf(c); if(v==="ok")ok++; else if(v==="bad")bad++; else pend++; }
+  const t = MANIFEST.components.length;
+  document.getElementById("stats").textContent = `${t} components · ${ok} ✓ · ${bad} ✗ · ${pend} unreviewed`;
+  document.getElementById("foot-stats").textContent = `${ok+bad}/${t} reviewed`;
+}
+function renderSaveStatus(){
+  const status = document.getElementById("save-status");
+  status.classList.toggle("error", Boolean(saveError));
+  if(saveError){ status.textContent = `save failed: ${saveError.message}`; return; }
+  if(pendingSaves || noteTimers.size){ status.textContent = "saving to GMK…"; return; }
+  if(lastSavedAt){
+    status.textContent = `saved on GMK · ${new Date(lastSavedAt).toLocaleTimeString()}`;
+    return;
+  }
+  status.textContent = "ready · clicks save on GMK";
+}
+function applyFilter(){
+  const f = document.getElementById("filter").value;
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  for(const det of document.querySelectorAll("details.component")){
+    const c = MANIFEST.components.find(x=>x.id===det.dataset.id);
+    const v = verdictOf(c);
+    const matchesQuery = !q || c.id.includes(q) || c.name.toLowerCase().includes(q);
+    det.style.display = (f==="all"||f===v) && matchesQuery ? "" : "none";
+  }
+}
+document.getElementById("filter").onchange = applyFilter;
+document.getElementById("search").oninput = applyFilter;
+document.getElementById("expand").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=true);
+document.getElementById("collapse").onclick = ()=>document.querySelectorAll("details.component").forEach(d=>d.open=false);
+document.getElementById("reset").onclick = async()=>{
+  if(!confirm("Clear all server-backed review decisions and notes?")) return;
+  for(const timer of noteTimers.values()) clearTimeout(timer);
+  noteTimers.clear();
+  await Promise.all(saveQueues.values());
+  try {
+    const state = await fetchJSON(API, {method:"DELETE"});
+    for(const stateKey in verdicts) delete verdicts[stateKey];
+    lastSavedAt = state.updatedAt;
+    saveError = null;
+    render(MANIFEST);
+    renderSaveStatus();
+  } catch(error){
+    saveError = error;
+    renderSaveStatus();
+  }
+};
+load();
+</script>
+</body>
+</html>

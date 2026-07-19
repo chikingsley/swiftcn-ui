@@ -1,0 +1,13 @@
+[Unit]
+Description=Swiftcn shadcn visual comparison gallery
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/simon/github/swiftcn-shadcn-ref
+ExecStart=/home/simon/github/swiftcn-shadcn-ref/ops/serve-gallery.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

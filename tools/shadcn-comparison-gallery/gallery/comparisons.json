@@ -1,0 +1,968 @@
+{
+  "components": [
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "states": [
+        {
+          "id": "expanded-light",
+          "label": "Expanded · Light",
+          "note": "Tight Base UI/Vega pilot fixture; first item is expanded in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-expanded-light.png",
+          "swiftcn": "swiftcn-pilot/accordion-expanded-light.png"
+        },
+        {
+          "id": "expanded-dark",
+          "label": "Expanded · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; first item is expanded in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-expanded-dark.png",
+          "swiftcn": "swiftcn-pilot/accordion-expanded-dark.png"
+        },
+        {
+          "id": "collapsed-light",
+          "label": "Collapsed · Light",
+          "note": "Tight Base UI/Vega pilot fixture; all items are collapsed in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-collapsed-light.png",
+          "swiftcn": "swiftcn-pilot/accordion-collapsed-light.png"
+        },
+        {
+          "id": "collapsed-dark",
+          "label": "Collapsed · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; all items are collapsed in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-collapsed-dark.png",
+          "swiftcn": "swiftcn-pilot/accordion-collapsed-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "alert",
+      "name": "Alert",
+      "states": [
+        {
+          "id": "default-light",
+          "label": "Default · Light",
+          "note": "Tight Base UI/Vega pilot fixture with an identical icon, title, description, and width contract.",
+          "shadcn": "shadcn-pilot/alert-default-light.png",
+          "swiftcn": "swiftcn-pilot/alert-default-light.png"
+        },
+        {
+          "id": "default-dark",
+          "label": "Default · Dark",
+          "note": "Tight Base UI/Vega pilot fixture with an identical icon, title, description, and width contract.",
+          "shadcn": "shadcn-pilot/alert-default-dark.png",
+          "swiftcn": "swiftcn-pilot/alert-default-dark.png"
+        },
+        {
+          "id": "destructive-light",
+          "label": "Destructive · Light",
+          "note": "Tight Base UI/Vega pilot fixture; destructive text uses the normal semantic border in both runtimes.",
+          "shadcn": "shadcn-pilot/alert-destructive-light.png",
+          "swiftcn": "swiftcn-pilot/alert-destructive-light.png"
+        },
+        {
+          "id": "destructive-dark",
+          "label": "Destructive · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; destructive text uses the normal semantic border in both runtimes.",
+          "shadcn": "shadcn-pilot/alert-destructive-dark.png",
+          "swiftcn": "swiftcn-pilot/alert-destructive-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "alert-dialog",
+      "name": "Alert Dialog",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/alert-dialog-light.png",
+          "swiftcn": "swiftcn/alert-dialog-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/alert-dialog-dark.png",
+          "swiftcn": "swiftcn/alert-dialog-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "aspect-ratio",
+      "name": "Aspect Ratio",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/aspect-ratio-light.png",
+          "swiftcn": "swiftcn/aspect-ratio-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/aspect-ratio-dark.png",
+          "swiftcn": "swiftcn/aspect-ratio-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/avatar-light.png",
+          "swiftcn": "swiftcn/avatar-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/avatar-dark.png",
+          "swiftcn": "swiftcn/avatar-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/badge-light.png",
+          "swiftcn": "swiftcn/badge-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/badge-dark.png",
+          "swiftcn": "swiftcn/badge-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "breadcrumb",
+      "name": "Breadcrumb",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/breadcrumb-light.png",
+          "swiftcn": "swiftcn/breadcrumb-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/breadcrumb-dark.png",
+          "swiftcn": "swiftcn/breadcrumb-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/button-light.png",
+          "swiftcn": "swiftcn/button-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/button-dark.png",
+          "swiftcn": "swiftcn/button-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "button-group",
+      "name": "Button Group",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/button-group-light.png",
+          "swiftcn": "swiftcn/button-group-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/button-group-dark.png",
+          "swiftcn": "swiftcn/button-group-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/calendar-light.png",
+          "swiftcn": "swiftcn/calendar-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/calendar-dark.png",
+          "swiftcn": "swiftcn/calendar-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/card-light.png",
+          "swiftcn": "swiftcn/card-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/card-dark.png",
+          "swiftcn": "swiftcn/card-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "chart",
+      "name": "Chart",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/chart-light.png",
+          "swiftcn": "swiftcn/chart-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/chart-dark.png",
+          "swiftcn": "swiftcn/chart-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/checkbox-light.png",
+          "swiftcn": "swiftcn/checkbox-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/checkbox-dark.png",
+          "swiftcn": "swiftcn/checkbox-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "collapsible",
+      "name": "Collapsible",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/collapsible-light.png",
+          "swiftcn": "swiftcn/collapsible-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/collapsible-dark.png",
+          "swiftcn": "swiftcn/collapsible-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "combobox",
+      "name": "Combobox",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/combobox-light.png",
+          "swiftcn": "swiftcn/combobox-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/combobox-dark.png",
+          "swiftcn": "swiftcn/combobox-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "command",
+      "name": "Command",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/command-light.png",
+          "swiftcn": "swiftcn/command-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/command-dark.png",
+          "swiftcn": "swiftcn/command-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "context-menu",
+      "name": "Context Menu",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Both captures are rest state; opening the menu still needs interactive validation.",
+          "shadcn": "shadcn/context-menu-light.png",
+          "swiftcn": "swiftcn/context-menu-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Both captures are rest state; opening the menu still needs interactive validation.",
+          "shadcn": "shadcn/context-menu-dark.png",
+          "swiftcn": "swiftcn/context-menu-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/dialog-light.png",
+          "swiftcn": "swiftcn/dialog-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/dialog-dark.png",
+          "swiftcn": "swiftcn/dialog-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "drawer",
+      "name": "Drawer",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/drawer-light.png",
+          "swiftcn": "swiftcn/drawer-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/drawer-dark.png",
+          "swiftcn": "swiftcn/drawer-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "Dropdown Menu",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/dropdown-menu-light.png",
+          "swiftcn": "swiftcn/dropdown-menu-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/dropdown-menu-dark.png",
+          "swiftcn": "swiftcn/dropdown-menu-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "empty",
+      "name": "Empty",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/empty-light.png",
+          "swiftcn": "swiftcn/empty-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/empty-dark.png",
+          "swiftcn": "swiftcn/empty-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "field",
+      "name": "Field",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/field-light.png",
+          "swiftcn": "swiftcn/field-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/field-dark.png",
+          "swiftcn": "swiftcn/field-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "hover-card",
+      "name": "Hover Card",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/hover-card-light.png",
+          "swiftcn": "swiftcn/hover-card-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/hover-card-dark.png",
+          "swiftcn": "swiftcn/hover-card-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "input",
+      "name": "Input",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/input-light.png",
+          "swiftcn": "swiftcn/input-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/input-dark.png",
+          "swiftcn": "swiftcn/input-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "input-group",
+      "name": "Input Group",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/input-group-light.png",
+          "swiftcn": "swiftcn/input-group-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/input-group-dark.png",
+          "swiftcn": "swiftcn/input-group-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "input-otp",
+      "name": "Input OTP",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/input-otp-light.png",
+          "swiftcn": "swiftcn/input-otp-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/input-otp-dark.png",
+          "swiftcn": "swiftcn/input-otp-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "item",
+      "name": "Item",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/item-light.png",
+          "swiftcn": "swiftcn/item-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/item-dark.png",
+          "swiftcn": "swiftcn/item-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "kbd",
+      "name": "Kbd",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/kbd-light.png",
+          "swiftcn": "swiftcn/kbd-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/kbd-dark.png",
+          "swiftcn": "swiftcn/kbd-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/label-light.png",
+          "swiftcn": "swiftcn/label-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/label-dark.png",
+          "swiftcn": "swiftcn/label-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "menubar",
+      "name": "Menubar",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/menubar-light.png",
+          "swiftcn": "swiftcn/menubar-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/menubar-dark.png",
+          "swiftcn": "swiftcn/menubar-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "navigation-menu",
+      "name": "Navigation Menu",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/navigation-menu-light.png",
+          "swiftcn": "swiftcn/navigation-menu-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/navigation-menu-dark.png",
+          "swiftcn": "swiftcn/navigation-menu-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/pagination-light.png",
+          "swiftcn": "swiftcn/pagination-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/pagination-dark.png",
+          "swiftcn": "swiftcn/pagination-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/popover-light.png",
+          "swiftcn": "swiftcn/popover-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/popover-dark.png",
+          "swiftcn": "swiftcn/popover-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "progress",
+      "name": "Progress",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/progress-light.png",
+          "swiftcn": "swiftcn/progress-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/progress-dark.png",
+          "swiftcn": "swiftcn/progress-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "radio-group",
+      "name": "Radio Group",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/radio-group-light.png",
+          "swiftcn": "swiftcn/radio-group-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/radio-group-dark.png",
+          "swiftcn": "swiftcn/radio-group-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "resizable",
+      "name": "Resizable",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/resizable-light.png",
+          "swiftcn": "swiftcn/resizable-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/resizable-dark.png",
+          "swiftcn": "swiftcn/resizable-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "scroll-area",
+      "name": "Scroll Area",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/scroll-area-light.png",
+          "swiftcn": "swiftcn/scroll-area-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/scroll-area-dark.png",
+          "swiftcn": "swiftcn/scroll-area-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/select-light.png",
+          "swiftcn": "swiftcn/select-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Swiftcn is rest state; open-state parity still needs interactive validation.",
+          "shadcn": "shadcn/select-dark.png",
+          "swiftcn": "swiftcn/select-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "separator",
+      "name": "Separator",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/separator-light.png",
+          "swiftcn": "swiftcn/separator-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/separator-dark.png",
+          "swiftcn": "swiftcn/separator-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "sheet",
+      "name": "Sheet",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/sheet-light.png",
+          "swiftcn": "swiftcn/sheet-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/sheet-dark.png",
+          "swiftcn": "swiftcn/sheet-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/sidebar-light.png",
+          "swiftcn": "swiftcn/sidebar-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/sidebar-dark.png",
+          "swiftcn": "swiftcn/sidebar-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/skeleton-light.png",
+          "swiftcn": "swiftcn/skeleton-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/skeleton-dark.png",
+          "swiftcn": "swiftcn/skeleton-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/slider-light.png",
+          "swiftcn": "swiftcn/slider-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/slider-dark.png",
+          "swiftcn": "swiftcn/slider-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "sonner",
+      "name": "Sonner",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/sonner-light.png",
+          "swiftcn": "swiftcn/sonner-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/sonner-dark.png",
+          "swiftcn": "swiftcn/sonner-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/switch-light.png",
+          "swiftcn": "swiftcn/switch-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/switch-dark.png",
+          "swiftcn": "swiftcn/switch-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/table-light.png",
+          "swiftcn": "swiftcn/table-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/table-dark.png",
+          "swiftcn": "swiftcn/table-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/tabs-light.png",
+          "swiftcn": "swiftcn/tabs-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/tabs-dark.png",
+          "swiftcn": "swiftcn/tabs-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "textarea",
+      "name": "Textarea",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/textarea-light.png",
+          "swiftcn": "swiftcn/textarea-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/textarea-dark.png",
+          "swiftcn": "swiftcn/textarea-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "toggle",
+      "name": "Toggle",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/toggle-light.png",
+          "swiftcn": "swiftcn/toggle-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/toggle-dark.png",
+          "swiftcn": "swiftcn/toggle-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "toggle-group",
+      "name": "Toggle Group",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "shadcn": "shadcn/toggle-group-light.png",
+          "swiftcn": "swiftcn/toggle-group-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "shadcn": "shadcn/toggle-group-dark.png",
+          "swiftcn": "swiftcn/toggle-group-dark.png"
+        }
+      ]
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "states": [
+        {
+          "id": "light",
+          "label": "Light",
+          "note": "Swiftcn is rest state; hover and long-press still need interactive validation.",
+          "shadcn": "shadcn/tooltip-light.png",
+          "swiftcn": "swiftcn/tooltip-light.png"
+        },
+        {
+          "id": "dark",
+          "label": "Dark",
+          "note": "Swiftcn is rest state; hover and long-press still need interactive validation.",
+          "shadcn": "shadcn/tooltip-dark.png",
+          "swiftcn": "swiftcn/tooltip-dark.png"
+        }
+      ]
+    }
+  ],
+  "generated": "2026-07-17",
+  "note": "Accordion and Alert use tight state-specific Base UI/Vega/zinc pilot captures; remaining rows are the earlier full-page reference wave and must be regenerated before acceptance"
+}

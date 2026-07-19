@@ -1,0 +1,98 @@
+[
+  {
+    "component": "accordion",
+    "state": "expanded",
+    "theme": "light",
+    "file": "accordion-expanded-light.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 480,
+      "height": 232
+    }
+  },
+  {
+    "component": "accordion",
+    "state": "expanded",
+    "theme": "dark",
+    "file": "accordion-expanded-dark.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 480,
+      "height": 232
+    }
+  },
+  {
+    "component": "accordion",
+    "state": "collapsed",
+    "theme": "light",
+    "file": "accordion-collapsed-light.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 480,
+      "height": 196
+    }
+  },
+  {
+    "component": "accordion",
+    "state": "collapsed",
+    "theme": "dark",
+    "file": "accordion-collapsed-dark.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 480,
+      "height": 196
+    }
+  },
+  {
+    "component": "alert",
+    "state": "default",
+    "theme": "light",
+    "file": "alert-default-light.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 704,
+      "height": 100
+    }
+  },
+  {
+    "component": "alert",
+    "state": "default",
+    "theme": "dark",
+    "file": "alert-default-dark.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 704,
+      "height": 100
+    }
+  },
+  {
+    "component": "alert",
+    "state": "destructive",
+    "theme": "light",
+    "file": "alert-destructive-light.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 704,
+      "height": 100
+    }
+  },
+  {
+    "component": "alert",
+    "state": "destructive",
+    "theme": "dark",
+    "file": "alert-destructive-dark.png",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 704,
+      "height": 100
+    }
+  }
+]
