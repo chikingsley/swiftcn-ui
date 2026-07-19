@@ -20,11 +20,11 @@ export default function DrawerShowcase() {
   return (
     <StatesContainer>
       <StateRow label="open">
-        <Drawer defaultOpen direction="bottom">
-          <DrawerTrigger asChild>
-            <Button variant="outline">Open drawer</Button>
+        <Drawer defaultOpen swipeDirection="down">
+          <DrawerTrigger render={<Button variant="outline" />}>
+            Open drawer
           </DrawerTrigger>
-          <DrawerContent onOpenAutoFocus={(e) => e.preventDefault()}>
+          <DrawerContent initialFocus={false}>
             <div className="mx-auto w-full max-w-sm">
               <DrawerHeader>
                 <DrawerTitle>Move goal</DrawerTitle>
@@ -34,8 +34,8 @@ export default function DrawerShowcase() {
               </DrawerHeader>
               <DrawerFooter>
                 <Button>Submit</Button>
-                <DrawerClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                <DrawerClose render={<Button variant="outline" />}>
+                  Cancel
                 </DrawerClose>
               </DrawerFooter>
             </div>

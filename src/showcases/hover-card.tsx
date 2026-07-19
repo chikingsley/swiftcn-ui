@@ -9,15 +9,15 @@ import { StateRow, StatesContainer } from "@/lib/showcase"
 
 /**
  * The hover card portals its content to <body> anchored to the trigger, so
- * this page renders it OPEN by default (`defaultOpen`, `openDelay={0}`).
+ * this page renders it OPEN by default (`defaultOpen`, trigger `delay={0}`).
  */
 export default function HoverCardShowcase() {
   return (
     <StatesContainer>
       <StateRow label="open / expanded">
-        <HoverCard defaultOpen openDelay={0}>
-          <HoverCardTrigger asChild>
-            <Button variant="link">@nextjs</Button>
+        <HoverCard defaultOpen>
+          <HoverCardTrigger delay={0} render={<Button variant="link" />}>
+            @nextjs
           </HoverCardTrigger>
           <HoverCardContent className="w-80">
             <div className="flex justify-between gap-4">

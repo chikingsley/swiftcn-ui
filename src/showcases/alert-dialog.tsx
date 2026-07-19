@@ -22,12 +22,10 @@ export default function AlertDialogShowcase() {
     <StatesContainer>
       <StateRow label="open">
         <AlertDialog defaultOpen>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline">Show dialog</Button>
+          <AlertDialogTrigger render={<Button variant="outline" />}>
+            Show dialog
           </AlertDialogTrigger>
-          <AlertDialogContent
-            onOpenAutoFocus={(e) => e.preventDefault()}
-          >
+          <AlertDialogContent initialFocus={false}>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>

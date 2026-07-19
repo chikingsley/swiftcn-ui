@@ -11,15 +11,14 @@ import { StateRow, StatesContainer } from "@/lib/showcase"
 
 /**
  * The menubar renders inline, but its menu content portals to <body>. The File
- * menu is forced OPEN via the Root's `defaultValue` matching that Menu's
- * `value`.
+ * menu is forced OPEN via that menu root's `defaultOpen` state.
  */
 export default function MenubarShowcase() {
   return (
     <StatesContainer>
       <StateRow label="open / expanded">
-        <Menubar defaultValue="file">
-          <MenubarMenu value="file">
+        <Menubar>
+          <MenubarMenu defaultOpen>
             <MenubarTrigger>File</MenubarTrigger>
             <MenubarContent>
               <MenubarItem>
@@ -36,10 +35,10 @@ export default function MenubarShowcase() {
               </MenubarItem>
             </MenubarContent>
           </MenubarMenu>
-          <MenubarMenu value="edit">
+          <MenubarMenu>
             <MenubarTrigger>Edit</MenubarTrigger>
           </MenubarMenu>
-          <MenubarMenu value="view">
+          <MenubarMenu>
             <MenubarTrigger>View</MenubarTrigger>
           </MenubarMenu>
         </Menubar>

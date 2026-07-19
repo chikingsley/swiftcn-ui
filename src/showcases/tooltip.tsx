@@ -17,8 +17,8 @@ export default function TooltipShowcase() {
       <StateRow label="open / expanded">
         <TooltipProvider>
           <Tooltip defaultOpen>
-            <TooltipTrigger asChild>
-              <Button variant="outline">Hover</Button>
+            <TooltipTrigger render={<Button variant="outline" />}>
+              Hover
             </TooltipTrigger>
             <TooltipContent>Add to library</TooltipContent>
           </Tooltip>

@@ -32,19 +32,19 @@ export default function ComboboxShowcase() {
     <StatesContainer>
       <StateRow label="open / expanded (command inside popover)">
         <Popover defaultOpen>
-          <PopoverTrigger asChild>
-            <Button
+          <PopoverTrigger
+            render={<Button
               variant="outline"
               role="combobox"
               className="w-[240px] justify-between"
-            >
-              {frameworks.find((f) => f.value === selected)?.label}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
+            />}
+          >
+            {frameworks.find((f) => f.value === selected)?.label}
+            <ChevronsUpDown className="opacity-50" />
           </PopoverTrigger>
           <PopoverContent
             className="w-[240px] p-0"
-            onOpenAutoFocus={(e) => e.preventDefault()}
+            initialFocus={false}
           >
             <Command>
               <CommandInput placeholder="Search framework..." />

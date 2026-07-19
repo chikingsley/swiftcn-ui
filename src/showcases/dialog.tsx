@@ -22,8 +22,8 @@ export default function DialogShowcase() {
     <StatesContainer>
       <StateRow label="Trigger (rest) — dialog opens over it">
         <Dialog defaultOpen>
-          <DialogTrigger asChild>
-            <Button variant="outline">Edit profile</Button>
+          <DialogTrigger render={<Button variant="outline" />}>
+            Edit profile
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -43,8 +43,8 @@ export default function DialogShowcase() {
               </div>
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+              <DialogClose render={<Button variant="outline" />}>
+                Cancel
               </DialogClose>
               <Button>Save changes</Button>
             </DialogFooter>

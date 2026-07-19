@@ -5,16 +5,32 @@
       "name": "Accordion",
       "states": [
         {
-          "id": "light",
-          "label": "Light",
-          "shadcn": "shadcn/accordion-light.png",
-          "swiftcn": "swiftcn/accordion-light.png"
+          "id": "expanded-light",
+          "label": "Expanded · Light",
+          "note": "Tight Base UI/Vega pilot fixture; first item is expanded in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-expanded-light.png",
+          "swiftcn": "swiftcn-pilot/accordion-expanded-light.png"
         },
         {
-          "id": "dark",
-          "label": "Dark",
-          "shadcn": "shadcn/accordion-dark.png",
-          "swiftcn": "swiftcn/accordion-dark.png"
+          "id": "expanded-dark",
+          "label": "Expanded · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; first item is expanded in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-expanded-dark.png",
+          "swiftcn": "swiftcn-pilot/accordion-expanded-dark.png"
+        },
+        {
+          "id": "collapsed-light",
+          "label": "Collapsed · Light",
+          "note": "Tight Base UI/Vega pilot fixture; all items are collapsed in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-collapsed-light.png",
+          "swiftcn": "swiftcn-pilot/accordion-collapsed-light.png"
+        },
+        {
+          "id": "collapsed-dark",
+          "label": "Collapsed · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; all items are collapsed in both runtimes.",
+          "shadcn": "shadcn-pilot/accordion-collapsed-dark.png",
+          "swiftcn": "swiftcn-pilot/accordion-collapsed-dark.png"
         }
       ]
     },
@@ -23,16 +39,32 @@
       "name": "Alert",
       "states": [
         {
-          "id": "light",
-          "label": "Light",
-          "shadcn": "shadcn/alert-light.png",
-          "swiftcn": "swiftcn/alert-light.png"
+          "id": "default-light",
+          "label": "Default · Light",
+          "note": "Tight Base UI/Vega pilot fixture with an identical icon, title, description, and width contract.",
+          "shadcn": "shadcn-pilot/alert-default-light.png",
+          "swiftcn": "swiftcn-pilot/alert-default-light.png"
         },
         {
-          "id": "dark",
-          "label": "Dark",
-          "shadcn": "shadcn/alert-dark.png",
-          "swiftcn": "swiftcn/alert-dark.png"
+          "id": "default-dark",
+          "label": "Default · Dark",
+          "note": "Tight Base UI/Vega pilot fixture with an identical icon, title, description, and width contract.",
+          "shadcn": "shadcn-pilot/alert-default-dark.png",
+          "swiftcn": "swiftcn-pilot/alert-default-dark.png"
+        },
+        {
+          "id": "destructive-light",
+          "label": "Destructive · Light",
+          "note": "Tight Base UI/Vega pilot fixture; destructive text uses the normal semantic border in both runtimes.",
+          "shadcn": "shadcn-pilot/alert-destructive-light.png",
+          "swiftcn": "swiftcn-pilot/alert-destructive-light.png"
+        },
+        {
+          "id": "destructive-dark",
+          "label": "Destructive · Dark",
+          "note": "Tight Base UI/Vega pilot fixture; destructive text uses the normal semantic border in both runtimes.",
+          "shadcn": "shadcn-pilot/alert-destructive-dark.png",
+          "swiftcn": "swiftcn-pilot/alert-destructive-dark.png"
         }
       ]
     },
@@ -932,5 +964,5 @@
     }
   ],
   "generated": "2026-07-17",
-  "note": "shadcn = official new-york/zinc reference; swiftcn = deterministic SwiftUI Showcase capture; both are 1800px wide, while full-page shadcn captures may be taller"
+  "note": "Accordion and Alert use tight state-specific Base UI/Vega/zinc pilot captures; remaining rows are the earlier full-page reference wave and must be regenerated before acceptance"
 }

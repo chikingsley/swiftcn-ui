@@ -6,7 +6,7 @@ export default function ToggleGroupShowcase() {
   return (
     <StatesContainer>
       <StateRow label="Single select (one selected)">
-        <ToggleGroup type="single" defaultValue="bold">
+        <ToggleGroup defaultValue={["bold"]}>
           <ToggleGroupItem value="bold" aria-label="Toggle bold">
             <Bold />
           </ToggleGroupItem>
@@ -19,7 +19,7 @@ export default function ToggleGroupShowcase() {
         </ToggleGroup>
       </StateRow>
       <StateRow label="Multiple select">
-        <ToggleGroup type="multiple" defaultValue={["bold"]}>
+        <ToggleGroup multiple defaultValue={["bold"]}>
           <ToggleGroupItem value="bold" aria-label="Toggle bold">
             <Bold />
           </ToggleGroupItem>
@@ -32,7 +32,7 @@ export default function ToggleGroupShowcase() {
         </ToggleGroup>
       </StateRow>
       <StateRow label="Disabled">
-        <ToggleGroup type="single" defaultValue="bold" disabled>
+        <ToggleGroup defaultValue={["bold"]} disabled>
           <ToggleGroupItem value="bold" aria-label="Toggle bold">
             <Bold />
           </ToggleGroupItem>

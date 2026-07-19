@@ -23,12 +23,12 @@ export default function SheetShowcase() {
     <StatesContainer>
       <StateRow label="open">
         <Sheet defaultOpen>
-          <SheetTrigger asChild>
-            <Button variant="outline">Edit profile</Button>
+          <SheetTrigger render={<Button variant="outline" />}>
+            Edit profile
           </SheetTrigger>
           <SheetContent
             side="right"
-            onOpenAutoFocus={(e) => e.preventDefault()}
+            initialFocus={false}
           >
             <SheetHeader>
               <SheetTitle>Edit profile</SheetTitle>
@@ -48,8 +48,8 @@ export default function SheetShowcase() {
             </div>
             <SheetFooter>
               <Button>Save changes</Button>
-              <SheetClose asChild>
-                <Button variant="outline">Cancel</Button>
+              <SheetClose render={<Button variant="outline" />}>
+                Cancel
               </SheetClose>
             </SheetFooter>
           </SheetContent>

@@ -7,19 +7,14 @@ import {
 import { StateRow, StatesContainer } from "@/lib/showcase"
 
 /**
- * Animations are globally disabled, so `defaultValue="item-1"` renders the
+ * Animations are globally disabled, so `defaultValue={["item-1"]}` renders the
  * first item's content instantly — this page shows the FORCED-EXPANDED state.
  */
 export default function AccordionShowcase() {
   return (
     <StatesContainer>
       <StateRow label="Single, first item expanded">
-        <Accordion
-          type="single"
-          collapsible
-          defaultValue="item-1"
-          className="w-full max-w-md"
-        >
+        <Accordion defaultValue={["item-1"]} className="w-full max-w-md">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
             <AccordionContent>

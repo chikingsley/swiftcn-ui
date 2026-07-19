@@ -21,12 +21,12 @@ export default function PopoverShowcase() {
     <StatesContainer>
       <StateRow label="open / expanded">
         <Popover defaultOpen>
-          <PopoverTrigger asChild>
-            <Button variant="outline">Open popover</Button>
+          <PopoverTrigger render={<Button variant="outline" />}>
+            Open popover
           </PopoverTrigger>
           <PopoverContent
             className="w-80"
-            onOpenAutoFocus={(e) => e.preventDefault()}
+            initialFocus={false}
           >
             <div className="grid gap-4">
               <PopoverHeader>

@@ -24,8 +24,8 @@ export default function DropdownMenuShowcase() {
     <StatesContainer>
       <StateRow label="open / expanded">
         <DropdownMenu defaultOpen>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">Open menu</Button>
+          <DropdownMenuTrigger render={<Button variant="outline" />}>
+            Open menu
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="start">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>

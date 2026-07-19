@@ -13,7 +13,7 @@ export default function IndexPage() {
           swiftcn/ui — shadcn reference
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Official shadcn/ui components (new-york style, zinc theme) rendered in
+          Official shadcn/ui components (Base UI, Vega style, zinc theme) rendered in
           fixed visual states for side-by-side screenshot comparison against the
           SwiftUI port. Append <code>?theme=dark</code> to any route for dark
           mode.

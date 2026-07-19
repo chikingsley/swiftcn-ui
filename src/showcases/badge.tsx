@@ -23,10 +23,8 @@ export default function BadgeShowcase() {
           Notifications
         </Badge>
       </StateRow>
-      <StateRow label="As link (asChild)">
-        <Badge asChild>
-          <a href="#">Documentation</a>
-        </Badge>
+      <StateRow label="As link (render)">
+        <Badge render={<a href="#" />}>Documentation</Badge>
       </StateRow>
     </StatesContainer>
   )

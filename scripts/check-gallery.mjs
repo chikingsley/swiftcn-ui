@@ -44,23 +44,50 @@ if (new Set(imagePaths).size !== imagePaths.length) {
   throw new Error("Gallery manifest contains duplicate image paths")
 }
 
-for (const imagePath of imagePaths) {
+function imageSize(imagePath) {
   const absolutePath = resolve(galleryRoot, imagePath)
   if (!existsSync(absolutePath)) {
     throw new Error(`Missing gallery image: ${imagePath}`)
   }
 
   const png = readFileSync(absolutePath)
-  const width = png.readUInt32BE(16)
-  const height = png.readUInt32BE(20)
-  const isSwiftcn = imagePath.startsWith("swiftcn/")
-  const expectedHeight = isSwiftcn ? height === 1600 : height >= 1600
-  if (width !== 1800 || !expectedHeight) {
-    const expectation = isSwiftcn ? "1800x1600" : "1800px wide and at least 1600px high"
-    throw new Error(`${imagePath} is ${width}x${height}; expected ${expectation}`)
+  return { width: png.readUInt32BE(16), height: png.readUInt32BE(20) }
+}
+
+for (const component of manifest.components) {
+  for (const state of component.states) {
+    const shadcn = imageSize(state.shadcn)
+    const swiftcn = imageSize(state.swiftcn)
+    const isPilot = state.shadcn.startsWith("shadcn-pilot/")
+
+    if (isPilot) {
+      if (shadcn.width !== swiftcn.width || shadcn.width < 900) {
+        throw new Error(
+          `${component.id}/${state.id} pilot widths differ or are too small: ` +
+          `shadcn ${shadcn.width}px, swiftcn ${swiftcn.width}px`,
+        )
+      }
+      if (shadcn.height < 100 || swiftcn.height < 100) {
+        throw new Error(`${component.id}/${state.id} pilot capture is empty`)
+      }
+      continue
+    }
+
+    if (shadcn.width !== 1800 || shadcn.height < 1600) {
+      throw new Error(
+        `${state.shadcn} is ${shadcn.width}x${shadcn.height}; ` +
+        "expected 1800px wide and at least 1600px high",
+      )
+    }
+    if (swiftcn.width !== 1800 || swiftcn.height !== 1600) {
+      throw new Error(
+        `${state.swiftcn} is ${swiftcn.width}x${swiftcn.height}; expected 1800x1600`,
+      )
+    }
   }
 }
 
 console.log(
-  `gallery check: ${manifest.components.length} components, ${states.length} states, ${imagePaths.length} images, all 1800px wide`,
+  `gallery check: ${manifest.components.length} components, ${states.length} states, ` +
+  `${imagePaths.length} images; pilot pairs are tight and width-matched`,
 )
