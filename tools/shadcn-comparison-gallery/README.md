@@ -1,9 +1,13 @@
-# swiftcn-shadcn-ref
+# Swiftcn shadcn comparison gallery
 
 A durable **Vite + React + TypeScript + shadcn/ui** reference and review
-workspace for `swiftcn-ui`. It renders fixed official-source states, stores both
+tool inside `swiftcn-ui`. It renders fixed official-source states, stores both
 image sets, and provides a side-by-side gallery with per-state verdicts and
 notes.
+
+The former standalone checkout was imported here with its complete four-commit
+history through source checkpoint `0d91e17` on 2026-07-18. This directory is
+now the canonical location; it is deliberately not a nested Git repository.
 
 - Style: shadcn **new-york** (radix-based), the classic look the port mirrors.
 - Theme: **zinc** base color, CSS variables (matches the port's zinc theme).
@@ -18,7 +22,7 @@ the Swift package.
 ## Install
 
 ```bash
-cd /home/simon/github/swiftcn-shadcn-ref
+cd /home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery
 pnpm install
 ```
 
@@ -69,7 +73,7 @@ to this server:
 ```bash
 rsync -av --delete \
   Showcase/.comparison-shots/ \
-  gmk-server:/home/simon/github/swiftcn-shadcn-ref/gallery/swiftcn/
+  gmk-server:/home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery/gallery/swiftcn/
 ```
 
 The gallery manifest is `gallery/comparisons.json`. Both sets are 1800px wide;

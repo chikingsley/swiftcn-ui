@@ -6,7 +6,7 @@ visible and reviewable. Install it as a user-service symlink on GMK:
 ```bash
 mkdir -p ~/.config/systemd/user
 ln -sfn \
-  /home/simon/github/swiftcn-shadcn-ref/ops/swiftcn-gallery.service \
+  /home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery/ops/swiftcn-gallery.service \
   ~/.config/systemd/user/swiftcn-gallery.service
 systemctl --user daemon-reload
 systemctl --user enable --now swiftcn-gallery.service
@@ -19,7 +19,7 @@ systemctl --user status swiftcn-gallery.service
 systemctl --user restart swiftcn-gallery.service
 journalctl --user -u swiftcn-gallery.service --since today
 curl -fsS http://localhost:4174/api/review-state | jq
-jq . /home/simon/github/swiftcn-shadcn-ref/gallery/review-state.json
+jq . /home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery/gallery/review-state.json
 ```
 
 The service exposes the static `gallery/` directory and a narrow same-origin

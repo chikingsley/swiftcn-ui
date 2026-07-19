@@ -1,5 +1,5 @@
 {
-  "name": "swiftcn-shadcn-ref",
+  "name": "swiftcn-shadcn-comparison-gallery",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "capture:pilot": "node scripts/capture-pilot.mjs",
     "check:gallery": "node scripts/check-gallery.mjs",
     "lint": "oxlint",
-    "test:gallery-server": "python3 ops/test_gallery_server.py",
+    "test:gallery-server": "uv run --no-project ops/test_gallery_server.py",
     "preview": "vite preview",
     "capture": "node scripts/capture.mjs"
   },

@@ -70,7 +70,8 @@ deterministic automated contract or an explicit manual validation item.
   process via ScreenCaptureKit.
 - The current set contains 51 components in light and dark at 1800 x 1600.
 - GMK serves the side-by-side gallery at `http://gmk-server:4174/` from the
-  server-local Git repository `/home/simon/github/swiftcn-shadcn-ref`.
+  contained tool at
+  `/home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery`.
 - Every match, mismatch, reversal, and note is saved directly on GMK in the
   gitignored `gallery/review-state.json` file. The same state reloads across
   browsers and is readable through `http://gmk-server:4174/api/review-state`;

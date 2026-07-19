@@ -16,6 +16,7 @@ not a published release. All current and unfinished work lives in
 - `Showcase/` — the macOS-only component gallery.
 - `registry.json`, `schemas/swiftcn.schema.json`, and `cli/` — copy-owned source distribution.
 - `parity/shadcn.json` — official inventory, source coverage, and machine structural maps; it is not code-review approval.
+- `tools/shadcn-comparison-gallery/` — the server-backed React reference and side-by-side screenshot review surface.
 - `Archive/` — the original v1 iOS playground, retained only as historical reference.
 
 ## Consume it

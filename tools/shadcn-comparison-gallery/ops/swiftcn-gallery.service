@@ -4,8 +4,8 @@ After=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/simon/github/swiftcn-shadcn-ref
-ExecStart=/home/simon/github/swiftcn-shadcn-ref/ops/serve-gallery.sh
+WorkingDirectory=/home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery
+ExecStart=/home/simon/github/swiftcn-ui/tools/shadcn-comparison-gallery/ops/serve-gallery.sh
 Restart=on-failure
 RestartSec=2
 
