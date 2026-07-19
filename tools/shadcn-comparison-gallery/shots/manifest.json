@@ -1,0 +1,512 @@
+[
+  {
+    "component": "button",
+    "theme": "light",
+    "file": "button-light.png"
+  },
+  {
+    "component": "button",
+    "theme": "dark",
+    "file": "button-dark.png"
+  },
+  {
+    "component": "badge",
+    "theme": "light",
+    "file": "badge-light.png"
+  },
+  {
+    "component": "badge",
+    "theme": "dark",
+    "file": "badge-dark.png"
+  },
+  {
+    "component": "input",
+    "theme": "light",
+    "file": "input-light.png"
+  },
+  {
+    "component": "input",
+    "theme": "dark",
+    "file": "input-dark.png"
+  },
+  {
+    "component": "textarea",
+    "theme": "light",
+    "file": "textarea-light.png"
+  },
+  {
+    "component": "textarea",
+    "theme": "dark",
+    "file": "textarea-dark.png"
+  },
+  {
+    "component": "label",
+    "theme": "light",
+    "file": "label-light.png"
+  },
+  {
+    "component": "label",
+    "theme": "dark",
+    "file": "label-dark.png"
+  },
+  {
+    "component": "checkbox",
+    "theme": "light",
+    "file": "checkbox-light.png"
+  },
+  {
+    "component": "checkbox",
+    "theme": "dark",
+    "file": "checkbox-dark.png"
+  },
+  {
+    "component": "switch",
+    "theme": "light",
+    "file": "switch-light.png"
+  },
+  {
+    "component": "switch",
+    "theme": "dark",
+    "file": "switch-dark.png"
+  },
+  {
+    "component": "radio-group",
+    "theme": "light",
+    "file": "radio-group-light.png"
+  },
+  {
+    "component": "radio-group",
+    "theme": "dark",
+    "file": "radio-group-dark.png"
+  },
+  {
+    "component": "select",
+    "theme": "light",
+    "file": "select-light.png"
+  },
+  {
+    "component": "select",
+    "theme": "dark",
+    "file": "select-dark.png"
+  },
+  {
+    "component": "combobox",
+    "theme": "light",
+    "file": "combobox-light.png"
+  },
+  {
+    "component": "combobox",
+    "theme": "dark",
+    "file": "combobox-dark.png"
+  },
+  {
+    "component": "command",
+    "theme": "light",
+    "file": "command-light.png"
+  },
+  {
+    "component": "command",
+    "theme": "dark",
+    "file": "command-dark.png"
+  },
+  {
+    "component": "popover",
+    "theme": "light",
+    "file": "popover-light.png"
+  },
+  {
+    "component": "popover",
+    "theme": "dark",
+    "file": "popover-dark.png"
+  },
+  {
+    "component": "dropdown-menu",
+    "theme": "light",
+    "file": "dropdown-menu-light.png"
+  },
+  {
+    "component": "dropdown-menu",
+    "theme": "dark",
+    "file": "dropdown-menu-dark.png"
+  },
+  {
+    "component": "context-menu",
+    "theme": "light",
+    "file": "context-menu-light.png"
+  },
+  {
+    "component": "context-menu",
+    "theme": "dark",
+    "file": "context-menu-dark.png"
+  },
+  {
+    "component": "menubar",
+    "theme": "light",
+    "file": "menubar-light.png"
+  },
+  {
+    "component": "menubar",
+    "theme": "dark",
+    "file": "menubar-dark.png"
+  },
+  {
+    "component": "navigation-menu",
+    "theme": "light",
+    "file": "navigation-menu-light.png"
+  },
+  {
+    "component": "navigation-menu",
+    "theme": "dark",
+    "file": "navigation-menu-dark.png"
+  },
+  {
+    "component": "dialog",
+    "theme": "light",
+    "file": "dialog-light.png"
+  },
+  {
+    "component": "dialog",
+    "theme": "dark",
+    "file": "dialog-dark.png"
+  },
+  {
+    "component": "alert-dialog",
+    "theme": "light",
+    "file": "alert-dialog-light.png"
+  },
+  {
+    "component": "alert-dialog",
+    "theme": "dark",
+    "file": "alert-dialog-dark.png"
+  },
+  {
+    "component": "sheet",
+    "theme": "light",
+    "file": "sheet-light.png"
+  },
+  {
+    "component": "sheet",
+    "theme": "dark",
+    "file": "sheet-dark.png"
+  },
+  {
+    "component": "drawer",
+    "theme": "light",
+    "file": "drawer-light.png"
+  },
+  {
+    "component": "drawer",
+    "theme": "dark",
+    "file": "drawer-dark.png"
+  },
+  {
+    "component": "hover-card",
+    "theme": "light",
+    "file": "hover-card-light.png"
+  },
+  {
+    "component": "hover-card",
+    "theme": "dark",
+    "file": "hover-card-dark.png"
+  },
+  {
+    "component": "tooltip",
+    "theme": "light",
+    "file": "tooltip-light.png"
+  },
+  {
+    "component": "tooltip",
+    "theme": "dark",
+    "file": "tooltip-dark.png"
+  },
+  {
+    "component": "accordion",
+    "theme": "light",
+    "file": "accordion-light.png"
+  },
+  {
+    "component": "accordion",
+    "theme": "dark",
+    "file": "accordion-dark.png"
+  },
+  {
+    "component": "collapsible",
+    "theme": "light",
+    "file": "collapsible-light.png"
+  },
+  {
+    "component": "collapsible",
+    "theme": "dark",
+    "file": "collapsible-dark.png"
+  },
+  {
+    "component": "tabs",
+    "theme": "light",
+    "file": "tabs-light.png"
+  },
+  {
+    "component": "tabs",
+    "theme": "dark",
+    "file": "tabs-dark.png"
+  },
+  {
+    "component": "card",
+    "theme": "light",
+    "file": "card-light.png"
+  },
+  {
+    "component": "card",
+    "theme": "dark",
+    "file": "card-dark.png"
+  },
+  {
+    "component": "avatar",
+    "theme": "light",
+    "file": "avatar-light.png"
+  },
+  {
+    "component": "avatar",
+    "theme": "dark",
+    "file": "avatar-dark.png"
+  },
+  {
+    "component": "alert",
+    "theme": "light",
+    "file": "alert-light.png"
+  },
+  {
+    "component": "alert",
+    "theme": "dark",
+    "file": "alert-dark.png"
+  },
+  {
+    "component": "separator",
+    "theme": "light",
+    "file": "separator-light.png"
+  },
+  {
+    "component": "separator",
+    "theme": "dark",
+    "file": "separator-dark.png"
+  },
+  {
+    "component": "skeleton",
+    "theme": "light",
+    "file": "skeleton-light.png"
+  },
+  {
+    "component": "skeleton",
+    "theme": "dark",
+    "file": "skeleton-dark.png"
+  },
+  {
+    "component": "progress",
+    "theme": "light",
+    "file": "progress-light.png"
+  },
+  {
+    "component": "progress",
+    "theme": "dark",
+    "file": "progress-dark.png"
+  },
+  {
+    "component": "slider",
+    "theme": "light",
+    "file": "slider-light.png"
+  },
+  {
+    "component": "slider",
+    "theme": "dark",
+    "file": "slider-dark.png"
+  },
+  {
+    "component": "breadcrumb",
+    "theme": "light",
+    "file": "breadcrumb-light.png"
+  },
+  {
+    "component": "breadcrumb",
+    "theme": "dark",
+    "file": "breadcrumb-dark.png"
+  },
+  {
+    "component": "pagination",
+    "theme": "light",
+    "file": "pagination-light.png"
+  },
+  {
+    "component": "pagination",
+    "theme": "dark",
+    "file": "pagination-dark.png"
+  },
+  {
+    "component": "calendar",
+    "theme": "light",
+    "file": "calendar-light.png"
+  },
+  {
+    "component": "calendar",
+    "theme": "dark",
+    "file": "calendar-dark.png"
+  },
+  {
+    "component": "table",
+    "theme": "light",
+    "file": "table-light.png"
+  },
+  {
+    "component": "table",
+    "theme": "dark",
+    "file": "table-dark.png"
+  },
+  {
+    "component": "scroll-area",
+    "theme": "light",
+    "file": "scroll-area-light.png"
+  },
+  {
+    "component": "scroll-area",
+    "theme": "dark",
+    "file": "scroll-area-dark.png"
+  },
+  {
+    "component": "resizable",
+    "theme": "light",
+    "file": "resizable-light.png"
+  },
+  {
+    "component": "resizable",
+    "theme": "dark",
+    "file": "resizable-dark.png"
+  },
+  {
+    "component": "sidebar",
+    "theme": "light",
+    "file": "sidebar-light.png"
+  },
+  {
+    "component": "sidebar",
+    "theme": "dark",
+    "file": "sidebar-dark.png"
+  },
+  {
+    "component": "sonner",
+    "theme": "light",
+    "file": "sonner-light.png"
+  },
+  {
+    "component": "sonner",
+    "theme": "dark",
+    "file": "sonner-dark.png"
+  },
+  {
+    "component": "toggle",
+    "theme": "light",
+    "file": "toggle-light.png"
+  },
+  {
+    "component": "toggle",
+    "theme": "dark",
+    "file": "toggle-dark.png"
+  },
+  {
+    "component": "toggle-group",
+    "theme": "light",
+    "file": "toggle-group-light.png"
+  },
+  {
+    "component": "toggle-group",
+    "theme": "dark",
+    "file": "toggle-group-dark.png"
+  },
+  {
+    "component": "input-otp",
+    "theme": "light",
+    "file": "input-otp-light.png"
+  },
+  {
+    "component": "input-otp",
+    "theme": "dark",
+    "file": "input-otp-dark.png"
+  },
+  {
+    "component": "aspect-ratio",
+    "theme": "light",
+    "file": "aspect-ratio-light.png"
+  },
+  {
+    "component": "aspect-ratio",
+    "theme": "dark",
+    "file": "aspect-ratio-dark.png"
+  },
+  {
+    "component": "kbd",
+    "theme": "light",
+    "file": "kbd-light.png"
+  },
+  {
+    "component": "kbd",
+    "theme": "dark",
+    "file": "kbd-dark.png"
+  },
+  {
+    "component": "field",
+    "theme": "light",
+    "file": "field-light.png"
+  },
+  {
+    "component": "field",
+    "theme": "dark",
+    "file": "field-dark.png"
+  },
+  {
+    "component": "button-group",
+    "theme": "light",
+    "file": "button-group-light.png"
+  },
+  {
+    "component": "button-group",
+    "theme": "dark",
+    "file": "button-group-dark.png"
+  },
+  {
+    "component": "input-group",
+    "theme": "light",
+    "file": "input-group-light.png"
+  },
+  {
+    "component": "input-group",
+    "theme": "dark",
+    "file": "input-group-dark.png"
+  },
+  {
+    "component": "item",
+    "theme": "light",
+    "file": "item-light.png"
+  },
+  {
+    "component": "item",
+    "theme": "dark",
+    "file": "item-dark.png"
+  },
+  {
+    "component": "empty",
+    "theme": "light",
+    "file": "empty-light.png"
+  },
+  {
+    "component": "empty",
+    "theme": "dark",
+    "file": "empty-dark.png"
+  },
+  {
+    "component": "chart",
+    "theme": "light",
+    "file": "chart-light.png"
+  },
+  {
+    "component": "chart",
+    "theme": "dark",
+    "file": "chart-dark.png"
+  }
+]
