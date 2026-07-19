@@ -4,6 +4,12 @@ This document records the handoff state of the unmerged macOS validation wave
 based on `b08a8b0`. It is a coding checkpoint, not acceptance evidence and not
 ready to merge to `main`.
 
+The contained shadcn comparison gallery migration through `c206fb9` is also
+published only on `checkpoint/validation-wave-2026-07-17`. Merge that branch
+into `main` only after the validation-wave blockers below are resolved. The
+canonical gallery path is now `tools/shadcn-comparison-gallery`; do not recreate
+the removed standalone checkout.
+
 ## Last complete macOS run
 
 The final run completed on a calm Mac with 514 tests:
