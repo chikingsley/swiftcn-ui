@@ -37,7 +37,7 @@ public struct SCAlert<Leading: View, Content: View>: View {
     }
 
     public var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: 10) {
             leading
                 .foregroundStyle(foregroundColor)
 
@@ -46,9 +46,14 @@ public struct SCAlert<Leading: View, Content: View>: View {
             }
             .frame(maxWidth: .infinity)
         }
-        .padding(16)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
         .background(background, in: shape)
-        .overlay(shape.strokeBorder(strokeColor))
+        .overlay {
+            shape
+                .strokeBorder(strokeColor)
+                .allowsHitTesting(false)
+        }
         .environment(\.scAlertVariant, variant)
         .accessibilityElement(children: .contain)
     }
@@ -65,14 +70,11 @@ public struct SCAlert<Leading: View, Content: View>: View {
         // Both variants stay untinted, matching upstream's bg-card: the
         // former 8% destructive tint dropped the destructive title below
         // WCAG AA (4.14:1 light / 4.05:1 dark).
-        theme.background
+        theme.card
     }
 
     private var strokeColor: Color {
-        switch variant {
-        case .default: theme.border
-        case .destructive: theme.destructive.opacity(0.5)
-        }
+        theme.border
     }
 }
 
@@ -101,7 +103,7 @@ public struct SCAlertTitle<Content: View>: View {
 
     public var body: some View {
         content
-            .font(.subheadline.weight(.semibold))
+            .font(.subheadline.weight(.medium))
             .foregroundStyle(
                 variant == .destructive ? theme.destructive : theme.foreground
             )
@@ -129,7 +131,7 @@ public struct SCAlertDescription<Content: View>: View {
 
     public var body: some View {
         content
-            .font(.footnote)
+            .font(.subheadline)
             .foregroundStyle(
                 // Full-strength destructive, deviating from upstream's /90
                 // opacity, which measures below WCAG AA for footnote text.
@@ -242,7 +244,7 @@ extension SCAlert where Leading == AnyView, Content == AnyView {
                 Group {
                     if let icon {
                         Image(systemName: icon)
-                            .font(.system(size: 17, weight: .medium))
+                            .font(.system(size: 16))
                             .accessibilityHidden(true)
                     }
                 }

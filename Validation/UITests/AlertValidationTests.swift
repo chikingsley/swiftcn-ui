@@ -50,10 +50,10 @@ final class AlertValidationTests: ValidationCase {
     }
 
     // Both audits must pass with no tolerations: the destructive variant
-    // is untinted (theme.background, Alert.swift:63-68) and the
+    // is untinted (theme.card, Alert.swift:64-69) and the
     // description uses full-strength destructive, so the title measures
     // red-600 #E7000B on white = 4.77:1 light and red-400 #FF6467 on
-    // zinc-950 = 6.55:1 dark (WCAG AA needs 4.5:1).
+    // zinc-900 = 6.13:1 dark (WCAG AA needs 4.5:1).
     func testAccessibilityAuditLight() throws {
         let app = launchHost(scene: "alert", appearance: "light")
         XCTAssertTrue(app.groups["alert-default"].waitForExistence(timeout: 5))

@@ -8,11 +8,13 @@ import Swiftcn
 @main
 struct ShowcaseApp: App {
     private let captureComponentID: String?
+    private let captureState: String?
     private let captureAppearance: ColorScheme?
 
     init() {
         let arguments = ProcessInfo.processInfo.arguments
         captureComponentID = Self.value(named: "--capture-component", in: arguments)
+        captureState = Self.value(named: "--capture-state", in: arguments)
         switch Self.value(named: "--capture-appearance", in: arguments) {
         case "dark": captureAppearance = .dark
         case "light": captureAppearance = .light
@@ -22,7 +24,13 @@ struct ShowcaseApp: App {
 
     var body: some Scene {
         WindowGroup {
-            if let captureComponentID {
+            if let captureComponentID, let captureState {
+                ComparisonPilotRootView(
+                    componentID: captureComponentID,
+                    state: captureState,
+                    appearance: captureAppearance
+                )
+            } else if let captureComponentID {
                 CaptureRootView(
                     componentID: captureComponentID,
                     appearance: captureAppearance

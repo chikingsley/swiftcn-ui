@@ -102,3 +102,7 @@ Validation/*.xcresult
 
 # Generated Swiftcn side-by-side comparison captures
 Showcase/.comparison-shots/
+Showcase/.pilot-actual/
+Showcase/.web-pilot-actual/
+Showcase/.pilot-diffs/
+Showcase/.pilot-parity-report.json

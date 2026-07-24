@@ -83,11 +83,11 @@ class ValidationCase: XCTestCase {
         auditTypes.subtract(excludedTypes)
         try app.performAccessibilityAudit(for: auditTypes) { issue in
             if let element = issue.element,
-                element.elementType == .group,
+                (element.elementType == .group || element.elementType == .touchBar),
                 !element.isEnabled,
                 element.identifier.isEmpty
             {
-                print("SC-AUDIT-EXPECTED: window chrome group (\(issue.compactDescription))")
+                print("SC-AUDIT-EXPECTED: system window chrome (\(issue.compactDescription))")
                 return true
             }
             if let element = issue.element,

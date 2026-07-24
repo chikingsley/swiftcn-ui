@@ -244,7 +244,7 @@ public struct SCAccordionTrigger<Label: View>: View {
             .font(.subheadline.weight(.medium))
             .foregroundStyle(theme.foreground)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.vertical, 14)
+            .padding(.vertical, 16)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -281,9 +281,9 @@ public struct SCAccordionContent<Content: View>: View {
         if accordion.expanded.contains(item.id) {
             content
                 .font(.subheadline)
-                .foregroundStyle(theme.mutedForeground)
+                .foregroundStyle(theme.foreground)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.bottom, 14)
+                .padding(.bottom, 16)
                 .transition(.opacity.combined(with: .move(edge: .top)))
         }
     }

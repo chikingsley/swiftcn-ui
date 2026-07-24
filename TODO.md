@@ -89,6 +89,11 @@ third completion gate and they do not pass either checkbox.
       `test-without-building` per run against a fixed `-derivedDataPath`;
       pin one simulator runtime for iPadOS — see docs/architecture.md,
       "Building and the development loop".)
+- [x] Create the macOS Accordion/Alert visual-parity pilot (2026-07-17):
+      state-specific tight light/dark runtime captures, eight checked-in Swift
+      goldens with exact-repeat verification, a cross-runtime
+      color/edge/ink/aspect checker with normalized diff heatmaps, and the
+      server-backed review gallery are documented in `docs/parity-pilot.md`.
 - [ ] Create the screenshot/snapshot harness for both platforms.
 - [ ] Publish a versioned CLI and test installation outside this checkout.
 - [ ] Publish the private canonical repository and correct package/registry URLs.
@@ -172,7 +177,10 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         collapsible/non-collapsible and multiple modes expand and collapse with
         content and echo, disabled items, and callbacks — validation caught and
         fixed a spurious onExpandedChange fired for no-op re-presses in
-        non-collapsible single mode
+        non-collapsible single mode. Revalidated 2026-07-17 after the Base
+        UI/Vega pilot styling correction: four behavior/render cases and both
+        light/dark accessibility audits pass; expanded/collapsed light/dark
+        runtime goldens and cross-runtime structural checks pass.
 - **Alert**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Alert:
         Root/Title/Description/Action, arbitrary content and leading slots, and
@@ -192,12 +200,21 @@ shadcn component catalog. “Source exists” describes inventory only; it is no
         `SCAlertContentLayout` places it top-trailing on the title's row,
         reserving its width so it never overlaps wrapped text — the same
         accepted native adaptation `SCCardHeader` uses for its action.
+        Base UI/Vega pilot correction 2026-07-17: the surface now uses
+        `theme.card`, the destructive variant keeps the normal semantic border
+        instead of a red outline, and upstream's 16x12 padding, 10-point icon
+        gap, medium title, and 14-point description geometry are mirrored.
+        The decorative stroke is explicitly excluded from hit testing after
+        the behavior suite proved it intercepted the real action button.
   - [ ] `VALIDATION` — variants, arbitrary slots, Dynamic Type, and accessibility not validated.
         macOS host evidence 2026-07-15 (Validation/ suite, all passing):
         both variants render their slots, SCAlertAction routes real
         activations, light/dark screenshots, and both audits pass with no
         tolerations after the tint fix (destructive title 4.77:1 light /
-        6.55:1 dark).
+        6.13:1 dark on the card surface). Revalidated 2026-07-17: four
+        behavior/render cases and both light/dark accessibility audits pass;
+        default/destructive light/dark runtime goldens and cross-runtime
+        structural checks pass.
 - **Alert Dialog**
   - [x] `CODE` — accepted 2026-07-14 against the current Base Alert Dialog:
         Root/Trigger/Overlay/Content/Header/Footer/Media/Title/Description/Action/Cancel,

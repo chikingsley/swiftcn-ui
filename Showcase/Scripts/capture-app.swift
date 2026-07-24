@@ -36,7 +36,7 @@ struct CaptureApp {
                     exceptingWindows: []
                 )
                 let configuration = SCStreamConfiguration()
-                let captureSize = CGSize(width: 900, height: 800)
+                let captureSize = mainWindow.frame.size
                 configuration.sourceRect = CGRect(
                     x: mainWindow.frame.midX - display.frame.minX - captureSize.width / 2,
                     y: mainWindow.frame.midY - display.frame.minY - captureSize.height / 2,
